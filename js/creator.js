@@ -104,7 +104,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
         // OPTIONAL: Still save to localStorage for immediate local play if desired
-        // localStorage.setItem('connectionsGameData', gameDataString);
+        localStorage.setItem('connectionsGameData', gameDataString);
 
         // --- END NEW SHARING LOGIC ---
     });
