@@ -144,3 +144,128 @@ button:hover {
     text-decoration: none;
     cursor: pointer;
 }
+
+/* ... (previous styles) ... */
+
+/* Player Page Styles */
+
+/* ... (initial player styles like .game-grid, .card) ... */
+
+.card.selected {
+    background-color: #a0d2eb; /* Highlight selected cards */
+    border-color: #007bff;
+}
+
+.card.solved {
+    background-color: #e0e0e0; /* Neutral background for solved cards */
+    border: 1px solid #bbb;
+    cursor: default; /* Change cursor */
+}
+
+/* Style for the row of solved cards */
+.solved-group-row {
+    display: flex; /* Arrange solved cards in a row */
+    gap: 10px; /* Same gap as grid */
+    margin-bottom: 15px; /* Space between solved rows */
+    padding: 10px;
+    background-color: #f9f9f9;
+    border-radius: 5px;
+    align-items: center; /* Vertically center items */
+    flex-wrap: wrap; /* Allow wrapping if screen is very narrow */
+}
+
+.solved-group-row h3 {
+    margin: 0 10px 0 0; /* Space after the group title */
+    font-size: 1em;
+    color: #555;
+}
+
+.solved-group-row .card {
+    /* Styles for cards within the solved row */
+    flex-basis: calc(25% - 15px); /* Attempt to make them roughly same width */
+    height: auto; /* Allow height to adjust */
+    padding: 8px; /* Smaller padding in solved row */
+    box-sizing: border-box;
+    font-size: 0.85em; /* Slightly smaller font */
+    background-color: inherit; /* Inherit background from solved-group-row */
+    border: 1px dashed #ccc; /* Different border */
+}
+
+
+/* Vibration Animation for Incorrect Guess */
+@keyframes vibrate {
+    0% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    50% { transform: translateX(5px); }
+    75% { transform: translateX(-5px); }
+    100% { transform: translateX(0); }
+}
+
+.card.vibrate {
+    animation: vibrate 0.3s ease-in-out; /* Apply the animation */
+}
+
+
+/* Game Over Modal (Basic) */
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 100; /* High z-index to be on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgba(0,0,0,0.7); /* Black background with opacity */
+    backdrop-filter: blur(5px); /* Optional: blur background */
+}
+
+.modal-content {
+    background-color: #fefefedb; /* Slightly transparent white */
+    margin: 15% auto; /* 15% from the top and centered */
+    padding: 30px;
+    border: 1px solid #888;
+    border-radius: 10px;
+    width: 80%; /* Could be more specific */
+    max-width: 400px;
+    text-align: center;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    position: relative; /* Needed for the close button positioning */
+}
+
+.modal-content h2 {
+    margin-top: 0;
+    color: #007bff;
+}
+
+.modal-content p {
+    margin-bottom: 15px;
+    color: #555;
+}
+
+.close {
+    color: #aaa;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.close:hover,
+.close:focus {
+    color: #333;
+    text-decoration: none;
+}
+
+#play-again-button {
+    margin-top: 20px;
+    /* Inherits button styles */
+}
+
+/* Optional: Style for areas that get disabled */
+#game-grid.disabled {
+     pointer-events: none;
+     opacity: 0.8;
+}
