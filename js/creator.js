@@ -1,10 +1,14 @@
+// js/creator.js
+
 document.addEventListener('DOMContentLoaded', () => {
     const createButton = document.getElementById('create-game-button');
+    const container = document.querySelector('.container'); // Get the container to add the link output
 
     createButton.addEventListener('click', () => {
         const groups = [];
         let allInputsValid = true;
 
+        // ... (code to get words from inputs - keep this) ...
         // Get words from Group 1
         const group1Inputs = document.querySelectorAll('.group1-word');
         const group1Words = [];
@@ -49,18 +53,59 @@ document.addEventListener('DOMContentLoaded', () => {
         });
         groups.push(group4Words);
 
+
         // Basic validation
         if (!allInputsValid) {
             alert('Please fill in all 16 words.');
-            return; // Stop the function if inputs are empty
+            return;
         }
 
-        // Store the groups data
-        // Using a simple key like 'connectionsGameData' for now
-        // In a real app, you might generate a unique ID per game
-        localStorage.setItem('connectionsGameData', JSON.stringify(groups));
+        // --- NEW SHARING LOGIC ---
 
-        // Redirect to the player page
-        window.location.href = 'player.html';
+        // 1. Stringify the game data (the groups array)
+        const gameDataString = JSON.stringify(groups);
+
+        // 2. Encode the string for URL safety (using Base64)
+        // btoa() creates a Base64 encoded string from a string
+        const encodedGameData = btoa(gameDataString);
+
+        // 3. Get the base URL of the player page
+        // This assumes player.html is in the same directory or easily relative
+        const playerPageUrl = 'player.html'; // Or '/player.html' if at site root
+
+        // 4. Construct the full URL with the encoded data as a query parameter
+        const shareableLink = `${playerPageUrl}?gameData=${encodedGameData}`;
+
+        // 5. Display the link to the user instead of redirecting
+        // Remove the input form and button
+        container.innerHTML = `
+            <h2>Game Created!</h2>
+            <p>Share this link with your friend:</p>
+            <input type="text" id="share-link-input" value="${shareableLink}" readonly style="width: 90%; padding: 8px; margin-bottom: 10px;">
+            <button id="copy-link-button">Copy Link</button>
+            <p><a href="${shareableLink}">Or click here to play yourself</a></p>
+            <p><a href="creator.html">Create another game</a></p>
+        `;
+
+        // Add copy button functionality
+        document.getElementById('copy-link-button').addEventListener('click', () => {
+            const linkInput = document.getElementById('share-link-input');
+            linkInput.select(); // Select the text field
+            linkInput.setSelectionRange(0, 99999); // For mobile devices
+
+            // Copy the text inside the text field
+            navigator.clipboard.writeText(linkInput.value).then(() => {
+                alert("Link copied to clipboard!");
+            }).catch(err => {
+                console.error("Failed to copy link: ", err);
+                alert("Could not copy link. Please copy it manually.");
+            });
+        });
+
+
+        // OPTIONAL: Still save to localStorage for immediate local play if desired
+        // localStorage.setItem('connectionsGameData', gameDataString);
+
+        // --- END NEW SHARING LOGIC ---
     });
 });
