@@ -1,6 +1,8 @@
 // js/player.js
 
 document.addEventListener('DOMContentLoaded', () => {
+    console.log("DOM Content Loaded. Player script starting.");
+    
     const gameGrid = document.getElementById('game-grid');
     const messageArea = document.getElementById('message-area');
     const submitButton = document.getElementById('submit-button');
@@ -26,8 +28,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Game Initialization ---
     function loadGameData() {
+        console.log("Attempting to load game data from localStorage.");
         const gameDataString = localStorage.getItem('connectionsGameData');
         if (!gameDataString) {
+            console.log("No game data found in localStorage.");
             // Handle case where no game data is found (e.g., redirect to creator)
             messageArea.textContent = 'No game data found. Please create a game first.';
             submitButton.disabled = true;
@@ -47,10 +51,14 @@ document.addEventListener('DOMContentLoaded', () => {
         // Shuffle the words
         shuffledWords = shuffleArray(allWords);
 
+        console.log("Game data loaded:", correctGroups);
+        console.log("Shuffled words:", shuffledWords);
+        
         return true; // Data loaded successfully
     }
 
     function renderGrid() {
+        console.log("Rendering game grid.");
         gameGrid.innerHTML = ''; // Clear previous grid
         cardElements = []; // Clear previous card references
 
@@ -68,7 +76,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- Event Handlers ---
     function handleCardClick(event) {
         const card = event.target;
-
+        console.log("Card clicked:", card.dataset.word, ". Current selected count:", selectedCards.length);
         // Prevent selecting solved cards
         if (card.classList.contains('solved')) {
             return;
@@ -93,19 +101,27 @@ document.addEventListener('DOMContentLoaded', () => {
         // Enable/Disable submit button based on selection count
         submitButton.disabled = selectedCards.length !== 4;
         messageArea.textContent = selectedCards.length > 0 ? `Selected: ${selectedCards.length}` : '';
+
+        console.log("Selected cards after click:", selectedCards.map(c => c.dataset.word));
     }
 
     function handleSubmitClick() {
+        console.log("Submit button clicked!");
         if (selectedCards.length !== 4) {
+            console.warn("Submit clicked with incorrect selection count:", selectedCards.length);
             messageArea.textContent = 'Please select exactly 4 words.';
             return; // Should be disabled, but safety check
         }
-
+        console.log("Selected words:", selectedCards.map(card => card.dataset.word));
+   
         const selectedWords = selectedCards.map(card => card.dataset.word);
         const checkResult = checkSelection(selectedWords, correctGroups, solvedGroupIndexes);
+        
+        console.log("Result from checkSelection:", checkResult);
 
-        switch (checkResult.type) {
+        switch (checkResult.type) {                
             case 'correct':
+                console.log("Result: Correct group found.");
                 const solvedIndex = checkResult.groupIndex;
                 handleCorrectGuess(solvedIndex);
                 break;
