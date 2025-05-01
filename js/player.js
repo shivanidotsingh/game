@@ -25,6 +25,13 @@ document.addEventListener('DOMContentLoaded', () => {
     let tries = 0;
     const maxTries = 4; // Standard Connections game allows 4 mistakes
 
+     if (submitButton) { // Optional: Check if button was found before adding listener
+       submitButton.addEventListener('click', handleSubmitClick);
+       console.log("Submit button click listener added."); // Add this log too
+    } else {
+       console.error("Submit button not found!"); // Log an error if button wasn't found
+    }
+
 
     // --- Game Initialization ---
     function loadGameData() {
