@@ -71,7 +71,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // 3. Get the base URL of the player page
         // This assumes player.html is in the same directory or easily relative
-        const playerPageUrl = '/player.html'; 
+        const playerPageUrl = 'https://shivanidotsingh.github.io/game/player.html'; 
 
         // 4. Construct the full URL with the encoded data as a query parameter
         const shareableLink = `${playerPageUrl}?gameData=${encodedGameData}`;
