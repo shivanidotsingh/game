@@ -1,5 +1,5 @@
 body {
-    font-family: sans-serif;
+    font-family: 'Helvetica', sans-serif;
     margin: 20px;
     text-align: center;
 }
@@ -64,9 +64,10 @@ button:hover {
     background-color: #f0f0f0;
     border: 1px solid #ccc;
     border-radius: 5px;
+    
     /* Adjusted padding and height for slightly larger cards */
     padding: 20px 10px; /* Increased padding */
-    height: 70px; /* Increased height */
+    height: 80px; /* Increased height */
 
     text-align: center;
     cursor: pointer;
@@ -79,9 +80,10 @@ button:hover {
     align-items: center; /* Center text vertically */
 
     /* Font adjustments */
-    font-size: 1.2em; /* Made font larger */
+    font-size: 1em; /* Made font larger */
     font-weight: bold; /* Made font bolder */
     text-transform: uppercase; /* Made text uppercase */
+    letter-spacing: 0.5px;
 }
 
 .card:hover {
