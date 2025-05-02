@@ -64,17 +64,24 @@ button:hover {
     background-color: #f0f0f0;
     border: 1px solid #ccc;
     border-radius: 5px;
-    padding: 15px 5px; /* Increased vertical padding slightly */
+    /* Adjusted padding and height for slightly larger cards */
+    padding: 20px 10px; /* Increased padding */
+    height: 70px; /* Increased height */
+
     text-align: center;
     cursor: pointer;
     user-select: none; /* Prevent text selection */
     word-break: break-word; /* Break long words */
     overflow: hidden; /* Hide overflow if word is too long */
-    height: 60px; /* Fixed height for consistent grid */
+
     display: flex; /* Use flexbox to center text vertically */
     justify-content: center; /* Center text horizontally */
     align-items: center; /* Center text vertically */
-    font-size: 0.9em; /* Slightly smaller font */
+
+    /* Font adjustments */
+    font-size: 1.2em; /* Made font larger */
+    font-weight: bold; /* Made font bolder */
+    text-transform: uppercase; /* Made text uppercase */
 }
 
 .card:hover {
