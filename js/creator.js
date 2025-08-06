@@ -1,5 +1,3 @@
-// js/creator.js
-
 document.addEventListener('DOMContentLoaded', () => {
     const createButton = document.getElementById('create-game-button');
     const container = document.querySelector('.container'); // Get the container to add the link output
@@ -46,9 +44,13 @@ document.addEventListener('DOMContentLoaded', () => {
         // 2. Encode the string for URL safety (using Base64)
         const encodedGameData = btoa(gameDataString);
 
-        // 3. Get the base URL of the player page
-        // This assumes player.html is in the same directory or easily relative
-        const playerPageUrl = 'https://shivanidotsingh.github.io/game/player.html';
+        // 3. Dynamically get the base URL of the player page
+        // This makes the link robust whether hosted locally or on a server.
+        // It takes the current origin (e.g., http://localhost:8000 or https://yourusername.github.io)
+        // and appends the relative path to player.html (assuming it's in the same directory as creator.html)
+        const currentPath = window.location.pathname;
+        const playerPagePath = currentPath.substring(0, currentPath.lastIndexOf('/')) + '/player.html';
+        const playerPageUrl = window.location.origin + playerPagePath;
 
         // 4. Construct the full URL with the encoded data as a query parameter
         const shareableLink = `${playerPageUrl}?gameData=${encodedGameData}`;
