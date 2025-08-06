@@ -33,8 +33,6 @@ h1, h2 {
     align-items: center; /* Center content horizontally */
 }
 
-/* No specific label style needed for theme-label as it's removed from HTML */
-
 input.group-theme {
     width: calc(100% - 20px); /* Full width minus padding */
     padding: 15px; /* Larger padding for prominence */
@@ -46,19 +44,20 @@ input.group-theme {
     font-size: 1.1em; /* Larger font size */
     text-align: center; /* Center text within input */
     box-sizing: border-box;
-    /* Style for placeholder text */
-    &::placeholder {
-        color: #007bff;
-        opacity: 0.7;
-    }
 }
+
+/* Style for placeholder text in group-theme input */
+input.group-theme::placeholder {
+    color: #007bff;
+    opacity: 0.7;
+}
+
 
 .creator-words-grid {
     display: grid;
-    grid-template-columns: repeat(4, 1fr); /* Changed to 4 columns for words on desktop */
+    grid-template-columns: repeat(4, 1fr); /* 4 columns for words on desktop */
     gap: 8px; /* Slightly reduced space between word cards */
     width: 100%; /* Take full width of parent card */
-    /* max-width: 400px; Removed max-width to allow more space for 4 columns */
     margin-left: auto;
     margin-right: auto;
 }
@@ -68,7 +67,7 @@ input.group-theme {
     border: 1px solid #ccc;
     border-radius: 8px;
     padding: 10px; /* Reduced padding to make cards smaller */
-    min-height: 50px; /* Slightly reduced height */
+    min-height: 50px; /* Consistent height for creator cards */
     display: flex; /* Use flex for centering text */
     align-items: center;
     justify-content: center;
@@ -163,7 +162,7 @@ button:active {
 
 .solved-group-row {
     margin-bottom: 15px;
-    padding: 15px;
+    padding: 10px; /* Reduced padding for the holding card */
     border-radius: 8px;
     display: flex;
     flex-direction: column; /* Stack theme and words vertically */
@@ -174,27 +173,29 @@ button:active {
 
 .solved-group-row h3 {
     margin-top: 0;
-    margin-bottom: 10px;
-    font-size: 1.2em;
+    margin-bottom: 8px; /* Reduced margin below theme */
+    font-size: 1.1em; /* Slightly smaller font for theme */
     font-weight: bold;
     color: #333; /* Default theme color */
 }
 
 .solved-cards-wrapper {
-    display: flex;
-    flex-wrap: wrap; /* Allow cards to wrap to next line */
-    justify-content: center;
-    gap: 8px; /* Space between solved cards */
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); /* 4 columns for solved cards */
+    gap: 8px; /* Consistent gap with creator cards */
     width: 100%; /* Take full width of the solved row */
+    padding: 0;
+    box-sizing: border-box;
 }
 
-/* Specific styling for cards within the solved row */
+/* Specific styling for cards within the solved row - now matching creator-word-card */
 .solved-group-row .card {
-    flex: 0 0 auto; /* Don't grow, don't shrink, base on content */
-    width: auto; /* Allow width to be determined by content */
-    padding: 10px 15px; /* Slightly smaller padding for solved cards */
-    font-size: 0.9em;
-    white-space: nowrap; /* Prevent words from breaking */
+    padding: 10px; /* Matching creator-word-card padding */
+    min-height: 50px; /* Matching creator-word-card min-height */
+    font-size: 0.9em; /* Matching creator-word-card font-size */
+    white-space: normal; /* Allow text to wrap if needed */
+    word-break: break-word; /* Ensure long words break */
+    overflow-wrap: break-word; /* For older browsers */
 }
 
 
@@ -342,17 +343,15 @@ button:active {
         grid-template-columns: repeat(2, 1fr); /* 2 columns on smaller screens */
     }
 
-    .creator-words-grid {
-        grid-template-columns: repeat(2, 1fr); /* Revert to 2 columns for creator words on smaller screens */
+    .creator-words-grid,
+    .solved-cards-wrapper { /* Apply 2-column grid to both creator and solved words on small screens */
+        grid-template-columns: repeat(2, 1fr);
     }
 
-    .creator-word-card {
-        padding: 10px;
-        font-size: 0.9em;
-    }
-
-    .solved-group-row .card {
-        padding: 8px 12px;
+    .creator-word-card,
+    .solved-group-row .card { /* Adjust padding/font for smaller cards on small screens */
+        padding: 8px;
         font-size: 0.8em;
+        min-height: 40px;
     }
 }
