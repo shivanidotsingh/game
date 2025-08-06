@@ -55,10 +55,10 @@ input.group-theme {
 
 .creator-words-grid {
     display: grid;
-    grid-template-columns: repeat(2, 1fr); /* 2 columns for words on desktop */
-    gap: 10px; /* Space between word cards */
+    grid-template-columns: repeat(4, 1fr); /* Changed to 4 columns for words on desktop */
+    gap: 8px; /* Slightly reduced space between word cards */
     width: 100%; /* Take full width of parent card */
-    max-width: 400px; /* Limit width to keep cards from getting too wide */
+    /* max-width: 400px; Removed max-width to allow more space for 4 columns */
     margin-left: auto;
     margin-right: auto;
 }
@@ -67,12 +67,12 @@ input.group-theme {
     background-color: #e0e0e0; /* Light grey, similar to game cards */
     border: 1px solid #ccc;
     border-radius: 8px;
-    padding: 15px;
-    min-height: 60px; /* Consistent height */
+    padding: 10px; /* Reduced padding to make cards smaller */
+    min-height: 50px; /* Slightly reduced height */
     display: flex; /* Use flex for centering text */
     align-items: center;
     justify-content: center;
-    font-size: 1em;
+    font-size: 0.9em; /* Slightly smaller font size */
     font-weight: bold;
     /* box-shadow: 0 1px 3px rgba(0,0,0,0.1); */ /* Removed shadow */
     box-sizing: border-box; /* Include padding and border in element's total width */
@@ -343,7 +343,7 @@ button:active {
     }
 
     .creator-words-grid {
-        grid-template-columns: repeat(2, 1fr); /* 2 columns for creator words on smaller screens */
+        grid-template-columns: repeat(2, 1fr); /* Revert to 2 columns for creator words on smaller screens */
     }
 
     .creator-word-card {
