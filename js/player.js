@@ -1,3 +1,5 @@
+// js/player.js
+
 document.addEventListener('DOMContentLoaded', () => {
     console.log("DOM Content Loaded. Player script starting.");
 
@@ -16,7 +18,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const playAgainButton = document.getElementById('play-again-button');
 
     // --- Game State Variables ---
-    let correctGroups = []; // Stores the original grouped words
+    let fullGameData = []; // Stores the original grouped words AND their themes as objects {theme: "", words: []}
+    let correctWordsOnly = []; // Stores ONLY the words for game logic (array of arrays of strings)
     let shuffledWords = []; // Stores all 16 words in shuffled order for the grid
     let cardElements = []; // Stores references to the card DOM elements
     let selectedCards = []; // Stores references to the currently selected card elements
@@ -28,7 +31,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- Add Event Listeners ---
 
     // Listener for the Submit Button
-    // We add this listener here, outside of functions, but within DOMContentLoaded
     console.log("Submit button element found:", submitButton);
     if (submitButton) { // Check if button was found
        submitButton.addEventListener('click', handleSubmitClick);
@@ -58,6 +60,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     /**
      * Loads game data from URL parameter or falls back to localStorage.
+     * Updates fullGameData and correctWordsOnly.
      * @returns {boolean} true if data was successfully loaded and processed, false otherwise.
      */
     function loadGameData() {
@@ -84,17 +87,24 @@ document.addEventListener('DOMContentLoaded', () => {
                 const parsedData = JSON.parse(decodedGameData);
                 console.log("Parsed data:", parsedData);
 
-                // Basic validation to ensure it looks like our game data structure
-                console.log("Checking parsed data structure...");
-                if (Array.isArray(parsedData) && parsedData.length === 4 && parsedData.every(group => Array.isArray(group) && group.length === 4 && group.every(word => typeof word === 'string'))) {
-                     correctGroups = parsedData;
-                     gameDataString = decodedGameData; // Use the decoded string for word collection
-                     console.log("Data structure looks valid.");
+                // Validate and process the new data structure (array of objects {theme, words})
+                console.log("Checking parsed data structure from URL...");
+                if (Array.isArray(parsedData) && parsedData.length === 4 &&
+                    parsedData.every(groupObj =>
+                        typeof groupObj === 'object' && groupObj !== null &&
+                        typeof groupObj.theme === 'string' && groupObj.theme.trim() !== '' &&
+                        Array.isArray(groupObj.words) && groupObj.words.length === 4 &&
+                        groupObj.words.every(word => typeof word === 'string' && word.trim() !== '')
+                    )
+                ) {
+                    fullGameData = parsedData; // Store the full data including themes
+                    correctWordsOnly = fullGameData.map(groupObj => groupObj.words); // Extract only words for game logic
+                    console.log("Data structure from URL looks valid.");
                 } else {
-                     console.error("Invalid game data structure found in URL.");
-                     if(messageArea) messageArea.textContent = 'Error loading game data from link: Invalid format.';
-                     if(submitButton) submitButton.disabled = true;
-                     return false;
+                    console.error("Invalid game data structure found in URL.");
+                    if(messageArea) messageArea.textContent = 'Error loading game data from link: Invalid format.';
+                    if(submitButton) submitButton.disabled = true;
+                    return false;
                 }
 
             } catch (e) {
@@ -118,15 +128,25 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             try {
-                 correctGroups = JSON.parse(gameDataString);
-                 // Basic validation for localStorage data too
-                 if (!Array.isArray(correctGroups) || correctGroups.length !== 4 || !correctGroups.every(group => Array.isArray(group) && group.length === 4 && group.every(word => typeof word === 'string'))) {
-                      console.error("Invalid game data structure found in localStorage.");
-                      if(messageArea) messageArea.textContent = 'Error loading game data from localStorage: Invalid format.';
-                      if(submitButton) submitButton.disabled = true;
-                      return false;
-                 }
-                 console.log("Game data loaded successfully from localStorage.");
+                const parsedData = JSON.parse(gameDataString);
+                // Validate and process the new data structure from localStorage too
+                if (Array.isArray(parsedData) && parsedData.length === 4 &&
+                    parsedData.every(groupObj =>
+                        typeof groupObj === 'object' && groupObj !== null &&
+                        typeof groupObj.theme === 'string' && groupObj.theme.trim() !== '' &&
+                        Array.isArray(groupObj.words) && groupObj.words.length === 4 &&
+                        groupObj.words.every(word => typeof word === 'string' && word.trim() !== '')
+                    )
+                ) {
+                    fullGameData = parsedData;
+                    correctWordsOnly = fullGameData.map(groupObj => groupObj.words);
+                    console.log("Game data loaded successfully from localStorage.");
+                } else {
+                    console.error("Invalid game data structure found in localStorage.");
+                    if(messageArea) messageArea.textContent = 'Error loading game data from localStorage: Invalid format.';
+                    if(submitButton) submitButton.disabled = true;
+                    return false;
+                }
 
             } catch (e) {
                  console.error("Failed to parse game data from localStorage:", e);
@@ -137,10 +157,10 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
 
-        // If we reached here, correctGroups should be populated correctly
-        if(correctGroups && correctGroups.length === 4) { // Ensure it's the correct structure
+        // If we reached here, fullGameData and correctWordsOnly should be populated
+        if(fullGameData && fullGameData.length === 4) {
              let allWords = [];
-             correctGroups.forEach(group => {
+             correctWordsOnly.forEach(group => { // Use correctWordsOnly for collecting all words
                  allWords = allWords.concat(group);
              });
              if (allWords.length !== 16) {
@@ -153,7 +173,7 @@ document.addEventListener('DOMContentLoaded', () => {
              console.log("Shuffled words generated.");
              return true; // Data loaded and processed successfully
         } else {
-            console.error("correctGroups is not correctly populated after loading attempt.");
+            console.error("fullGameData is not correctly populated after loading attempt.");
             if(messageArea) messageArea.textContent = 'Failed to process game data.';
             if(submitButton) submitButton.disabled = true;
             return false;
@@ -242,8 +262,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const selectedWords = selectedCards.map(card => card.dataset.word);
         console.log("Selected words for checking:", selectedWords);
 
-        // Call the checkSelection function from game.js
-        const checkResult = checkSelection(selectedWords, correctGroups, solvedGroupIndexes);
+        // Call the checkSelection function from game.js, passing only the words
+        const checkResult = checkSelection(selectedWords, correctWordsOnly, solvedGroupIndexes);
         console.log("Result from checkSelection:", checkResult);
 
         switch (checkResult.type) {
@@ -284,10 +304,10 @@ document.addEventListener('DOMContentLoaded', () => {
         solvedGroupIndexes.push(groupIndex);
         solvedGroupIndexes.sort((a, b) => a - b); // Keep solved groups sorted by original index
 
-        // Get the theme/words for the solved group from original data
-        const groupWords = correctGroups[groupIndex];
-        // Example: show the words as a "theme" - you could make a separate theme input in creator.html later
-        const groupTheme = groupWords.join(', ');
+        // Get the theme and words for the solved group from fullGameData
+        const solvedGroup = fullGameData[groupIndex];
+        const groupTheme = solvedGroup.theme;
+        const groupWords = solvedGroup.words; // Get the words for display if needed
         messageArea.textContent = `Correct! ${groupTheme}`;
 
 
@@ -304,15 +324,13 @@ document.addEventListener('DOMContentLoaded', () => {
         selectedCards = [];
 
         // Move solved cards to the solved area
-        // This part needs more sophisticated layout logic for a clean "move to top" animation/effect.
-        // For now, we'll create a container for the row and move the DOM elements.
         const solvedGroupContainer = document.createElement('div');
         solvedGroupContainer.classList.add('solved-group-row'); // Style this in CSS
         solvedGroupContainer.dataset.groupIndex = groupIndex; // Store group index
 
         // Add theme/title
         const themeTitle = document.createElement('h3');
-        themeTitle.textContent = `Group ${groupIndex + 1}: ${groupTheme}`; // Display group number and theme
+        themeTitle.textContent = groupTheme; // Display the actual theme
         solvedGroupContainer.appendChild(themeTitle);
 
 
@@ -345,23 +363,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
         // Re-arrange the remaining cards in the grid visually (simple approach: hide moved ones)
-        // A more complex approach would involve re-rendering the grid or updating grid layout CSS
          cardElements.forEach(card => {
              if (card.classList.contains('solved')) {
                  card.style.display = 'none'; // Hide solved cards from the main grid area
              }
          });
 
-         // Optional: Could regenerate the grid HTML here with only unsolved words
-         // Or use CSS Grid manipulation to fill gaps
-
          // After cards are moved/hidden, clear the message area after a brief delay
          setTimeout(() => {
               messageArea.textContent = '';
          }, 1500); // Clear message after 1.5 seconds
-
-        // submitButton.disabled = true; // This was already disabled at start of handleSubmitClick
-                                       // It will be re-enabled by handleCardClick once 4 new cards are selected
     }
 
 
@@ -381,7 +392,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         // Remove vibration class and deselect after animation
-        // Match the duration of the vibration CSS animation (e.g., 300ms = 0.3s)
         const animationDuration = 300; // Should match CSS animation-duration
         setTimeout(() => {
             selectedCards.forEach(card => {
@@ -392,13 +402,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
              // Keep the try count message visible for a bit longer
              setTimeout(() => {
-                 if (messageArea.textContent.startsWith('Try again')) { // Only clear if it's still the 'Try again' message
+                 if (messageArea.textContent.startsWith('Try again')) {
                      messageArea.textContent = '';
                  }
              }, 1000); // Clear message after 1 second
         }, animationDuration);
-
-
     }
 
     /**
@@ -406,11 +414,10 @@ document.addEventListener('DOMContentLoaded', () => {
      */
     function deselectAllCards() {
         console.log("Deselecting all cards.");
-        cardElements.forEach(card => { // Iterate through all cards, not just currently selected
+        cardElements.forEach(card => {
              card.classList.remove('selected');
         });
-        selectedCards = []; // Clear the array
-         // messageArea.textContent = ''; // Message is cleared by the handlers after timeout
+        selectedCards = [];
     }
 
     /**
@@ -418,8 +425,7 @@ document.addEventListener('DOMContentLoaded', () => {
      */
     function checkGameOver() {
         console.log("Checking if game is over. Solved:", solvedGroupIndexes.length, "Tries:", tries);
-        // Game is over if all groups are solved OR user runs out of tries
-        if (solvedGroupIndexes.length === correctGroups.length) {
+        if (solvedGroupIndexes.length === fullGameData.length) { // Use fullGameData.length for total groups
             console.log("Game Over: All groups solved!");
             endGame(true); // Win
         } else if (tries >= maxTries) {
@@ -427,10 +433,6 @@ document.addEventListener('DOMContentLoaded', () => {
             endGame(false); // Lose (run out of tries)
         } else {
              console.log("Game not over yet.");
-             // If game is not over and it was an incorrect guess,
-             // the deselectAllCards() and button disable handled it.
-             // If it was a correct guess, the handler also disabled button.
-             // The button will be re-enabled by handleCardClick when 4 cards are selected.
         }
     }
 
@@ -440,9 +442,9 @@ document.addEventListener('DOMContentLoaded', () => {
      */
     function endGame(isWin) {
         console.log("Ending game. Win status:", isWin);
-        if(submitButton) submitButton.disabled = true; // Ensure button is disabled
-        if(gameGrid) gameGrid.style.pointerEvents = 'none'; // Disable clicks on remaining cards
-        if(messageArea) messageArea.textContent = ''; // Clear any lingering message
+        if(submitButton) submitButton.disabled = true;
+        if(gameGrid) gameGrid.style.pointerEvents = 'none';
+        if(messageArea) messageArea.textContent = '';
 
         if (modal) {
             if (isWin) {
@@ -452,10 +454,10 @@ document.addEventListener('DOMContentLoaded', () => {
             } else {
                  if(modalTitle) modalTitle.textContent = "Game Over!";
                  if(modalMessage) modalMessage.textContent = "You ran out of tries.";
-                 if(modalTries) modalTries.textContent = "Keep practicing!"; // Or reveal groups later
+                 if(modalTries) modalTries.textContent = "Keep practicing!";
                  // Optional: Reveal remaining groups visually here
             }
-             modal.style.display = "block"; // Show the modal
+             modal.style.display = "block";
              console.log("Game Over modal shown.");
         } else {
              console.error("Game over modal element not found!");
@@ -466,13 +468,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     // --- Initial Game Setup on Load ---
-    // This runs once when the player.html page finishes loading DOM content.
-    if (loadGameData()) { // Attempt to load data (from URL or localStorage)
-         renderGrid(); // If data loaded successfully, render the grid
-         if(submitButton) submitButton.disabled = true; // Disable submit initially
+    if (loadGameData()) {
+         renderGrid();
+         if(submitButton) submitButton.disabled = true;
     } else {
          console.log("Game data not loaded. Game not started.");
-         // loadGameData already sets messageArea and disables button on failure
     }
 
 }); // End of DOMContentLoaded listener
