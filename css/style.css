@@ -12,7 +12,7 @@ body {
     padding: 20px;
     background-color: #fff;
     border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    /* box-shadow: 0 2px 10px rgba(0,0,0,0.1); */ /* Removed shadow */
 }
 
 h1, h2 {
@@ -27,40 +27,65 @@ h1, h2 {
     border-radius: 8px;
     padding: 20px;
     margin-bottom: 20px;
-    box-shadow: 0 1px 5px rgba(0,0,0,0.05);
+    /* box-shadow: 0 1px 5px rgba(0,0,0,0.05); */ /* Removed shadow */
+    display: flex; /* Use flexbox for internal layout */
+    flex-direction: column; /* Stack theme and words vertically */
+    align-items: center; /* Center content horizontally */
 }
 
-.group-inputs {
-    margin-bottom: 15px;
-    text-align: left;
-}
+/* No specific label style needed for theme-label as it's removed from HTML */
 
-.group-inputs label {
-    display: block;
-    margin-bottom: 5px;
-    font-weight: bold;
-    color: #555;
-    font-size: 0.9em;
-}
-
-.group-inputs input[type="text"] {
-    width: calc(25% - 12px); /* Roughly four inputs per line with spacing */
-    padding: 10px;
-    margin: 4px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    box-sizing: border-box; /* Include padding and border in element's total width */
-    font-size: 1em;
-}
-
-/* Specific style for the theme input to make it stand out */
 input.group-theme {
-    width: calc(100% - 8px); /* Full width minus margin */
-    margin-bottom: 15px;
+    width: calc(100% - 20px); /* Full width minus padding */
+    padding: 15px; /* Larger padding for prominence */
+    margin-bottom: 20px; /* More space below theme input */
     font-weight: bold;
     color: #007bff;
-    border-color: #007bff;
+    border: 2px solid #007bff; /* More prominent border */
+    border-radius: 8px; /* Rounded corners */
+    font-size: 1.1em; /* Larger font size */
+    text-align: center; /* Center text within input */
+    box-sizing: border-box;
+    /* Style for placeholder text */
+    &::placeholder {
+        color: #007bff;
+        opacity: 0.7;
+    }
 }
+
+.creator-words-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* 2 columns for words on desktop */
+    gap: 10px; /* Space between word cards */
+    width: 100%; /* Take full width of parent card */
+    max-width: 400px; /* Limit width to keep cards from getting too wide */
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.creator-word-card {
+    background-color: #e0e0e0; /* Light grey, similar to game cards */
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 15px;
+    min-height: 60px; /* Consistent height */
+    display: flex; /* Use flex for centering text */
+    align-items: center;
+    justify-content: center;
+    font-size: 1em;
+    font-weight: bold;
+    /* box-shadow: 0 1px 3px rgba(0,0,0,0.1); */ /* Removed shadow */
+    box-sizing: border-box; /* Include padding and border in element's total width */
+    text-align: center; /* Ensure text is centered within the input */
+    transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.creator-word-card:focus {
+    outline: none;
+    border-color: #007bff; /* Highlight on focus */
+    /* box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25); */ /* Removed shadow */
+}
+
 
 button {
     padding: 12px 25px;
@@ -107,7 +132,7 @@ button:active {
     cursor: pointer;
     transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.1s ease;
     user-select: none; /* Prevent text selection */
-    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    /* box-shadow: 0 1px 3px rgba(0,0,0,0.1); */ /* Removed shadow */
 }
 
 .card:hover {
@@ -118,12 +143,12 @@ button:active {
 .card.selected {
     background-color: #a0c0ff; /* A light blue for selected cards */
     border-color: #007bff;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    /* box-shadow: 0 2px 5px rgba(0,0,0,0.2); */ /* Removed shadow */
 }
 
 .card.solved {
     cursor: default;
-    box-shadow: none;
+    box-shadow: none; /* Keep this to explicitly remove any inherited shadows */
     background-color: #f0f0f0; /* Default solved background, will be overridden by color classes */
     border-color: #ccc; /* Default solved border, will be overridden by color classes */
     color: #333;
@@ -143,7 +168,7 @@ button:active {
     display: flex;
     flex-direction: column; /* Stack theme and words vertically */
     align-items: center;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    /* box-shadow: 0 2px 8px rgba(0,0,0,0.1); */ /* Removed shadow */
     transition: background-color 0.3s ease;
 }
 
@@ -267,7 +292,7 @@ button:active {
     width: 80%; /* Could be more specific */
     max-width: 400px;
     text-align: center;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    /* box-shadow: 0 5px 15px rgba(0,0,0,0.3); */ /* Removed shadow */
     position: relative; /* Needed for the close button positioning */
 }
 
@@ -317,11 +342,11 @@ button:active {
         grid-template-columns: repeat(2, 1fr); /* 2 columns on smaller screens */
     }
 
-    .group-inputs input[type="text"] {
-        width: calc(50% - 8px); /* 2 inputs per line on smaller screens */
+    .creator-words-grid {
+        grid-template-columns: repeat(2, 1fr); /* 2 columns for creator words on smaller screens */
     }
 
-    .card {
+    .creator-word-card {
         padding: 10px;
         font-size: 0.9em;
     }
