@@ -3,30 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Play Connections Game</title>
+    <title>Play</title>
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
     <div class="container">
+
         <div id="solved-groups-area">
-            </div>
+        </div>
 
         <div id="game-grid" class="game-grid">
-            </div>
+        </div>
 
         <div id="message-area">
-            </div>
+        </div>
 
         <button id="submit-button">Submit</button>
 
-        <div id="gameOverModal" class="modal">
-            <div class="modal-content">
-                <span class="close">&times;</span>
-                <h2 id="modal-title">Congratulations!</h2>
-                <p id="modal-message"></p>
-                <p id="modal-tries"></p>
-                <button id="play-again-button">Create Another Game</button>
-            </div>
+        <!-- Removed the entire gameOverModal structure -->
+
+        <div id="end-game-message-container" style="display: none; margin-top: 20px;">
+            <p id="end-game-emoji" style="font-size: 3em; margin-bottom: 10px;"></p>
+            <p id="end-game-text" style="font-size: 1.2em; font-weight: bold;"></p>
+            <button id="play-again-button" style="margin-top: 15px;">Create Another Game</button>
         </div>
 
     </div>
