@@ -2,23 +2,36 @@ body {
     font-family: 'Helvetica', sans-serif;
     margin: 20px;
     text-align: center;
+    background-color: #f4f4f4; /* Light background for the whole page */
+    color: #333;
 }
 
 .container {
     max-width: 800px;
     margin: 0 auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
 }
 
 h1, h2 {
     color: #333;
+    margin-bottom: 20px;
 }
 
 /* Creator Page Styles */
-.group-inputs {
+.creator-group-card {
+    background-color: #f9f9f9; /* Slightly off-white background for the card */
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 20px;
     margin-bottom: 20px;
-    padding: 15px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
+    box-shadow: 0 1px 5px rgba(0,0,0,0.05);
+}
+
+.group-inputs {
+    margin-bottom: 15px;
     text-align: left;
 }
 
@@ -26,194 +39,207 @@ h1, h2 {
     display: block;
     margin-bottom: 5px;
     font-weight: bold;
+    color: #555;
+    font-size: 0.9em;
 }
 
 .group-inputs input[type="text"] {
     width: calc(25% - 12px); /* Roughly four inputs per line with spacing */
-    padding: 8px;
+    padding: 10px;
     margin: 4px;
-    border: 1px solid #ddd;
-    border-radius: 3px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
     box-sizing: border-box; /* Include padding and border in element's total width */
+    font-size: 1em;
+}
+
+/* Specific style for the theme input to make it stand out */
+input.group-theme {
+    width: calc(100% - 8px); /* Full width minus margin */
+    margin-bottom: 15px;
+    font-weight: bold;
+    color: #007bff;
+    border-color: #007bff;
 }
 
 button {
-    padding: 10px 20px;
+    padding: 12px 25px;
     background-color: #007bff;
     color: white;
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    font-size: 1em;
-    margin-top: 10px;
+    font-size: 1.1em;
+    margin-top: 20px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
 button:hover {
     background-color: #0056b3;
+    transform: translateY(-2px);
 }
 
-/* Player Page Styles (Initial) */
+button:active {
+    transform: translateY(0);
+}
+
+
+/* Player Page Styles */
 .game-grid {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 10px;
+    grid-template-columns: repeat(4, 1fr); /* 4 columns */
+    gap: 10px; /* Space between cards */
     margin-top: 20px;
+    margin-bottom: 20px;
 }
 
 .card {
-    background-color: #f0f0f0;
+    background-color: #e0e0e0;
     border: 1px solid #ccc;
-    border-radius: 5px;
-    
-    /* Adjusted padding and height for slightly larger cards */
-    padding: 20px 10px; /* Increased padding */
-    height: 80px; /* Increased height */
-
-    text-align: center;
+    border-radius: 8px;
+    padding: 15px;
+    min-height: 60px; /* Ensure consistent height */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1em;
+    font-weight: bold;
     cursor: pointer;
+    transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.1s ease;
     user-select: none; /* Prevent text selection */
-    word-break: break-word; /* Break long words */
-    overflow: hidden; /* Hide overflow if word is too long */
-
-    display: flex; /* Use flexbox to center text vertically */
-    justify-content: center; /* Center text horizontally */
-    align-items: center; /* Center text vertically */
-
-    /* Font adjustments */
-    font-size: 1em; /* Made font larger */
-    font-weight: bold; /* Made font bolder */
-    text-transform: uppercase; /* Made text uppercase */
-    letter-spacing: 0.5px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
 }
 
 .card:hover {
-    background-color: #e9e9e9;
+    background-color: #d0d0d0;
+    border-color: #bbb;
 }
 
 .card.selected {
-    background-color: #a0d2eb; /* Highlight selected cards */
+    background-color: #a0c0ff; /* A light blue for selected cards */
     border-color: #007bff;
-}
-
-/* Placeholder for correct/solved styles later */
-.card.solved {
-    /* Styles for correctly guessed cards */
-}
-
-/* Placeholder for incorrect/vibrate animation later */
-.card.vibrate {
-    /* Animation will be added here */
-}
-
-#message-area {
-    margin-top: 20px;
-    min-height: 1.5em; /* Reserve space */
-    font-weight: bold;
-}
-
-#submit-button {
-    margin-top: 20px;
-}
-
-/* Game Over Modal (Basic) */
-.modal {
-    display: none; /* Hidden by default */
-    position: fixed; /* Stay in place */
-    z-index: 1; /* Sit on top */
-    left: 0;
-    top: 0;
-    width: 100%; /* Full width */
-    height: 100%; /* Full height */
-    overflow: auto; /* Enable scroll if needed */
-    background-color: rgb(0,0,0); /* Fallback color */
-    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
-}
-
-.modal-content {
-    background-color: #fefefe;
-    margin: 15% auto; /* 15% from the top and centered */
-    padding: 20px;
-    border: 1px solid #888;
-    border-radius: 10px;
-    width: 80%; /* Could be more specific */
-    max-width: 400px;
-    text-align: center;
-}
-
-.close {
-    color: #aaa;
-    float: right;
-    font-size: 28px;
-    font-weight: bold;
-}
-
-.close:hover,
-.close:focus {
-    color: black;
-    text-decoration: none;
-    cursor: pointer;
-}
-
-/* ... (previous styles) ... */
-
-/* Player Page Styles */
-
-/* ... (initial player styles like .game-grid, .card) ... */
-
-.card.selected {
-    background-color: #a0d2eb; /* Highlight selected cards */
-    border-color: #007bff;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
 }
 
 .card.solved {
-    background-color: #e0e0e0; /* Neutral background for solved cards */
-    border: 1px solid #bbb;
-    cursor: default; /* Change cursor */
+    cursor: default;
+    box-shadow: none;
+    background-color: #f0f0f0; /* Default solved background, will be overridden by color classes */
+    border-color: #ccc; /* Default solved border, will be overridden by color classes */
+    color: #333;
 }
 
-/* Style for the row of solved cards */
+/* Solved Groups Area */
+#solved-groups-area {
+    margin-top: 30px;
+    border-top: 1px solid #eee;
+    padding-top: 20px;
+}
+
 .solved-group-row {
-    display: flex; /* Arrange solved cards in a row */
-    gap: 10px; /* Same gap as grid */
-    margin-bottom: 15px; /* Space between solved rows */
-    padding: 10px;
-    background-color: #f9f9f9;
-    border-radius: 5px;
-    align-items: center; /* Vertically center items */
-    flex-wrap: wrap; /* Allow wrapping if screen is very narrow */
+    margin-bottom: 15px;
+    padding: 15px;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column; /* Stack theme and words vertically */
+    align-items: center;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    transition: background-color 0.3s ease;
 }
 
 .solved-group-row h3 {
-    margin: 0 10px 0 0; /* Space after the group title */
-    font-size: 1em;
-    color: #555;
+    margin-top: 0;
+    margin-bottom: 10px;
+    font-size: 1.2em;
+    font-weight: bold;
+    color: #333; /* Default theme color */
 }
 
+.solved-cards-wrapper {
+    display: flex;
+    flex-wrap: wrap; /* Allow cards to wrap to next line */
+    justify-content: center;
+    gap: 8px; /* Space between solved cards */
+    width: 100%; /* Take full width of the solved row */
+}
+
+/* Specific styling for cards within the solved row */
 .solved-group-row .card {
-    /* Styles for cards within the solved row */
-    flex-basis: calc(25% - 15px); /* Attempt to make them roughly same width */
-    height: auto; /* Allow height to adjust */
-    padding: 8px; /* Smaller padding in solved row */
-    box-sizing: border-box;
-    font-size: 0.85em; /* Slightly smaller font */
-    background-color: inherit; /* Inherit background from solved-group-row */
-    border: 1px dashed #ccc; /* Different border */
+    flex: 0 0 auto; /* Don't grow, don't shrink, base on content */
+    width: auto; /* Allow width to be determined by content */
+    padding: 10px 15px; /* Slightly smaller padding for solved cards */
+    font-size: 0.9em;
+    white-space: nowrap; /* Prevent words from breaking */
 }
 
 
-/* Vibration Animation for Incorrect Guess */
-@keyframes vibrate {
-    0% { transform: translateX(0); }
-    25% { transform: translateX(-5px); }
-    50% { transform: translateX(5px); }
-    75% { transform: translateX(-5px); }
-    100% { transform: translateX(0); }
+/* Color-coding for solved groups and cards */
+
+/* Yellow Group */
+.solved-group-yellow {
+    background-color: #fffacd; /* Lemon Chiffon */
+    border-color: #ffd700; /* Gold */
+}
+.solved-group-yellow h3 {
+    color: #b8860b; /* DarkGoldenrod */
+}
+.card-solved-yellow {
+    background-color: #ffd700; /* Gold */
+    border-color: #daa520; /* Goldenrod */
+    color: #333;
 }
 
-.card.vibrate {
-    animation: vibrate 0.3s ease-in-out; /* Apply the animation */
+/* Green Group */
+.solved-group-green {
+    background-color: #e0ffe0; /* Light Green */
+    border-color: #32cd32; /* LimeGreen */
+}
+.solved-group-green h3 {
+    color: #228b22; /* ForestGreen */
+}
+.card-solved-green {
+    background-color: #32cd32; /* LimeGreen */
+    border-color: #2e8b57; /* SeaGreen */
+    color: #fff;
 }
 
+/* Blue Group */
+.solved-group-blue {
+    background-color: #e0f2ff; /* Light Blue */
+    border-color: #4682b4; /* SteelBlue */
+}
+.solved-group-blue h3 {
+    color: #191970; /* MidnightBlue */
+}
+.card-solved-blue {
+    background-color: #4682b4; /* SteelBlue */
+    border-color: #6a5acd; /* SlateBlue */
+    color: #fff;
+}
+
+/* Purple Group */
+.solved-group-purple {
+    background-color: #f5e0ff; /* Light Purple */
+    border-color: #8a2be2; /* BlueViolet */
+}
+.solved-group-purple h3 {
+    color: #4b0082; /* Indigo */
+}
+.card-solved-purple {
+    background-color: #8a2be2; /* BlueViolet */
+    border-color: #9370db; /* MediumPurple */
+    color: #fff;
+}
+
+
+/* Message Area */
+#message-area {
+    margin-top: 15px;
+    font-size: 1.1em;
+    font-weight: bold;
+    color: #d9534f; /* Red for errors/feedback */
+    min-height: 25px; /* Prevent layout shift */
+}
 
 /* Game Over Modal (Basic) */
 .modal {
@@ -227,11 +253,14 @@ button:hover {
     overflow: auto; /* Enable scroll if needed */
     background-color: rgba(0,0,0,0.7); /* Black background with opacity */
     backdrop-filter: blur(5px); /* Optional: blur background */
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .modal-content {
     background-color: #fefefedb; /* Slightly transparent white */
-    margin: 15% auto; /* 15% from the top and centered */
+    margin: auto; /* Centered */
     padding: 30px;
     border: 1px solid #888;
     border-radius: 10px;
@@ -252,29 +281,53 @@ button:hover {
     color: #555;
 }
 
-.close {
+.modal .close {
     color: #aaa;
     position: absolute;
     top: 10px;
-    right: 10px;
+    right: 15px;
     font-size: 28px;
     font-weight: bold;
     cursor: pointer;
 }
 
-.close:hover,
-.close:focus {
+.modal .close:hover,
+.modal .close:focus {
     color: #333;
     text-decoration: none;
+    cursor: pointer;
 }
 
-#play-again-button {
-    margin-top: 20px;
-    /* Inherits button styles */
+/* Vibration animation for incorrect guesses */
+@keyframes vibrate {
+    0% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    50% { transform: translateX(5px); }
+    75% { transform: translateX(-5px); }
+    100% { transform: translateX(0); }
 }
 
-/* Optional: Style for areas that get disabled */
-#game-grid.disabled {
-     pointer-events: none;
-     opacity: 0.8;
+.vibrate {
+    animation: vibrate 0.3s ease-in-out; /* Apply the animation */
+}
+
+/* Responsive adjustments */
+@media (max-width: 600px) {
+    .game-grid {
+        grid-template-columns: repeat(2, 1fr); /* 2 columns on smaller screens */
+    }
+
+    .group-inputs input[type="text"] {
+        width: calc(50% - 8px); /* 2 inputs per line on smaller screens */
+    }
+
+    .card {
+        padding: 10px;
+        font-size: 0.9em;
+    }
+
+    .solved-group-row .card {
+        padding: 8px 12px;
+        font-size: 0.8em;
+    }
 }
