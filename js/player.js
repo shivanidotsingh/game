@@ -68,10 +68,15 @@ document.addEventListener('DOMContentLoaded', () => {
      * @returns {boolean} true if data was successfully loaded and processed, false otherwise.
      */
     function loadGameData() {
-        let gameDataString = null;
+        // Reset game state variables for a fresh start
+        solvedGroupIndexes = []; // Reset solved groups
+        tries = 0;             // Reset tries count
+
+        let gameDataToParse = null;
+        let loadedFromUrl = false;
         console.log("Attempting to load game data.");
 
-        // 1. Check for data in the URL query parameter
+        // 1. Check for data in the URL query parameter first and prioritize it
         const urlParams = new URLSearchParams(window.location.search);
         const encodedGameDataFromUrl = urlParams.get('gameData');
 
@@ -79,20 +84,50 @@ document.addEventListener('DOMContentLoaded', () => {
         console.log("Value of 'gameData' parameter:", encodedGameDataFromUrl);
 
         if (encodedGameDataFromUrl) {
-            console.log("Found game data in URL.");
+            console.log("Found game data in URL. Prioritizing URL data.");
             try {
                 // Decode from Base64
                 console.log("Attempting to decode Base64...");
                 const decodedGameData = atob(encodedGameDataFromUrl);
                 console.log("Decoded data:", decodedGameData);
+                gameDataToParse = decodedGameData;
+                loadedFromUrl = true;
 
-                // Parse the JSON string
+                // Clear localStorage if data is successfully loaded from URL
+                // This prevents stale data from being loaded if user navigates directly to player.html later
+                localStorage.removeItem('connectionsGameData');
+                console.log("Cleared localStorage 'connectionsGameData' as URL data was found.");
+
+            } catch (e) {
+                console.error("Failed to decode game data from URL:", e);
+                if(messageArea) messageArea.textContent = 'Error loading game data from link.';
+                if(submitButton) submitButton.disabled = true;
+                return false;
+            }
+        } else {
+            // 2. If no data in URL, fall back to localStorage
+            console.log("No 'gameData' parameter in URL. Checking localStorage.");
+            gameDataToParse = localStorage.getItem('connectionsGameData');
+
+            if (!gameDataToParse) {
+                // Handle case where no game data is found anywhere
+                console.log("No game data found in localStorage either.");
+                if(messageArea) messageArea.textContent = 'No game data found. Please create a game first.';
+                if(submitButton) submitButton.disabled = true;
+                return false;
+            }
+            console.log("Game data found in localStorage.");
+        }
+
+        // Now, parse the gameDataToParse (either from URL or localStorage)
+        if (gameDataToParse) {
+            try {
                 console.log("Attempting to parse JSON...");
-                const parsedData = JSON.parse(decodedGameData);
+                const parsedData = JSON.parse(gameDataToParse);
                 console.log("Parsed data:", parsedData);
 
                 // Validate and process the new data structure (array of objects {theme, words})
-                console.log("Checking parsed data structure from URL...");
+                console.log("Checking parsed data structure...");
                 if (Array.isArray(parsedData) && parsedData.length === 4 &&
                     parsedData.every(groupObj =>
                         typeof groupObj === 'object' && groupObj !== null &&
@@ -103,61 +138,26 @@ document.addEventListener('DOMContentLoaded', () => {
                 ) {
                     fullGameData = parsedData; // Store the full data including themes
                     correctWordsOnly = fullGameData.map(groupObj => groupObj.words); // Extract only words for game logic
-                    console.log("Data structure from URL looks valid.");
+                    console.log("Data structure looks valid.");
                 } else {
-                    console.error("Invalid game data structure found in URL.");
-                    if(messageArea) messageArea.textContent = 'Error loading game data from link: Invalid format.';
+                    console.error("Invalid game data structure.");
+                    if(messageArea) messageArea.textContent = 'Error loading game data: Invalid format.';
                     if(submitButton) submitButton.disabled = true;
                     return false;
                 }
 
             } catch (e) {
-                console.error("Failed to decode or parse game data from URL:", e);
-                if(messageArea) messageArea.textContent = 'Error loading game data from link.';
+                console.error("Failed to parse game data:", e);
+                if(messageArea) messageArea.textContent = 'Error loading game data.';
                 if(submitButton) submitButton.disabled = true;
                 return false;
             }
-
         } else {
-            // 2. If no data in URL, fall back to localStorage
-            console.log("No 'gameData' parameter in URL. Checking localStorage.");
-            gameDataString = localStorage.getItem('connectionsGameData');
-
-            if (!gameDataString) {
-                // Handle case where no game data is found anywhere
-                console.log("No game data found in localStorage either.");
-                if(messageArea) messageArea.textContent = 'No game data found. Please create a game first.';
-                if(submitButton) submitButton.disabled = true;
-                return false;
-            }
-
-            try {
-                const parsedData = JSON.parse(gameDataString);
-                // Validate and process the new data structure from localStorage too
-                if (Array.isArray(parsedData) && parsedData.length === 4 &&
-                    parsedData.every(groupObj =>
-                        typeof groupObj === 'object' && groupObj !== null &&
-                        typeof groupObj.theme === 'string' && groupObj.theme.trim() !== '' &&
-                        Array.isArray(groupObj.words) && groupObj.words.length === 4 &&
-                        groupObj.words.every(word => typeof word === 'string' && word.trim() !== '')
-                    )
-                ) {
-                    fullGameData = parsedData;
-                    correctWordsOnly = fullGameData.map(groupObj => groupObj.words);
-                    console.log("Game data loaded successfully from localStorage.");
-                } else {
-                    console.error("Invalid game data structure found in localStorage.");
-                    if(messageArea) messageArea.textContent = 'Error loading game data from localStorage: Invalid format.';
-                    if(submitButton) submitButton.disabled = true;
-                    return false;
-                }
-
-            } catch (e) {
-                 console.error("Failed to parse game data from localStorage:", e);
-                 if(messageArea) messageArea.textContent = 'Error loading game data from localStorage.';
-                 if(submitButton) submitButton.disabled = true;
-                 return false;
-            }
+            // This case should ideally be caught by the initial checks
+            console.error("No game data to parse.");
+            if(messageArea) messageArea.textContent = 'No game data found.';
+            if(submitButton) submitButton.disabled = true;
+            return false;
         }
 
 
