@@ -449,7 +449,7 @@ document.addEventListener('DOMContentLoaded', () => {
      * Checks if the game is over (all groups solved or run out of tries).
      */
     function checkGameOver() {
-        console.log("Checking if game is over. Solved:", solvedGroupIndexes.length, "Tries:", tries);
+        console.log("Checking if game is over. Solved groups:", solvedGroupIndexes.length, "Total groups:", fullGameData.length, "Tries:", tries);
         if (solvedGroupIndexes.length === fullGameData.length) { // Use fullGameData.length for total groups
             console.log("Game Over: All groups solved!");
             endGame(true); // Win
@@ -498,6 +498,10 @@ document.addEventListener('DOMContentLoaded', () => {
     if (loadGameData()) {
          renderGrid();
          if(submitButton) submitButton.disabled = true;
+         // Add a log here to check initial state after loadGameData and renderGrid
+         console.log("Initial game state: solvedGroupIndexes.length =", solvedGroupIndexes.length, "fullGameData.length =", fullGameData.length, "tries =", tries);
+         // Crucially, ensure checkGameOver is NOT called here unless explicitly intended for a specific game start condition.
+         // It should only be called after user interaction (submit or incorrect guess).
     } else {
          console.log("Game data not loaded. Game not started.");
          // loadGameData already sets messageArea and disables button on failure
