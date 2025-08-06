@@ -27,6 +27,10 @@ document.addEventListener('DOMContentLoaded', () => {
     let tries = 0;
     const maxTries = 4; // Standard Connections game allows 4 mistakes
 
+    // Define colors for each group, corresponding to NYT Connections difficulty (Yellow, Green, Blue, Purple)
+    // These will be used as CSS class suffixes
+    const groupColorClasses = ['yellow', 'green', 'blue', 'purple'];
+
 
     // --- Add Event Listeners ---
 
@@ -311,22 +315,14 @@ document.addEventListener('DOMContentLoaded', () => {
         messageArea.textContent = `Correct! ${groupTheme}`;
 
 
-        // Mark selected cards as solved and add solved class
-        const cardsToMove = [];
-        selectedCards.forEach(card => {
-            card.classList.remove('selected'); // Remove selected state
-            card.classList.add('solved'); // Add solved state class
-            card.removeEventListener('click', handleCardClick); // Make solved cards non-clickable
-            cardsToMove.push(card); // Collect cards to move
-        });
-
-        // Clear selected cards array
-        selectedCards = [];
-
-        // Move solved cards to the solved area
+        // Create the container for the solved group row
         const solvedGroupContainer = document.createElement('div');
-        solvedGroupContainer.classList.add('solved-group-row'); // Style this in CSS
-        solvedGroupContainer.dataset.groupIndex = groupIndex; // Store group index
+        solvedGroupContainer.classList.add('solved-group-row');
+        solvedGroupContainer.dataset.groupIndex = groupIndex;
+
+        // Add the color class based on the group index
+        solvedGroupContainer.classList.add(`solved-group-${groupColorClasses[groupIndex]}`);
+
 
         // Add theme/title
         const themeTitle = document.createElement('h3');
@@ -334,18 +330,39 @@ document.addEventListener('DOMContentLoaded', () => {
         solvedGroupContainer.appendChild(themeTitle);
 
 
-         // Sort the cards visually by their word content for consistent display in the solved row
-         const sortedCardsToMove = cardsToMove.sort((a, b) => {
-             const wordA = a.dataset.word.toLowerCase();
-             const wordB = b.dataset.word.toLowerCase();
-             if (wordA < wordB) return -1;
-             if (wordA > wordB) return 1;
-             return 0;
-         });
+        // Sort the cards visually by their word content for consistent display in the solved row
+        const cardsToMove = [];
+        selectedCards.forEach(card => {
+            card.classList.remove('selected'); // Remove selected state
+            card.classList.add('solved'); // Add solved state class
+            // Add the specific color class to the card itself
+            card.classList.add(`card-solved-${groupColorClasses[groupIndex]}`);
+            card.removeEventListener('click', handleCardClick); // Make solved cards non-clickable
+            cardsToMove.push(card); // Collect cards to move
+        });
 
-         sortedCardsToMove.forEach(card => {
-             solvedGroupContainer.appendChild(card); // Move the actual DOM element
-         });
+        // Clear selected cards array
+        selectedCards = [];
+
+        // Sort the cards visually by their word content for consistent display in the solved row
+        const sortedCardsToMove = cardsToMove.sort((a, b) => {
+            const wordA = a.dataset.word.toLowerCase();
+            const wordB = b.dataset.word.toLowerCase();
+            if (wordA < wordB) return -1;
+            if (wordA > wordB) return 1;
+            return 0;
+        });
+
+        // Append the sorted cards to the solved group container
+        const cardsWrapper = document.createElement('div');
+        cardsWrapper.classList.add('solved-cards-wrapper'); // A wrapper for the cards within the solved row
+        sortedCardsToMove.forEach(card => {
+            // Ensure cards are visible when moved to the solved area
+            card.style.display = ''; // Reset display style if it was set to 'none' in the main grid logic
+            cardsWrapper.appendChild(card); // Move the actual DOM element
+        });
+        solvedGroupContainer.appendChild(cardsWrapper); // Append the wrapper to the solved group container
+
 
         // Find the correct position to insert the new solved row (sorted by group index)
         const solvedRows = Array.from(solvedGroupsArea.querySelectorAll('.solved-group-row'));
@@ -362,9 +379,10 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
 
-        // Re-arrange the remaining cards in the grid visually (simple approach: hide moved ones)
+        // Re-arrange the remaining cards in the grid visually (hide moved ones from the main grid)
+        // This hides the original card elements from the main grid once they've been moved.
          cardElements.forEach(card => {
-             if (card.classList.contains('solved')) {
+             if (card.classList.contains('solved') && card.parentNode === gameGrid) {
                  card.style.display = 'none'; // Hide solved cards from the main grid area
              }
          });
