@@ -3,11 +3,24 @@
 document.addEventListener('DOMContentLoaded', () => {
     console.log("DOM Content Loaded. Player script starting.");
 
+    // --- Reset Game State Variables for a Fresh Start ---
+    // These must be reset BEFORE any other game logic runs,
+    // especially any checks for game over conditions.
+    let solvedGroupIndexes = []; // Stores the indexes of groups that have been correctly identified (0, 1, 2, or 3)
+    let tries = 0;             // Reset tries count
+    // Also clear the display of solved groups from previous games
+    const solvedGroupsArea = document.getElementById('solved-groups-area');
+    if (solvedGroupsArea) {
+        solvedGroupsArea.innerHTML = '';
+        console.log("Solved groups area cleared.");
+    }
+
+
     // --- Get References to DOM Elements ---
     const gameGrid = document.getElementById('game-grid');
     const messageArea = document.getElementById('message-area');
     const submitButton = document.getElementById('submit-button');
-    const solvedGroupsArea = document.getElementById('solved-groups-area'); // Area to move solved groups
+
 
     // Modal elements
     const modal = document.getElementById('gameOverModal');
@@ -17,14 +30,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const closeModalSpan = document.getElementsByClassName('close')[0];
     const playAgainButton = document.getElementById('play-again-button');
 
-    // --- Game State Variables ---
+    // --- Game State Variables (continued, initialized once) ---
     let fullGameData = []; // Stores the original grouped words AND their themes as objects {theme: "", words: []}
     let correctWordsOnly = []; // Stores ONLY the words for game logic (array of arrays of strings)
     let shuffledWords = []; // Stores all 16 words in shuffled order for the grid
     let cardElements = []; // Stores references to the card DOM elements
     let selectedCards = []; // Stores references to the currently selected card elements
-    let solvedGroupIndexes = []; // Stores the indexes of groups that have been correctly identified (0, 1, 2, or 3)
-    let tries = 0;
     const maxTries = 4; // Standard Connections game allows 4 mistakes
 
     // Define colors for each group, corresponding to NYT Connections difficulty (Yellow, Green, Blue, Purple)
@@ -68,10 +79,6 @@ document.addEventListener('DOMContentLoaded', () => {
      * @returns {boolean} true if data was successfully loaded and processed, false otherwise.
      */
     function loadGameData() {
-        // Reset game state variables for a fresh start
-        solvedGroupIndexes = []; // Reset solved groups
-        tries = 0;             // Reset tries count
-
         let gameDataToParse = null;
         let loadedFromUrl = false;
         console.log("Attempting to load game data.");
@@ -486,11 +493,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     // --- Initial Game Setup on Load ---
+    // This runs once when the player.html page finishes loading DOM content.
+    // After initial state resets, load game data and render grid.
     if (loadGameData()) {
          renderGrid();
          if(submitButton) submitButton.disabled = true;
     } else {
          console.log("Game data not loaded. Game not started.");
+         // loadGameData already sets messageArea and disables button on failure
     }
 
 }); // End of DOMContentLoaded listener
