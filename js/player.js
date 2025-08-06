@@ -21,14 +21,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const messageArea = document.getElementById('message-area');
     const submitButton = document.getElementById('submit-button');
 
-
-    // Modal elements
-    const modal = document.getElementById('gameOverModal');
-    const modalTitle = document.getElementById('modal-title');
-    const modalMessage = document.getElementById('modal-message');
-    const modalTries = document.getElementById('modal-tries');
-    const closeModalSpan = document.getElementsByClassName('close')[0];
+    // New End Game Message Elements
+    const endGameMessageContainer = document.getElementById('end-game-message-container');
+    const endGameEmoji = document.getElementById('end-game-emoji');
+    const endGameText = document.getElementById('end-game-text');
     const playAgainButton = document.getElementById('play-again-button');
+
 
     // --- Game State Variables (continued, initialized once) ---
     let fullGameData = []; // Stores the original grouped words AND their themes as objects {theme: "", words: []}
@@ -54,20 +52,9 @@ document.addEventListener('DOMContentLoaded', () => {
        console.error("Submit button not found!"); // Log an error if button wasn't found
     }
 
-    // Listeners for the Modal
-    if (closeModalSpan) {
-        closeModalSpan.onclick = function() { modal.style.display = "none"; }
-    }
+    // Listener for the "Create Another Game" button
     if (playAgainButton) {
          playAgainButton.onclick = function() { window.location.href = 'creator.html'; }
-    }
-    // Close modal if user clicks outside of it
-    if (modal) {
-        window.onclick = function(event) {
-            if (event.target === modal) {
-                modal.style.display = "none";
-            }
-        }
     }
 
 
@@ -469,26 +456,40 @@ document.addEventListener('DOMContentLoaded', () => {
         console.log("Ending game. Win status:", isWin);
         if(submitButton) submitButton.disabled = true;
         if(gameGrid) gameGrid.style.pointerEvents = 'none';
-        if(messageArea) messageArea.textContent = '';
+        if(messageArea) messageArea.textContent = ''; // Clear any current message
 
-        if (modal) {
-            if (isWin) {
-                if(modalTitle) modalTitle.textContent = "Congratulations!";
-                if(modalMessage) modalMessage.textContent = "You solved all the connections!";
-                if(modalTries) modalTries.textContent = `It took you ${tries} mistake${tries === 1 ? '' : 's'}.`;
-            } else {
-                 if(modalTitle) modalTitle.textContent = "Game Over!";
-                 if(modalMessage) modalMessage.textContent = "You ran out of tries.";
-                 if(modalTries) modalTries.textContent = "Keep practicing!";
-                 // Optional: Reveal remaining groups visually here
+        // Determine emoji and text based on win/loss and tries
+        let emoji = '';
+        let text = '';
+
+        if (isWin) {
+            if (tries === 0) {
+                emoji = '😁';
+                text = 'Perfect! You solved it with no mistakes!';
+            } else if (tries === 1) {
+                emoji = '😃';
+                text = `Great job! You solved it with ${tries} mistake.`;
+            } else if (tries === 2) {
+                emoji = '🙂';
+                text = `Well done! You solved it with ${tries} mistakes.`;
+            } else if (tries === 3) {
+                emoji = '😐';
+                text = `You did it! It took ${tries} mistakes.`;
+            } else { // Should not happen with maxTries = 4, but as a fallback
+                emoji = '👍';
+                text = `Congratulations! You solved it in ${tries} mistakes.`;
             }
-             modal.style.display = "block";
-             console.log("Game Over modal shown.");
-        } else {
-             console.error("Game over modal element not found!");
-             // Fallback message if modal isn't found
-             alert(isWin ? `Congratulations! You solved it in ${tries} mistakes.` : `Game Over! You ran out of tries.`);
+        } else { // Game Over (ran out of tries)
+            emoji = '😑';
+            text = 'Game Over! Better luck next time.';
         }
+
+        // Display the emoji and text in the dedicated container
+        if (endGameEmoji) endGameEmoji.textContent = emoji;
+        if (endGameText) endGameText.textContent = text;
+        if (endGameMessageContainer) endGameMessageContainer.style.display = 'block'; // Show the container
+
+        console.log("End game message shown:", text, emoji);
     }
 
 
