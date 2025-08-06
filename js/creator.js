@@ -5,73 +5,50 @@ document.addEventListener('DOMContentLoaded', () => {
     const container = document.querySelector('.container'); // Get the container to add the link output
 
     createButton.addEventListener('click', () => {
-        const groups = [];
+        const gameGroups = []; // This will store objects, each containing a theme and its words
         let allInputsValid = true;
 
-        // ... (code to get words from inputs - keep this) ...
-        // Get words from Group 1
-        const group1Inputs = document.querySelectorAll('.group1-word');
-        const group1Words = [];
-        group1Inputs.forEach(input => {
-            if (input.value.trim() === '') {
+        // Loop through each group (1 to 4) to get both words and theme
+        for (let i = 1; i <= 4; i++) {
+            const groupWords = [];
+            const themeInput = document.getElementById(`group${i}-theme`);
+            const theme = themeInput ? themeInput.value.trim() : ''; // Get the theme for the current group
+
+            // Get words for the current group
+            const wordInputs = document.querySelectorAll(`.group${i}-word`);
+            wordInputs.forEach(input => {
+                if (input.value.trim() === '') {
+                    allInputsValid = false;
+                }
+                groupWords.push(input.value.trim());
+            });
+
+            // Validate theme input
+            if (theme === '') {
                 allInputsValid = false;
             }
-            group1Words.push(input.value.trim());
-        });
-        groups.push(group1Words);
 
-        // Get words from Group 2
-        const group2Inputs = document.querySelectorAll('.group2-word');
-        const group2Words = [];
-        group2Inputs.forEach(input => {
-            if (input.value.trim() === '') {
-                allInputsValid = false;
-            }
-            group2Words.push(input.value.trim());
-        });
-        groups.push(group2Words);
-
-        // Get words from Group 3
-        const group3Inputs = document.querySelectorAll('.group3-word');
-        const group3Words = [];
-        group3Inputs.forEach(input => {
-            if (input.value.trim() === '') {
-                allInputsValid = false;
-            }
-            group3Words.push(input.value.trim());
-        });
-        groups.push(group3Words);
-
-        // Get words from Group 4
-        const group4Inputs = document.querySelectorAll('.group4-word');
-        const group4Words = [];
-        group4Inputs.forEach(input => {
-            if (input.value.trim() === '') {
-                allInputsValid = false;
-            }
-            group4Words.push(input.value.trim());
-        });
-        groups.push(group4Words);
-
+            // Add the group's theme and words to the gameGroups array
+            gameGroups.push({ theme: theme, words: groupWords });
+        }
 
         // Basic validation
         if (!allInputsValid) {
-            alert('Please fill in all 16 words.');
+            alert('Please fill in all 16 words and all 4 category themes.');
             return;
         }
 
         // --- NEW SHARING LOGIC ---
 
-        // 1. Stringify the game data (the groups array)
-        const gameDataString = JSON.stringify(groups);
+        // 1. Stringify the game data (now includes themes and words)
+        const gameDataString = JSON.stringify(gameGroups);
 
         // 2. Encode the string for URL safety (using Base64)
-        // btoa() creates a Base64 encoded string from a string
         const encodedGameData = btoa(gameDataString);
 
         // 3. Get the base URL of the player page
         // This assumes player.html is in the same directory or easily relative
-        const playerPageUrl = 'https://shivanidotsingh.github.io/game/player.html'; 
+        const playerPageUrl = 'https://shivanidotsingh.github.io/game/player.html';
 
         // 4. Construct the full URL with the encoded data as a query parameter
         const shareableLink = `${playerPageUrl}?gameData=${encodedGameData}`;
@@ -94,12 +71,8 @@ document.addEventListener('DOMContentLoaded', () => {
             linkInput.setSelectionRange(0, 99999); // For mobile devices
 
             // Copy the text inside the text field
-            navigator.clipboard.writeText(linkInput.value).then(() => {
-                alert("Link copied to clipboard!");
-            }).catch(err => {
-                console.error("Failed to copy link: ", err);
-                alert("Could not copy link. Please copy it manually.");
-            });
+            document.execCommand('copy'); // Use document.execCommand for clipboard operations in iframes
+            alert("Link copied to clipboard!");
         });
 
 
