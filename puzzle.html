@@ -103,8 +103,27 @@
     const slideSound = document.getElementById('slide-sound');
 
     // Use separate images for each orientation
-    const IMAGE_LANDSCAPE = 'https://singh.work/grid/images/149.JPG';   // desktop / horizontal
-    const IMAGE_PORTRAIT  = 'https://singh.work/grid/images/164.jpg';   // mobile / vertical
+    const IMAGE_LANDSCAPE = 'https://singh.work/grid/images/154.JPG';   // desktop / horizontal
+    const IMAGE_PORTRAIT  = 'https://singh.work/grid/images/80.jpg';   // mobile / vertical
+
+    // Store natural image sizes so we can do "cover"-style cropping without distortion
+    const imageInfo = {
+      landscape: { src: IMAGE_LANDSCAPE, width: 0, height: 0, loaded: false },
+      portrait:  { src: IMAGE_PORTRAIT,  width: 0, height: 0, loaded: false }
+    };
+
+    // Preload both images and record their natural sizes
+    ['landscape', 'portrait'].forEach(key => {
+      const info = imageInfo[key];
+      const img = new Image();
+      img.src = info.src;
+      img.onload = () => {
+        info.width = img.naturalWidth;
+        info.height = img.naturalHeight;
+        info.loaded = true;
+        render(); // in case this orientation is active
+      };
+    });
 
     // State: array of length 12, values 0..11
     // 0..10 are image tiles, 11 is empty
@@ -223,6 +242,12 @@
     function render() {
       if (!ORIENTATION) return;
 
+      const key = ORIENTATION === 'landscape' ? 'landscape' : 'portrait';
+      const info = imageInfo[key];
+
+      // Wait until the relevant image is loaded so we know its aspect ratio
+      if (!info.loaded) return;
+
       puzzleEl.innerHTML = '';
 
       // Adjust CSS grid + aspect ratio to current orientation
@@ -235,7 +260,25 @@
       const tileWidth = puzzleWidth / COLS;
       const tileHeight = puzzleHeight / ROWS;
 
-      const imgSrc = ORIENTATION === 'landscape' ? IMAGE_LANDSCAPE : IMAGE_PORTRAIT;
+      // Compute "cover" sizing so the image fills the puzzle without distortion
+      const imgWidth = info.width;
+      const imgHeight = info.height;
+      const containerRatio = puzzleWidth / puzzleHeight;
+      const imgRatio = imgWidth / imgHeight;
+
+      let displayWidth, displayHeight, offsetX = 0, offsetY = 0;
+
+      if (imgRatio > containerRatio) {
+        // Image is wider than container: match height, crop left/right
+        displayHeight = puzzleHeight;
+        displayWidth = displayHeight * imgRatio;
+        offsetX = (displayWidth - puzzleWidth) / 2;
+      } else {
+        // Image is taller (or equal): match width, crop top/bottom
+        displayWidth = puzzleWidth;
+        displayHeight = displayWidth / imgRatio;
+        offsetY = (displayHeight - puzzleHeight) / 2;
+      }
 
       state.forEach((tileNum, positionIndex) => {
         const tile = document.createElement('button');
@@ -252,9 +295,13 @@
         const originalRow = Math.floor(tileNum / COLS);
         const originalCol = tileNum % COLS;
 
-        tile.style.backgroundImage = `url('${imgSrc}')`;
-        tile.style.backgroundSize = `${puzzleWidth}px ${puzzleHeight}px`;
-        tile.style.backgroundPosition = `-${originalCol * tileWidth}px -${originalRow * tileHeight}px`;
+        // Position within the covered image (include cropping offsets)
+        const bgX = originalCol * tileWidth + offsetX;
+        const bgY = originalRow * tileHeight + offsetY;
+
+        tile.style.backgroundImage = `url('${info.src}')`;
+        tile.style.backgroundSize = `${displayWidth}px ${displayHeight}px`;
+        tile.style.backgroundPosition = `-${bgX}px -${bgY}px`;
 
         tile.addEventListener('click', () => handleTileClick(positionIndex));
         puzzleEl.appendChild(tile);
