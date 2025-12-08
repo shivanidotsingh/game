@@ -39,7 +39,6 @@
       padding: 0;
       margin: 0;
       background-repeat: no-repeat;
-      background-size: 400% 300%; /* 4 cols, 3 rows */
       cursor: pointer;
       outline: none;
     }
@@ -49,7 +48,6 @@
       cursor: default;
     }
 
-    /* Optional: touch-friendly sizing */
     @media (max-width: 600px) {
       .puzzle-wrapper {
         width: 100vw;
@@ -79,10 +77,10 @@
       const col = index % COLS;
       const neighbors = [];
 
-      if (row > 0) neighbors.push(index - COLS);      // up
-      if (row < ROWS - 1) neighbors.push(index + COLS); // down
-      if (col > 0) neighbors.push(index - 1);         // left
-      if (col < COLS - 1) neighbors.push(index + 1);  // right
+      if (row > 0) neighbors.push(index - COLS);          // up
+      if (row < ROWS - 1) neighbors.push(index + COLS);   // down
+      if (col > 0) neighbors.push(index - 1);             // left
+      if (col < COLS - 1) neighbors.push(index + 1);      // right
 
       return neighbors;
     }
@@ -114,6 +112,12 @@
     function render() {
       puzzleEl.innerHTML = '';
 
+      // Current rendered size of the whole puzzle
+      const puzzleWidth = puzzleEl.clientWidth;
+      const puzzleHeight = puzzleEl.clientHeight;
+      const tileWidth = puzzleWidth / COLS;
+      const tileHeight = puzzleHeight / ROWS;
+
       state.forEach((tileNum, positionIndex) => {
         const tile = document.createElement('button');
         tile.className = 'tile';
@@ -129,14 +133,19 @@
         const originalCol = tileNum % COLS;
 
         // Use your own image instead of 'placeholder.jpg'
-        tile.style.backgroundImage = "url('https://singh.work/grid/images/117.jpg')";
-        tile.style.backgroundSize = `${COLS * 100}% ${ROWS * 100}%`;
-        tile.style.backgroundPosition = `-${originalCol * 100}% -${originalRow * 100}%`;
+        tile.style.backgroundImage = "url('https://singh.work/grid/images/148.JPG')";
+        tile.style.backgroundSize = `${puzzleWidth}px ${puzzleHeight}px`;
+        tile.style.backgroundPosition = `-${originalCol * tileWidth}px -${originalRow * tileHeight}px`;
 
         tile.addEventListener('click', () => handleTileClick(positionIndex));
         puzzleEl.appendChild(tile);
       });
     }
+
+    // Re-render on resize so the slices stay correct
+    window.addEventListener('resize', () => {
+      render();
+    });
 
     // Initialize
     shuffle(200);
