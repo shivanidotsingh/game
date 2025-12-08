@@ -26,10 +26,7 @@
 
     .puzzle-grid {
       width: 100%;
-      aspect-ratio: 4 / 3; /* 4 columns, 3 rows */
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      grid-template-rows: repeat(3, 1fr);
       gap: 2px;
       background: #ddd;
     }
@@ -62,25 +59,50 @@
   </div>
 
   <script>
-    const ROWS = 3;
-    const COLS = 4;
-    const TOTAL = ROWS * COLS;      // 12
-    const EMPTY = TOTAL - 1;        // index of the blank tile
+    const TOTAL = 12;              // total tiles
+    const EMPTY = TOTAL - 1;       // index of the blank tile (11)
     const puzzleEl = document.getElementById('puzzle');
 
     // State: array of length 12, values 0..11
     // 0..10 are image tiles, 11 is empty
     let state = Array.from({ length: TOTAL }, (_, i) => i);
 
+    // Orientation state
+    let ORIENTATION = null; // 'landscape' or 'portrait'
+    let ROWS = 3;
+    let COLS = 4;
+
+    function setOrientation() {
+      const isMobile = window.matchMedia("(max-width: 600px)").matches;
+      const newOrientation = isMobile ? 'portrait' : 'landscape';
+
+      if (newOrientation === ORIENTATION) return; // nothing to do
+
+      ORIENTATION = newOrientation;
+
+      if (ORIENTATION === 'landscape') {
+        ROWS = 3;
+        COLS = 4;
+      } else {
+        ROWS = 4;
+        COLS = 3;
+      }
+
+      // Reset puzzle for new orientation
+      state = Array.from({ length: TOTAL }, (_, i) => i);
+      shuffle(200);
+      render();
+    }
+
     function getNeighbors(index) {
       const row = Math.floor(index / COLS);
       const col = index % COLS;
       const neighbors = [];
 
-      if (row > 0) neighbors.push(index - COLS);          // up
-      if (row < ROWS - 1) neighbors.push(index + COLS);   // down
-      if (col > 0) neighbors.push(index - 1);             // left
-      if (col < COLS - 1) neighbors.push(index + 1);      // right
+      if (row > 0) neighbors.push(index - COLS);        // up
+      if (row < ROWS - 1) neighbors.push(index + COLS); // down
+      if (col > 0) neighbors.push(index - 1);           // left
+      if (col < COLS - 1) neighbors.push(index + 1);    // right
 
       return neighbors;
     }
@@ -112,9 +134,13 @@
     function render() {
       puzzleEl.innerHTML = '';
 
-      // Current rendered size of the whole puzzle
-      const puzzleWidth = puzzleEl.clientWidth;
-      const puzzleHeight = puzzleEl.clientHeight;
+      // Adjust CSS grid + aspect ratio to current orientation
+      puzzleEl.style.gridTemplateColumns = `repeat(${COLS}, 1fr)`;
+      puzzleEl.style.gridTemplateRows = `repeat(${ROWS}, 1fr)`;
+      puzzleEl.style.aspectRatio = `${COLS} / ${ROWS}`;
+
+      const puzzleWidth = puzzleEl.clientWidth || puzzleEl.offsetWidth;
+      const puzzleHeight = puzzleWidth * (ROWS / COLS); // from aspect ratio
       const tileWidth = puzzleWidth / COLS;
       const tileHeight = puzzleHeight / ROWS;
 
@@ -142,14 +168,13 @@
       });
     }
 
-    // Re-render on resize so the slices stay correct
+    // Recalculate orientation & redraw when viewport changes
     window.addEventListener('resize', () => {
-      render();
+      setOrientation();
     });
 
     // Initialize
-    shuffle(200);
-    render();
+    setOrientation();
   </script>
 </body>
 </html>
