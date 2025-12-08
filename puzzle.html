@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sliding Puzzle</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      background: #f4f4f4;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Inter", sans-serif;
+    }
+
+    .puzzle-wrapper {
+      width: min(90vw, 480px);
+    }
+
+    .puzzle-grid {
+      width: 100%;
+      aspect-ratio: 4 / 3; /* 4 columns, 3 rows */
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      grid-template-rows: repeat(3, 1fr);
+      gap: 2px;
+      background: #ddd;
+    }
+
+    .tile {
+      border: none;
+      padding: 0;
+      margin: 0;
+      background-repeat: no-repeat;
+      background-size: 400% 300%; /* 4 cols, 3 rows */
+      cursor: pointer;
+      outline: none;
+    }
+
+    .tile.empty {
+      background: none;
+      cursor: default;
+    }
+
+    /* Optional: touch-friendly sizing */
+    @media (max-width: 600px) {
+      .puzzle-wrapper {
+        width: 100vw;
+        margin: 0 8px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="puzzle-wrapper">
+    <div id="puzzle" class="puzzle-grid"></div>
+  </div>
+
+  <script>
+    const ROWS = 3;
+    const COLS = 4;
+    const TOTAL = ROWS * COLS;      // 12
+    const EMPTY = TOTAL - 1;        // index of the blank tile
+    const puzzleEl = document.getElementById('puzzle');
+
+    // State: array of length 12, values 0..11
+    // 0..10 are image tiles, 11 is empty
+    let state = Array.from({ length: TOTAL }, (_, i) => i);
+
+    function getNeighbors(index) {
+      const row = Math.floor(index / COLS);
+      const col = index % COLS;
+      const neighbors = [];
+
+      if (row > 0) neighbors.push(index - COLS);      // up
+      if (row < ROWS - 1) neighbors.push(index + COLS); // down
+      if (col > 0) neighbors.push(index - 1);         // left
+      if (col < COLS - 1) neighbors.push(index + 1);  // right
+
+      return neighbors;
+    }
+
+    function shuffle(moves = 200) {
+      let emptyPos = state.indexOf(EMPTY);
+
+      for (let i = 0; i < moves; i++) {
+        const neighbors = getNeighbors(emptyPos);
+        const randomNeighbor = neighbors[Math.floor(Math.random() * neighbors.length)];
+
+        // Swap empty with neighbor
+        [state[emptyPos], state[randomNeighbor]] = [state[randomNeighbor], state[emptyPos]];
+        emptyPos = randomNeighbor;
+      }
+    }
+
+    function handleTileClick(positionIndex) {
+      const emptyPos = state.indexOf(EMPTY);
+      const neighbors = getNeighbors(emptyPos);
+
+      if (!neighbors.includes(positionIndex)) return; // Not movable
+
+      // Swap clicked tile with empty
+      [state[emptyPos], state[positionIndex]] = [state[positionIndex], state[emptyPos]];
+      render();
+    }
+
+    function render() {
+      puzzleEl.innerHTML = '';
+
+      state.forEach((tileNum, positionIndex) => {
+        const tile = document.createElement('button');
+        tile.className = 'tile';
+
+        if (tileNum === EMPTY) {
+          tile.classList.add('empty');
+          puzzleEl.appendChild(tile);
+          return;
+        }
+
+        // tileNum is the "correct"/original index of this tile
+        const originalRow = Math.floor(tileNum / COLS);
+        const originalCol = tileNum % COLS;
+
+        // Use your own image instead of 'placeholder.jpg'
+        tile.style.backgroundImage = "url('https://singh.work/grid/images/117.jpg')";
+        tile.style.backgroundSize = `${COLS * 100}% ${ROWS * 100}%`;
+        tile.style.backgroundPosition = `-${originalCol * 100}% -${originalRow * 100}%`;
+
+        tile.addEventListener('click', () => handleTileClick(positionIndex));
+        puzzleEl.appendChild(tile);
+      });
+    }
+
+    // Initialize
+    shuffle(200);
+    render();
+  </script>
+</body>
+</html>
