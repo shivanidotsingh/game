@@ -82,20 +82,6 @@
       }
     }
 
-    /* Thumbnail of the solved image – top right of page */
-    .puzzle-thumbnail {
-  position: fixed;
-  top: 12px;
-  right: 12px;
-  width: 72px;          /* will be overridden in JS depending on orientation */
-  height: 54px;
-  background-size: cover;
-  background-position: center;
-  border: 1px solid rgba(0,0,0,0.12);
-  background-color: #eee;
-  }
-
-
     /* Tiny upload icon – bottom right, “internet blue” */
     .upload-button {
       position: fixed;
@@ -108,11 +94,59 @@
       cursor: pointer;
       font-size: 18px;
       line-height: 1;
+      z-index: 20;
     }
 
     .upload-button:focus-visible {
       outline: 2px solid #0645AD;
       outline-offset: 2px;
+    }
+
+    /* Eye (view reference) icon – top right */
+    .view-button {
+      position: fixed;
+      top: 12px;
+      right: 12px;
+      padding: 4px;
+      border: none;
+      background: transparent;
+      color: #0645AD;
+      cursor: pointer;
+      font-size: 18px;
+      line-height: 1;
+      z-index: 20;
+    }
+
+    .view-button:focus-visible {
+      outline: 2px solid #0645AD;
+      outline-offset: 2px;
+    }
+
+    /* Modal for reference image */
+    .reference-modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.65);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 30;
+    }
+
+    .reference-modal.open {
+      display: flex;
+    }
+
+    .reference-inner {
+      max-width: 90vw;
+      max-height: 90vh;
+    }
+
+    .reference-inner img {
+      max-width: 100%;
+      max-height: 100%;
+      display: block;
+      box-shadow: 0 0 0 1px rgba(255,255,255,0.3);
     }
   </style>
 </head>
@@ -121,8 +155,14 @@
     <div id="puzzle" class="puzzle-grid"></div>
   </div>
 
-  <!-- Thumbnail target image -->
-  <div id="puzzle-thumbnail" class="puzzle-thumbnail" aria-hidden="true"></div>
+  <!-- Eye icon to view reference image -->
+  <button
+    id="view-button"
+    class="view-button"
+    type="button"
+    title="View reference image">
+    👁
+  </button>
 
   <!-- Tiny upload icon (bottom right) -->
   <button
@@ -133,6 +173,13 @@
     📁
   </button>
   <input type="file" id="image-input" accept="image/*" style="display:none" />
+
+  <!-- Reference image modal -->
+  <div id="reference-modal" class="reference-modal">
+    <div class="reference-inner">
+      <img id="reference-image" alt="Reference image">
+    </div>
+  </div>
 
   <!-- Lego click sound: rename the downloaded file to lego-click-short.wav -->
   <audio
@@ -147,9 +194,11 @@
     const puzzleEl = document.getElementById('puzzle');
     const wrapperEl = document.querySelector('.puzzle-wrapper');
     const slideSound = document.getElementById('slide-sound');
-    const thumbEl = document.getElementById('puzzle-thumbnail');
     const uploadBtn = document.getElementById('upload-button');
     const fileInput = document.getElementById('image-input');
+    const viewBtn = document.getElementById('view-button');
+    const modalEl = document.getElementById('reference-modal');
+    const modalImg = document.getElementById('reference-image');
 
     // Use separate images for each orientation
     const IMAGE_LANDSCAPE = 'https://singh.work/grid/images/92.jpg';   // desktop / horizontal
@@ -300,20 +349,10 @@
       // Wait until the relevant image is loaded so we know its aspect ratio
       if (!info.loaded) return;
 
-      // Update thumbnail to show current target image and match orientation
-if (thumbEl) {
-  const isLandscapeThumb = ORIENTATION === 'landscape';
-  // Simple 4:3 vs 3:4 feel
-  if (isLandscapeThumb) {
-    thumbEl.style.width = '72px';
-    thumbEl.style.height = '54px';
-  } else {
-    thumbEl.style.width = '54px';
-    thumbEl.style.height = '72px';
-  }
-  thumbEl.style.backgroundImage = `url('${info.src}')`;
-}
-
+      // Update modal reference image to current target
+      if (modalImg) {
+        modalImg.src = info.src;
+      }
 
       puzzleEl.innerHTML = '';
 
@@ -431,6 +470,27 @@ if (thumbEl) {
         e.preventDefault();
         if (e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0]) {
           useCustomImage(e.dataTransfer.files[0]);
+        }
+      });
+    }
+
+    // View reference modal open/close
+    if (viewBtn && modalEl) {
+      viewBtn.addEventListener('click', () => {
+        modalEl.classList.add('open');
+      });
+
+      // click backdrop to close
+      modalEl.addEventListener('click', (e) => {
+        if (e.target === modalEl) {
+          modalEl.classList.remove('open');
+        }
+      });
+
+      // Esc to close
+      window.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+          modalEl.classList.remove('open');
         }
       });
     }
