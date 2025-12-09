@@ -81,12 +81,58 @@
         margin: 0 8px;
       }
     }
+
+    /* Thumbnail of the solved image – top right of page */
+    .puzzle-thumbnail {
+      position: fixed;
+      top: 12px;
+      right: 12px;
+      width: 72px;
+      aspect-ratio: 4 / 3;
+      background-size: cover;
+      background-position: center;
+      border-radius: 6px;
+      border: 1px solid rgba(0,0,0,0.12);
+      background-color: #eee;
+    }
+
+    /* Tiny upload icon – bottom right, “internet blue” */
+    .upload-button {
+      position: fixed;
+      bottom: 12px;
+      right: 12px;
+      padding: 4px;
+      border: none;
+      background: transparent;
+      color: #0645AD; /* classic link blue */
+      cursor: pointer;
+      font-size: 18px;
+      line-height: 1;
+    }
+
+    .upload-button:focus-visible {
+      outline: 2px solid #0645AD;
+      outline-offset: 2px;
+    }
   </style>
 </head>
 <body>
   <div class="puzzle-wrapper">
     <div id="puzzle" class="puzzle-grid"></div>
   </div>
+
+  <!-- Thumbnail target image -->
+  <div id="puzzle-thumbnail" class="puzzle-thumbnail" aria-hidden="true"></div>
+
+  <!-- Tiny upload icon (bottom right) -->
+  <button
+    id="upload-button"
+    class="upload-button"
+    type="button"
+    title="Upload your own image">
+    📁
+  </button>
+  <input type="file" id="image-input" accept="image/*" style="display:none" />
 
   <!-- Lego click sound: rename the downloaded file to lego-click-short.wav -->
   <audio
@@ -101,10 +147,13 @@
     const puzzleEl = document.getElementById('puzzle');
     const wrapperEl = document.querySelector('.puzzle-wrapper');
     const slideSound = document.getElementById('slide-sound');
+    const thumbEl = document.getElementById('puzzle-thumbnail');
+    const uploadBtn = document.getElementById('upload-button');
+    const fileInput = document.getElementById('image-input');
 
     // Use separate images for each orientation
     const IMAGE_LANDSCAPE = 'https://singh.work/grid/images/92.jpg';   // desktop / horizontal
-    const IMAGE_PORTRAIT  = 'https://singh.work/grid/images/134.jpg';   // mobile / vertical
+    const IMAGE_PORTRAIT  = 'https://singh.work/grid/images/134.jpg';  // mobile / vertical
 
     // Store natural image sizes so we can do "cover"-style cropping without distortion
     const imageInfo = {
@@ -124,6 +173,9 @@
         render(); // in case this orientation is active
       };
     });
+
+    // track current object URL (for uploads) to clean it up
+    let currentObjectUrl = null;
 
     // State: array of length 12, values 0..11
     // 0..10 are image tiles, 11 is empty
@@ -248,6 +300,11 @@
       // Wait until the relevant image is loaded so we know its aspect ratio
       if (!info.loaded) return;
 
+      // Update thumbnail to show current target image
+      if (thumbEl) {
+        thumbEl.style.backgroundImage = `url('${info.src}')`;
+      }
+
       puzzleEl.innerHTML = '';
 
       // Adjust CSS grid + aspect ratio to current orientation
@@ -308,10 +365,65 @@
       });
     }
 
+    // Allow custom image upload (click or drag & drop)
+    function useCustomImage(file) {
+      if (!file || !file.type.startsWith('image/')) return;
+
+      if (currentObjectUrl) {
+        URL.revokeObjectURL(currentObjectUrl);
+        currentObjectUrl = null;
+      }
+
+      const url = URL.createObjectURL(file);
+      currentObjectUrl = url;
+
+      const img = new Image();
+      img.onload = () => {
+        ['landscape', 'portrait'].forEach(key => {
+          imageInfo[key].src = url;
+          imageInfo[key].width = img.naturalWidth;
+          imageInfo[key].height = img.naturalHeight;
+          imageInfo[key].loaded = true;
+        });
+
+        completed = false;
+        state = Array.from({ length: TOTAL }, (_, i) => i);
+        shuffle(200);
+        render();
+      };
+      img.src = url;
+    }
+
     // Recalculate orientation & redraw when viewport changes
     window.addEventListener('resize', () => {
       setOrientation();
     });
+
+    // Upload icon -> file input
+    if (uploadBtn && fileInput) {
+      uploadBtn.addEventListener('click', () => fileInput.click());
+      fileInput.addEventListener('change', (e) => {
+        if (e.target.files && e.target.files[0]) {
+          useCustomImage(e.target.files[0]);
+          e.target.value = ''; // reset input
+        }
+      });
+    }
+
+    // Drag & drop onto puzzle area
+    if (wrapperEl) {
+      ['dragover', 'dragenter'].forEach(evt => {
+        wrapperEl.addEventListener(evt, e => {
+          e.preventDefault();
+        });
+      });
+      wrapperEl.addEventListener('drop', e => {
+        e.preventDefault();
+        if (e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0]) {
+          useCustomImage(e.dataTransfer.files[0]);
+        }
+      });
+    }
 
     // Initialize
     setOrientation();
