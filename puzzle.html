@@ -84,17 +84,17 @@
 
     /* Thumbnail of the solved image – top right of page */
     .puzzle-thumbnail {
-      position: fixed;
-      top: 12px;
-      right: 12px;
-      width: 72px;
-      aspect-ratio: 4 / 3;
-      background-size: cover;
-      background-position: center;
-      border-radius: 6px;
-      border: 1px solid rgba(0,0,0,0.12);
-      background-color: #eee;
-    }
+  position: fixed;
+  top: 12px;
+  right: 12px;
+  width: 72px;          /* will be overridden in JS depending on orientation */
+  height: 54px;
+  background-size: cover;
+  background-position: center;
+  border: 1px solid rgba(0,0,0,0.12);
+  background-color: #eee;
+  }
+
 
     /* Tiny upload icon – bottom right, “internet blue” */
     .upload-button {
@@ -300,10 +300,20 @@
       // Wait until the relevant image is loaded so we know its aspect ratio
       if (!info.loaded) return;
 
-      // Update thumbnail to show current target image
-      if (thumbEl) {
-        thumbEl.style.backgroundImage = `url('${info.src}')`;
-      }
+      // Update thumbnail to show current target image and match orientation
+if (thumbEl) {
+  const isLandscapeThumb = ORIENTATION === 'landscape';
+  // Simple 4:3 vs 3:4 feel
+  if (isLandscapeThumb) {
+    thumbEl.style.width = '72px';
+    thumbEl.style.height = '54px';
+  } else {
+    thumbEl.style.width = '54px';
+    thumbEl.style.height = '72px';
+  }
+  thumbEl.style.backgroundImage = `url('${info.src}')`;
+}
+
 
       puzzleEl.innerHTML = '';
 
