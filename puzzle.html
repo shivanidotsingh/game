@@ -124,29 +124,32 @@
 
     /* Modal for reference image */
     .reference-modal {
-      position: fixed;
-      inset: 0;
-      background: rgba(0, 0, 0, 0.65);
-      display: none;
-      align-items: center;
-      justify-content: center;
-      z-index: 30;
-    }
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.65);
+  display: none;
+  z-index: 30;
+}
 
-    .reference-modal.open {
-      display: flex;
-    }
+.reference-modal.open {
+  display: block;
+}
 
-    .reference-inner {
-      max-width: 45vw;
-      max-height: 45vh;
-    }
+.reference-inner {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  max-width: 45vw;
+  max-height: 45vh;
+}
 
-    .reference-inner img {
-      max-width: 100%;
-      max-height: 100%;
-      display: block;
-    }
+.reference-inner img {
+  max-width: 100%;
+  max-height: 100%;
+  display: block;
+}
+
   </style>
 </head>
 <body>
