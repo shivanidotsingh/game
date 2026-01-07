@@ -122,8 +122,8 @@
       outline-offset: 2px;
     }
 
-    /* Modal for reference image */
-    .reference-modal {
+/* Modal for reference image */
+.reference-modal {
   position: fixed;
   inset: 0;
   background: rgba(0, 0, 0, 0.65);
@@ -136,17 +136,17 @@
 }
 
 .reference-inner {
-  position: absolute;
+  max-width: 100vw;
+  max-height: 100vh;
+}
+
+.reference-inner img {
+  position: fixed;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
   max-width: 45vw;
   max-height: 45vh;
-}
-
-.reference-inner img {
-  max-width: 100%;
-  max-height: 100%;
   display: block;
 }
 
@@ -203,7 +203,7 @@
     const modalImg = document.getElementById('reference-image');
 
     // Use separate images for each orientation
-    const IMAGE_LANDSCAPE = 'https://singh.work/grid/images/92.jpg';   // desktop / horizontal
+    const IMAGE_LANDSCAPE = 'https://singh.work/grid/images/147.jpg';   // desktop / horizontal
     const IMAGE_PORTRAIT  = 'https://singh.work/grid/images/134.jpg';  // mobile / vertical
 
     // Store natural image sizes so we can do "cover"-style cropping without distortion
