@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>knot easy</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { width: 100%; height: 100vh; overflow: hidden; background: #f5f4f0; }
+#c { display: block; width: 100%; height: 100vh; cursor: default; }
+.hint {
+  position: fixed; bottom: 16px; left: 50%; transform: translateX(-50%);
+  font-size: 11px; letter-spacing: 0.06em;
+  color: rgba(20,18,15,0.35);
+  font-family: -apple-system, sans-serif;
+  pointer-events: none; white-space: nowrap;
+}
+</style>
+</head>
+<body>
+<canvas id="c"></canvas>
+<div class="hint">Tug to see how wicked problems resist detanglement</div>
+<script>
+const canvas = document.getElementById('c');
+const ctx = canvas.getContext('2d');
+const DPR = devicePixelRatio || 1;
+
+function resize() {
+  canvas.width = canvas.offsetWidth * DPR;
+  canvas.height = canvas.offsetHeight * DPR;
+  ctx.scale(DPR, DPR);
+}
+resize();
+window.addEventListener('resize', () => { resize(); initialised = false; });
+
+const W = () => canvas.offsetWidth;
+const H = () => canvas.offsetHeight;
+const CX = () => W() / 2;
+const CY = () => H() / 2;
+
+const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+const FG = isDark ? 'rgba(235,230,220,ALPHA)' : 'rgba(22,20,18,ALPHA)';
+const FONT_SC = '500 10px -apple-system, sans-serif';
+
+function toSC(str) { return str.toUpperCase(); }
+
+const leftTailText  = toSC("Global poverty and economic inequality");
+const rightTailText = toSC("Misinformation and disinformation");
+
+const knotPhrases = [
+  "Gender-based violence and domestic abuse",
+  "Labor exploitation",
+  "Refugee crises and forced migration",
+  "Systemic racism and racial injustice",
+  "Healthcare accessibility and affordability",
+  "Access to Education",
+  "Energy sustainability and transition",
+  "Aging population care and support",
+  "Youth unemployment",
+  "Artificial intelligence ethics and governance",
+  "Organized crime and corruption",
+  "Climate change",
+].map(toSC);
+
+const R_TIGHT = 115, R_LOOSE = 210;
+
+function knotXY(t, R) {
+  const phi = 5*t, theta = 7*t;
+  const r = R*0.55 + R*0.45*Math.cos(theta);
+  return {
+    x: CX() + r*Math.cos(phi),
+    y: CY() + r*Math.sin(phi)*0.70 + R*0.45*Math.sin(theta)*0.30
+  };
+}
+
+function buildKnot(R, N=8000) {
+  const pts = [];
+  for (let i = 0; i <= N; i++) pts.push(knotXY(i/N*Math.PI*2, R));
+  const arc = [0];
+  for (let i = 1; i < pts.length; i++) {
+    const dx = pts[i].x-pts[i-1].x, dy = pts[i].y-pts[i-1].y;
+    arc.push(arc[i-1] + Math.sqrt(dx*dx+dy*dy));
+  }
+  return { pts, arc, len: arc[arc.length-1] };
+}
+
+const KT = buildKnot(R_TIGHT), KL = buildKnot(R_LOOSE);
+let tightness = 1.0, tgtTight = 1.0;
+
+function knotPtAtS(knot, s) {
+  const { pts, arc } = knot;
+  s = ((s % knot.len) + knot.len) % knot.len;
+  let lo = 0, hi = pts.length-1;
+  while (lo < hi-1) { const m = (lo+hi)>>1; arc[m] <= s ? (lo=m) : (hi=m); }
+  const t = (s-arc[lo]) / (arc[hi]-arc[lo] || 1);
+  const ni = Math.min(lo+5, pts.length-1);
+  return {
+    x: pts[lo].x + t*(pts[hi].x-pts[lo].x),
+    y: pts[lo].y + t*(pts[hi].y-pts[lo].y),
+    angle: Math.atan2(pts[ni].y-pts[lo].y, pts[ni].x-pts[lo].x)
+  };
+}
+
+function knotPt(s) {
+  const k = 1-tightness;
+  const pl = knotPtAtS(KL, s);
+  const pt = knotPtAtS(KT, s/KL.len*KT.len);
+  return {
+    x: pt.x + (pl.x-pt.x)*k,
+    y: pt.y + (pl.y-pt.y)*k,
+    angle: pt.angle + (pl.angle-pt.angle)*k
+  };
+}
+
+function knotLen() { return KT.len + (KL.len-KT.len)*(1-tightness); }
+
+const MARGIN = 10;
+function currentR()       { return R_TIGHT + (R_LOOSE-R_TIGHT)*(1-tightness); }
+function leftTailWidth()  { return CX() - currentR() - MARGIN; }
+function rightTailWidth() { return CX() - currentR() - MARGIN; }
+function leftTailX1()     { return MARGIN; }
+function rightTailX1()    { return CX() + currentR(); }
+
+function pathPt(s) {
+  const ltw = leftTailWidth();
+  if (s < ltw) return { x: leftTailX1()+s, y: CY(), angle: 0 };
+  s -= ltw;
+  const kl = knotLen();
+  if (s < kl) return knotPt(s/kl*KL.len);
+  s -= kl;
+  return { x: rightTailX1()+s, y: CY(), angle: 0 };
+}
+
+ctx.font = FONT_SC;
+function charWidths(text) { return [...text].map(ch => ctx.measureText(ch).width); }
+function phraseWWithSpacing(text, sp) {
+  return charWidths(text).reduce((a,b) => a+b, 0) + sp*(text.length-1);
+}
+function tailSpacing(text, availWidth) {
+  const rawW = charWidths(text).reduce((a,b) => a+b, 0);
+  const gaps = text.length-1;
+  if (gaps <= 0) return 2.0;
+  return Math.max(0.5, (availWidth-rawW)/gaps);
+}
+
+const KNOT_SPACING = 2.8;
+const mKnot = knotPhrases.map(t => ({ text: t, tw: phraseWWithSpacing(t, KNOT_SPACING), cws: charWidths(t) }));
+const N_K = mKnot.length;
+
+function baseSForKnot(ki) {
+  const kl = knotLen(), g = kl/N_K;
+  return leftTailWidth() + ki*g + (g-mKnot[ki].tw)/2;
+}
+
+const knotStrands = mKnot.map((m, ki) => ({ text: m.text, tw: m.tw, cws: m.cws, ki, s: 0 }));
+
+function hitTail(mx, my) {
+  if (Math.abs(my-CY()) > 20) return null;
+  const ltw = leftTailWidth();
+  if (mx >= MARGIN && mx <= leftTailX1()+ltw) return 'left';
+  const rtx = rightTailX1();
+  if (mx >= rtx && mx <= rtx+rightTailWidth()) return 'right';
+  return null;
+}
+
+function drawTailLeft() {
+  const tw = leftTailWidth();
+  const sp = tailSpacing(leftTailText, tw-4);
+  ctx.save(); ctx.font = FONT_SC;
+  ctx.fillStyle = FG.replace('ALPHA','0.85');
+  ctx.textBaseline = 'middle';
+  const cws = charWidths(leftTailText);
+  let x = leftTailX1()+2;
+  for (let i = 0; i < leftTailText.length; i++) { ctx.fillText(leftTailText[i], x, CY()); x += cws[i]+sp; }
+  ctx.textBaseline = 'alphabetic'; ctx.restore();
+}
+
+function drawTailRight() {
+  const tw = rightTailWidth();
+  const sp = tailSpacing(rightTailText, tw-4);
+  ctx.save(); ctx.font = FONT_SC;
+  ctx.fillStyle = FG.replace('ALPHA','0.85');
+  ctx.textBaseline = 'middle';
+  const cws = charWidths(rightTailText);
+  let x = rightTailX1()+2;
+  for (let i = 0; i < rightTailText.length; i++) { ctx.fillText(rightTailText[i], x, CY()); x += cws[i]+sp; }
+  ctx.textBaseline = 'alphabetic'; ctx.restore();
+}
+
+function drawKnotPhrase(st, active) {
+  ctx.save(); ctx.font = FONT_SC;
+  ctx.fillStyle = FG.replace('ALPHA', active ? '0.45' : '0.85');
+  const mid = pathPt(st.s + st.tw/2);
+  let ang = mid.angle;
+  while (ang >  Math.PI) ang -= Math.PI*2;
+  while (ang < -Math.PI) ang += Math.PI*2;
+  const leftward = Math.abs(ang) > Math.PI/2;
+  if (!leftward) {
+    let cs = st.s;
+    for (let i = 0; i < st.text.length; i++) {
+      const cw = st.cws[i], pt = pathPt(cs+cw/2);
+      ctx.save(); ctx.translate(pt.x, pt.y); ctx.rotate(pt.angle);
+      ctx.fillText(st.text[i], -cw/2, 4); ctx.restore();
+      cs += cw+KNOT_SPACING;
+    }
+  } else {
+    let cs = st.s+st.tw;
+    for (let i = 0; i < st.text.length; i++) {
+      const cw = st.cws[i]; cs -= cw;
+      const pt = pathPt(cs+cw/2);
+      ctx.save(); ctx.translate(pt.x, pt.y); ctx.rotate(pt.angle+Math.PI);
+      ctx.fillText(st.text[i], -cw/2, 4); ctx.restore();
+      cs -= KNOT_SPACING;
+    }
+  }
+  ctx.restore();
+}
+
+let drag = null, tailDrag = null, tailDragX0 = 0, tailDragTightness0 = 1.0;
+function cxy(e) { const r = canvas.getBoundingClientRect(); return { x: e.clientX-r.left, y: e.clientY-r.top }; }
+
+function hitTestKnot(mx, my) {
+  for (let i = knotStrands.length-1; i >= 0; i--) {
+    const st = knotStrands[i], mid = pathPt(st.s+st.tw/2);
+    if (Math.abs(mx-mid.x) < st.tw/2+14 && Math.abs(my-mid.y) < 14) return i;
+  }
+  return -1;
+}
+
+canvas.addEventListener('pointerdown', e => {
+  const { x, y } = cxy(e);
+  const t = hitTail(x, y);
+  if (t) {
+    tailDrag = t; tailDragX0 = e.clientX; tailDragTightness0 = tightness;
+    canvas.setPointerCapture(e.pointerId);
+    return;
+  }
+  const idx = hitTestKnot(x, y);
+  if (idx < 0) return;
+  drag = idx;
+  canvas.setPointerCapture(e.pointerId);
+});
+
+canvas.addEventListener('pointermove', e => {
+  if (tailDrag) {
+    const dx = e.clientX - tailDragX0;
+    const pull = tailDrag === 'left' ? -dx : dx;
+    const delta = pull / 200;
+    tgtTight = Math.max(0.15, Math.min(1.0, tailDragTightness0+delta));
+    return;
+  }
+  if (drag === null) return;
+  const { x, y } = cxy(e);
+  const dist = Math.sqrt((x-CX())**2 + (y-CY())**2);
+  const looseness = Math.min(1, Math.max(0, (dist-R_TIGHT*0.3) / (R_LOOSE*1.4-R_TIGHT*0.3)));
+  tgtTight = Math.min(tgtTight, 1-looseness*0.82);
+  const st = knotStrands[drag];
+  const mid = pathPt(st.s+st.tw/2);
+  const dx = x-mid.x;
+  st.s += dx*0.04;
+  knotStrands.forEach((s, i) => {
+    if (i === drag) return;
+    const d = Math.min(Math.abs(i-drag), knotStrands.length-Math.abs(i-drag));
+    if (d <= 2) s.s += dx*0.04*Math.exp(-d*1.2)*0.08;
+  });
+});
+
+canvas.addEventListener('pointerup', () => { drag = null; tailDrag = null; });
+
+let initialised = false;
+function tick() {
+  ctx.clearRect(0, 0, W(), H());
+  tightness += (tgtTight-tightness)*0.018;
+  if (!initialised) { knotStrands.forEach((st, ki) => { st.s = baseSForKnot(ki); }); initialised = true; }
+  knotStrands.forEach((st, i) => { if (i !== drag) st.s += (baseSForKnot(st.ki)-st.s)*0.04; });
+  drawTailLeft();
+  drawTailRight();
+  knotStrands.forEach((st, i) => drawKnotPhrase(st, i === drag));
+  requestAnimationFrame(tick);
+}
+tick();
+</script>
+</body>
+</html>
