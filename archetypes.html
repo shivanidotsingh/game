@@ -86,10 +86,7 @@ body{background:var(--page-bg);color:var(--ink);font-family:-apple-system,'Helve
   display:flex;
   align-items:center;
   justify-content:center;
-  font-weight:700;
-  font-size:0.7rem;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
+  font-weight:700;font-size:0.9rem;
   backface-visibility:hidden;
   border: 1px solid rgba(255,255,255,0.1);
 }
@@ -165,12 +162,12 @@ body{background:var(--page-bg);color:var(--ink);font-family:-apple-system,'Helve
   
   <div class="intro-center" onclick="startQuiz()">
     <div class="cube">
-      <div class="face front tc-creator">Creator</div>
-      <div class="face back tc-preserver">Preserver</div>
-      <div class="face right tc-mover">Mover</div>
-      <div class="face left tc-reflector">Reflector</div>
-      <div class="face top tc-seeker">Seeker</div>
-      <div class="face bottom tc-tender">Nurturer</div>
+      <div class="face front tc-creator">💥<br>Creator</div>
+      <div class="face back tc-preserver">🌿<br>Preserver</div>
+      <div class="face right tc-mover">🚀<br>Mover</div>
+      <div class="face left tc-reflector">🌊<br>Reflector</div>
+      <div class="face top tc-seeker">🔭<br>Seeker</div>
+      <div class="face bottom tc-tender">🌸<br>Nurturer</div>
     </div>
     <div class="intro-instruction">click to begin</div>
   </div>
@@ -218,10 +215,10 @@ body{background:var(--page-bg);color:var(--ink);font-family:-apple-system,'Helve
 
 <script>
 const TYPES=['creator','preserver','reflector','mover','tender','seeker'];
-const RESULT_BG   ={creator:'#d4c8d8',preserver:'#b8c8b8',reflector:'#c0c8d8',mover:'#d8c8b8',tender:'#d8bec8',seeker:'#f0d0c0'};
-const RESULT_COLOR={creator:'#7a6890',preserver:'#2a7a6e',reflector:'#4a5878',mover:'#8a5030',tender:'#a84868',seeker:'#d87840'};
+const RESULT_BG   ={creator:'#d4c8d8',preserver:'#b8c8b8',reflector:'#c0c8d8',mover:'#e8c3d1',tender:'#d8bec8',seeker:'#f0d0c0'};
+const RESULT_COLOR={creator:'#7a6890',preserver:'#2a7a6e',reflector:'#4a5878',mover:'#c04a7a',tender:'#a84868',seeker:'#d87840'};
 const BAR_COLOR   ={creator:'#a890c0',preserver:'#68a888',reflector:'#7890b8',mover:'#c09068',tender:'#c87898',seeker:'#d87840'};
-const SHADOW_COLOR={creator:'#c0a0d0',preserver:'#80c8a8',reflector:'#90a8d0',mover:'#d8a878',tender:'#e090a8',seeker:'#FA8072'};
+const SHADOW_COLOR={creator:'#c0a0d0',preserver:'#80c8a8',reflector:'#90a8d0',mover:'#e8c3d1',tender:'#e090a8',seeker:'#FA8072'};
 const LABEL={creator:'Creator',preserver:'Preserver',reflector:'Reflector',mover:'Mover',tender:'Nurturer',seeker:'Seeker'};
 
 const TYPE_DATA={
