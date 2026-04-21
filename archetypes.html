@@ -134,7 +134,7 @@ body{background:var(--page-bg);color:var(--ink);font-family:-apple-system,sans-s
       <div class="shadow-name" id="r-shadow-name"></div>
       <div class="shadow-desc" id="r-shadow-desc"></div>
     </div>
-    <button class="restart-btn" onclick="location.reload()">← Start again</button>
+    <button class="restart-btn" onclick="restart()">← Start again</button>
   </div>
 </div>
 
@@ -238,6 +238,9 @@ function showResult(){
   show('s-result');
   setTimeout(()=>{document.querySelectorAll('.blend-bar').forEach(b=>b.style.width=b.dataset.pct+'%');},100);
 }
+
+  function restart(){current=0;answers=new Array(12).fill(null);show('s-intro');}
+
 </script>
 </body>
 </html>
