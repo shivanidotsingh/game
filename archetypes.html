@@ -7,150 +7,81 @@
 <title> archetypical </title>
 <style>
 :root {
-  --creator-bg:#d4c8d8; --creator-color:#7a6890;
-  --preserver-bg:#b8c8b8; --preserver-color:#2a7a6e;
-  --reflector-bg:#c0c8d8; --reflector-color:#4a5878;
-  --mover-bg:#e8c3d1; --mover-color:#c04a7a;
-  --tender-bg:#d8bec8; --tender-color:#a84868;
-  --seeker-bg:#f0d0c0; --seeker-color:#d87840;
+  /* 6 PRIMARY + 6 LIGHT VARIANTS */
+  --creator:   #7a6890; --creator-l:   #e2dde6; /* Purple */
+  --preserver: #2a7a6e; --preserver-l: #d4e2df; /* Green */
+  --reflector: #4a5878; --reflector-l: #dee2e8; /* Blue */
+  --mover:     #cc3300; --mover-l:     #ffebe6; /* Flame Red (High Energy) */
+  --tender:    #a84868; --tender-l:    #f2e1e7; /* Rose (Soft Care) */
+  --seeker:    #d4a017; --seeker-l:    #fdf5e6; /* Amber (Discovery) */
   
-  --creator-bar:     #a890c0;
-  --preserver-bar:   #68a888;
-  --reflector-bar:   #7890b8;
-  --mover-bar:       #c09068;
-  --tender-bar:      #c87898;
-  --seeker-bar:      #d87840;
-  --creator-shadow:  #c0a0d0;
-  --preserver-shadow:#80c8a8;
-  --reflector-shadow:#90a8d0;
-  --mover-shadow:    #d8a878;
-  --tender-shadow:   #e090a8;
-  --seeker-shadow:   #FA8072;
-  
-  --page-bg:  #f5f2e8;
-  --ink:      #000000;
-  --ink-light:#636363;
-  --border:    rgba(58,53,48,0.12);
-  --warm-grey:#d4d0c8;
+  --page-bg: #f5f2e8; --ink: #000; --ink-l: #636363;
+  --border: rgba(58,53,48,0.12); --warm-grey: #d4d0c8;
 }
+
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
-html{scroll-behavior:smooth;}
-body{background:var(--page-bg);color:var(--ink);font-family:-apple-system,'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:15px;line-height:1.6;min-height:100vh;}
-.screen{display:none;}.screen.active{display:flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh;}
+body{background:var(--page-bg);color:var(--ink);font-family:-apple-system,sans-serif;font-size:15px;line-height:1.6;min-height:100vh;}
+.screen{display:none; flex-direction:column; align-items:center; justify-content:center; min-height:100vh; padding:24px;}
+.screen.active{display:flex;}
 
-/* INTRO STYLING */
-#s-intro { padding: 24px; text-align: center; }
-
-.intro-sub { 
-  font-size: 0.75rem; 
-  color: var(--ink); 
-  opacity: 0.4; 
-  max-width: 340px; 
-  margin-bottom: 60px; /* Space between text and cube */
-  line-height: 1.6;
-}
-
-.intro-center {
-  perspective: 1000px;
-  cursor: pointer;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.intro-instruction {
-  margin-top: 50px;
-  font-size: 0.62rem;
-  letter-spacing: 0.25em;
-  text-transform: uppercase;
-  opacity: 0.3;
-  font-weight: 700;
-}
+/* INTRO */
+.intro-sub{font-size:0.75rem; opacity:0.4; max-width:340px; text-align:center; margin-bottom:60px; line-height:1.6;}
+.intro-center{perspective:1000px; cursor:pointer; display:flex; flex-direction:column; align-items:center;}
+.intro-instruction{margin-top:50px; font-size:0.62rem; letter-spacing:0.25em; text-transform:uppercase; opacity:0.3; font-weight:700;}
 
 /* CUBE */
-.cube {
-  position:relative;
-  width:110px;
-  height:110px;
-  transform-style:preserve-3d;
-  animation:rotateCube 18s infinite linear;
-}
-@keyframes rotateCube {
-  0%   { transform: rotateX(-25deg) rotateY(0deg); }
-  100% { transform: rotateX(-25deg) rotateY(360deg); }
-}
-.face {
-  position:absolute;
-  width:110px;
-  height:110px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-weight:700;font-size:0.9rem;
-  backface-visibility:hidden;
-  border: 1px solid rgba(255,255,255,0.1);
-}
-.front  { transform: rotateY(0deg) translateZ(55px); }
-.back   { transform: rotateY(180deg) translateZ(55px); }
-.right  { transform: rotateY(90deg) translateZ(55px); }
-.left   { transform: rotateY(-90deg) translateZ(55px); }
-.top    { transform: rotateX(90deg) translateZ(55px); }
-.bottom { transform: rotateX(-90deg) translateZ(55px); }
+.cube{position:relative; width:110px; height:110px; transform-style:preserve-3d; animation:rotateCube 20s infinite linear;}
+@keyframes rotateCube{0%{transform:rotateX(-25deg) rotateY(0deg);} 100%{transform:rotateX(-25deg) rotateY(360deg);}}
+.face{position:absolute; width:110px; height:110px; display:flex; flex-direction:column; align-items:center; justify-content:center; font-weight:700; font-size:0.75rem; text-transform:uppercase; letter-spacing:0.05em; backface-visibility:hidden; border:1px solid rgba(0,0,0,0.05);}
+.front{transform:rotateY(0deg) translateZ(55px);} .back{transform:rotateY(180deg) translateZ(55px);} .right{transform:rotateY(90deg) translateZ(55px);} .left{transform:rotateY(-90deg) translateZ(55px);} .top{transform:rotateX(90deg) translateZ(55px);} .bottom{transform:rotateX(-90deg) translateZ(55px);}
 
-.tc-creator  {background:var(--creator-bg);  color:var(--creator-color);}
-.tc-preserver{background:var(--preserver-bg);color:var(--preserver-color);}
-.tc-reflector{background:var(--reflector-bg);color:var(--reflector-color);}
-.tc-mover    {background:var(--mover-bg);color:var(--mover-color);} 
-.tc-tender   {background:var(--tender-bg);   color:var(--tender-color);}
-.tc-seeker   {background:var(--seeker-bg);   color:var(--seeker-color);}
+.f-creator{background:var(--creator-l); color:var(--creator);}
+.f-preserver{background:var(--preserver-l); color:var(--preserver);}
+.f-reflector{background:var(--reflector-l); color:var(--reflector);}
+.f-mover{background:var(--mover-l); color:var(--mover);}
+.f-tender{background:var(--tender-l); color:var(--tender);}
+.f-seeker{background:var(--seeker-l); color:var(--seeker);}
 
-/* QUIZ STYLING */
-#s-quiz { width: 100%; max-width: 640px; margin: 0 auto; padding: 40px 24px; justify-content: flex-start; padding-top: 80px; }
-.quiz-meta{width: 100%; display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;}
-.q-num{font-size:0.72rem;font-weight:700;color:var(--ink-light);letter-spacing:0.1em;text-transform:uppercase;}
-.prog-dots{display:flex;gap:4px;}
-.prog-dot{width:6px;height:6px;border-radius:50%;background:var(--warm-grey);transition:background 0.2s;}
-.prog-dot.done{background:var(--ink-light);}
-.prog-dot.active{background:var(--ink);width:14px;border-radius:3px;}
-.q-text{font-size:1.25rem;font-weight:700;line-height:1.3;color:var(--ink);margin-bottom:20px; width: 100%;}
-.options{width: 100%; display:flex;flex-direction:column;gap:8px;margin-bottom:28px;}
-.opt-label{display:flex;align-items:flex-start;gap:12px;padding:11px 14px;border:1.5px solid var(--border);border-radius:8px;cursor:pointer;background:white;transition:border-color 0.15s,background 0.15s;font-size:0.88rem;color:var(--ink);line-height:1.5;}
-.opt-label:hover{border-color:rgba(58,53,48,0.3);background:#fdfcf9;}
-.opt-label.selected{border-color:var(--ink);background:#fdfcf9;}
-.opt-label input[type="radio"]{display: none;}
-.quiz-footer{width: 100%; display:flex;align-items:center;justify-content:space-between;}
-.next-btn{font-family:inherit;font-size:0.85rem;font-weight:700;background:var(--ink);color:var(--page-bg);border:none;padding:9px 24px;border-radius:6px;cursor:pointer;transition:opacity 0.15s;}
-.next-btn:disabled{opacity:0.1;cursor:default;}
-
-/* TRANSITION */
-#s-transition { text-align: center; }
-.emoji-loader { font-size: 2.5rem; margin-bottom: 20px; min-height: 4rem; display: flex; align-items: center; justify-content: center; }
-.trans-text { font-size: 0.65rem; letter-spacing: 0.15em; text-transform: uppercase; opacity: 0.4; }
+/* QUIZ */
+#s-quiz{max-width:640px; margin:0 auto; justify-content:flex-start; padding-top:80px;}
+.quiz-meta{width:100%; display:flex; align-items:center; justify-content:space-between; margin-bottom:24px;}
+.q-num{font-size:0.72rem; font-weight:700; color:var(--ink-l); text-transform:uppercase;}
+.prog-dots{display:flex; gap:4px;}
+.prog-dot{width:6px; height:6px; border-radius:50%; background:var(--warm-grey); transition:0.2s;}
+.prog-dot.done{background:var(--ink-l);}
+.prog-dot.active{background:var(--ink); width:14px; border-radius:3px;}
+.q-text{font-size:1.25rem; font-weight:700; width:100%; margin-bottom:20px;}
+.options{width:100%; display:flex; flex-direction:column; gap:8px; margin-bottom:28px;}
+.opt-label{display:flex; padding:12px 14px; border:1.5px solid var(--border); border-radius:8px; cursor:pointer; background:white; font-size:0.88rem; transition:0.15s;}
+.opt-label:hover{background:#fdfcf9; border-color:rgba(0,0,0,0.2);}
+.opt-label.selected{border-color:var(--ink); background:#fdfcf9;}
+.opt-label input{display:none;}
+.next-btn{font-family:inherit; font-weight:700; background:var(--ink); color:var(--page-bg); border:none; padding:10px 24px; border-radius:6px; cursor:pointer;}
+.next-btn:disabled{opacity:0.1; cursor:default;}
 
 /* RESULTS */
-#s-result { display: block; min-height: 100vh; }
-.result-hero{padding:60px 24px 32px;border-bottom:1px solid var(--border);}
-.result-hero-inner{max-width:640px;margin:0 auto;}
-.result-kicker{font-size:0.7rem;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;margin-bottom:6px;opacity:0.55;}
-.result-name{font-size:3rem;font-weight:700;line-height:1;margin-bottom:6px;}
-.result-secondary{font-size:0.78rem;margin-bottom:14px;font-weight:600;}
-.result-tagline{font-size:1rem;font-weight:700;line-height:1.4;max-width:480px;opacity:0.75;}
-.result-emoji{font-size:1.6rem;margin-bottom:10px;letter-spacing:4px;}
-.result-band{height:4px;display:flex;}
-.result-band-seg{flex:1;}
-.result-body{max-width:640px;margin:0 auto;padding:28px 24px 80px;display:flex;flex-direction:column;gap:24px;}
-.section-label{font-size:0.68rem;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:var(--ink-light);margin-bottom:10px;}
-.blend-row{display:flex;align-items:center;gap:10px;margin-bottom:7px;}
-.blend-name{font-size:0.72rem;font-weight:700;min-width:80px;text-transform:uppercase;letter-spacing:0.06em;}
-.blend-track{flex:1;height:3px;background:rgba(58,53,48,0.1);border-radius:2px;}
-.blend-bar{height:3px;border-radius:2px;transition:width 1.1s cubic-bezier(0.16,1,0.3,1);}
-.blend-pct{font-size:0.7rem;color:var(--ink-light);min-width:30px;text-align:right;}
-.result-desc{font-size:0.88rem;color:var(--ink);}
-.shadow-section{background:#2e2a26;color:#f0ece4;border-radius:10px;padding:20px;}
-.shadow-label{font-size:0.65rem;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;opacity:0.45;margin-bottom:6px;}
-.shadow-name{font-size:1.3rem;font-weight:700;margin-bottom:8px;}
-.shadow-desc{font-size:0.84rem;opacity:0.72;}
-.restart-btn{font-family:inherit;font-size:0.8rem;font-weight:700;background:transparent;border:1.5px solid var(--border);color:var(--ink-light);padding:8px 20px;border-radius:6px;cursor:pointer;margin-top: 20px;}
+#s-result{display:block; padding:0;}
+.result-hero{padding:60px 24px 32px; border-bottom:1px solid var(--border);}
+.result-hero-inner{max-width:640px; margin:0 auto;}
+.result-emoji{font-size:1.6rem; margin-bottom:10px; letter-spacing:4px;}
+.result-kicker{font-size:0.7rem; font-weight:700; text-transform:uppercase; opacity:0.5; margin-bottom:6px;}
+.result-name{font-size:3rem; font-weight:700; line-height:1; margin-bottom:6px;}
+.result-secondary{font-size:0.78rem; margin-bottom:14px; font-weight:600;}
+.result-tagline{font-size:1rem; font-weight:700; max-width:480px; opacity:0.75;}
+.result-band{height:4px; display:flex;}
+.result-band-seg{height:100%;}
+.result-body{max-width:640px; margin:0 auto; padding:32px 24px 80px; display:flex; flex-direction:column; gap:28px;}
+.section-label{font-size:0.68rem; font-weight:700; text-transform:uppercase; color:var(--ink-l); margin-bottom:12px;}
+.blend-row{display:flex; align-items:center; gap:10px; margin-bottom:8px;}
+.blend-name{font-size:0.72rem; font-weight:700; min-width:85px; text-transform:uppercase;}
+.blend-track{flex:1; height:3px; background:rgba(0,0,0,0.06); border-radius:2px;}
+.blend-bar{height:100%; border-radius:2px; width:0; transition:width 1.2s cubic-bezier(0.16,1,0.3,1);}
+.blend-pct{font-size:0.7rem; color:var(--ink-l); min-width:30px; text-align:right;}
+.shadow-section{background:#2e2a26; color:#f0ece4; border-radius:10px; padding:24px;}
+.shadow-label{font-size:0.65rem; font-weight:700; text-transform:uppercase; opacity:0.4; margin-bottom:8px;}
+.shadow-name{font-size:1.3rem; font-weight:700; margin-bottom:8px;}
+.shadow-desc{font-size:0.86rem; opacity:0.75; line-height:1.7;}
+.restart-btn{background:transparent; border:1.5px solid var(--border); color:var(--ink-l); padding:8px 20px; border-radius:6px; cursor:pointer; font-weight:700; margin-top:10px;}
 
 @media(max-width:480px){.result-name{font-size:2.2rem;}}
 </style>
@@ -159,30 +90,24 @@ body{background:var(--page-bg);color:var(--ink);font-family:-apple-system,'Helve
 
 <div class="screen active" id="s-intro">
   <p class="intro-sub">Twelve questions. No right answers. Reveal your blend of multitudes, and its corresponding shadow tendencies.</p>
-  
   <div class="intro-center" onclick="startQuiz()">
     <div class="cube">
-      <div class="face front tc-creator">💥<br>Creator</div>
-      <div class="face back tc-preserver">🌿<br>Preserver</div>
-      <div class="face right tc-mover">🚀<br>Mover</div>
-      <div class="face left tc-reflector">🌊<br>Reflector</div>
-      <div class="face top tc-seeker">🔭<br>Seeker</div>
-      <div class="face bottom tc-tender">🌸<br>Nurturer</div>
+      <div class="face front f-creator"><span>💥</span>Creator</div>
+      <div class="face back f-preserver"><span>🌿</span>Preserver</div>
+      <div class="face right f-mover"><span>🚀</span>Mover</div>
+      <div class="face left f-reflector"><span>🌊</span>Reflector</div>
+      <div class="face top f-seeker"><span>🔭</span>Seeker</div>
+      <div class="face bottom f-tender"><span>🌸</span>Nurturer</div>
     </div>
     <div class="intro-instruction">click to begin</div>
   </div>
 </div>
 
 <div class="screen" id="s-quiz">
-  <div class="quiz-meta">
-    <span class="q-num" id="q-num-label">1 / 12</span>
-    <div class="prog-dots" id="prog-dots"></div>
-  </div>
+  <div class="quiz-meta"><span class="q-num" id="q-num-label"></span><div class="prog-dots" id="prog-dots"></div></div>
   <div class="q-text" id="q-text"></div>
   <div class="options" id="options"></div>
-  <div class="quiz-footer">
-    <button class="next-btn" id="next-btn" onclick="nextQ()" disabled>Next →</button>
-  </div>
+  <button class="next-btn" id="next-btn" onclick="nextQ()" disabled>Next →</button>
 </div>
 
 <div class="screen" id="s-transition">
@@ -209,25 +134,21 @@ body{background:var(--page-bg);color:var(--ink);font-family:-apple-system,'Helve
       <div class="shadow-name" id="r-shadow-name"></div>
       <div class="shadow-desc" id="r-shadow-desc"></div>
     </div>
-    <div class="restart-row"><button class="restart-btn" onclick="restart()">← Start again</button></div>
+    <button class="restart-btn" onclick="location.reload()">← Start again</button>
   </div>
 </div>
 
 <script>
 const TYPES=['creator','preserver','reflector','mover','tender','seeker'];
-const RESULT_BG   ={creator:'#d4c8d8',preserver:'#b8c8b8',reflector:'#c0c8d8',mover:'#e8c3d1',tender:'#d8bec8',seeker:'#f0d0c0'};
-const RESULT_COLOR={creator:'#7a6890',preserver:'#2a7a6e',reflector:'#4a5878',mover:'#c04a7a',tender:'#a84868',seeker:'#d87840'};
-const BAR_COLOR   ={creator:'#a890c0',preserver:'#68a888',reflector:'#7890b8',mover:'#c09068',tender:'#c87898',seeker:'#d87840'};
-const SHADOW_COLOR={creator:'#c0a0d0',preserver:'#80c8a8',reflector:'#90a8d0',mover:'#e8c3d1',tender:'#e090a8',seeker:'#FA8072'};
-const LABEL={creator:'Creator',preserver:'Preserver',reflector:'Reflector',mover:'Mover',tender:'Nurturer',seeker:'Seeker'};
+const TYPE_MAP={creator:'Creator',preserver:'Preserver',reflector:'Reflector',mover:'Mover',tender:'Nurturer',seeker:'Seeker'};
 
 const TYPE_DATA={
-  creator:{label:'Creator',emoji:'⚡ 🔨 💥 🛠',tagline:"You bring things into being that didn't exist before.",desc:"You think in possibilities and futures. Driven by the need to build and disrupt because the current version of things isn't good enough.",shadow_name:'The Destroyer',shadow:"Your drive to create can flatten what already exists. You may leave wreckage behind you and call it progress."},
-  preserver:{label:'Preserver',emoji:'🌿 🏛 📖 🔒',tagline:'You hold things together that would otherwise fall apart.',desc:"You understand that most of what's valuable was built slowly and can be lost quickly. You are the continuity others take for granted.",shadow_name:'The Decayer',shadow:"Held too tightly, preservation becomes resistance. Stagnation can look a lot like stability from the inside."},
-  reflector:{label:'Reflector',emoji:'🌊 🦉 📡 🌀',tagline:'You process the world deeply before responding to it.',desc:"You observe more than you act. You find meaning in what others overlook. Your insights often arrive after everyone else has moved on.",shadow_name:'The Consumer',shadow:"Reflection without action can become a way of avoiding the world. You may mistake depth of feeling for depth of contribution."},
-  mover:{label:'Mover',emoji:'🚀 🏃 🔥 💨',tagline:'You generate momentum — in yourself and in others.',desc:"Energised by progress, pace, and forward motion. You don't wait for permission and find inaction physically uncomfortable.",shadow_name:'The Agitator',shadow:"Speed without direction is just disruption. You can bulldoze slower people and mistake urgency for importance."},
-  tender:{label:'Nurturer',emoji:'🌸 🕯 💌 🫶',tagline:'You are most alive when being there for someone.',desc:"You notice when people are struggling before they say anything. You create safety, warmth, and belonging — often invisibly.",shadow_name:'The Enabler',shadow:"Care without boundaries becomes self-erasure. You may protect people from consequences that would help them grow."},
-  seeker:{label:'Seeker',emoji:'🧭 🔭 🌍 ✨',tagline:'You follow the question wherever it leads.',desc:"Driven by curiosity more than answers. You change your mind readily and feel most alive in unfamiliar territory.",shadow_name:'The Escapist',shadow:"The horizon is always more interesting than where you've arrived. You may flee depth for novelty and commitment for possibility."}
+  creator:{emoji:'⚡ 🔨 💥 🛠',tagline:"You bring things into being that didn't exist before.",desc:"You think in possibilities and futures. Driven by the need to build and disrupt because the current version of things isn't good enough.",shadow_name:'The Destroyer',shadow:"Your drive to create can flatten what already exists. You may leave wreckage behind you and call it progress."},
+  preserver:{emoji:'🌿 🏛 📖 🔒',tagline:'You hold things together that would otherwise fall apart.',desc:"You understand that most of what's valuable was built slowly and can be lost quickly. You are the continuity others take for granted.",shadow_name:'The Decayer',shadow:"Held too tightly, preservation becomes resistance. Stagnation can look a lot like stability from the inside."},
+  reflector:{emoji:'🌊 🦉 📡 🌀',tagline:'You process the world deeply before responding to it.',desc:"You observe more than you act. You find meaning in what others overlook. Your insights often arrive after everyone else has moved on.",shadow_name:'The Consumer',shadow:"Reflection without action can become a way of avoiding the world. You may mistake depth of feeling for depth of contribution."},
+  mover:{emoji:'🚀 🏃 🔥 💨',tagline:'You generate momentum — in yourself and in others.',desc:"Energised by progress, pace, and forward motion. You don't wait for permission and find inaction physically uncomfortable.",shadow_name:'The Agitator',shadow:"Speed without direction is just disruption. You can bulldoze slower people and mistake urgency for importance."},
+  tender:{emoji:'🌸 🕯 💌 🫶',tagline:'You are most alive when being there for someone.',desc:"You notice when people are struggling before they say anything. You create safety, warmth, and belonging — often invisibly.",shadow_name:'The Enabler',shadow:"Care without boundaries becomes self-erasure. You may protect people from consequences that would help them grow."},
+  seeker:{emoji:'🧭 🔭 🌍 ✨',tagline:'You follow the question wherever it leads.',desc:"Driven by curiosity more than answers. You change your mind readily and feel most alive in unfamiliar territory.",shadow_name:'The Escapist',shadow:"The horizon is always more interesting than where you've arrived. You may flee depth for novelty and commitment for possibility."}
 };
 
 const QUESTIONS=[
@@ -245,101 +166,78 @@ const QUESTIONS=[
   {text:"After you're gone, what do you want said about you?",opts:[{text:"They made something that mattered.",w:[4,0,0,1,0,0]},{text:"They held things together. They kept what was good.",w:[0,4,0,0,1,0]},{text:"They saw what others missed. They understood deeply.",w:[0,0,4,0,0,1]},{text:"They made things happen. They got people moving.",w:[0,0,0,4,0,0]},{text:"They made people feel less alone.",w:[0,0,0,0,4,0]},{text:"They never stopped asking questions. Always becoming.",w:[0,0,1,0,0,4]}]}
 ];
 
-let current=0,answers=new Array(12).fill(null);
-let emojiInterval;
+let current=0, answers=new Array(12).fill(null);
 
 function show(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');window.scrollTo(0,0);}
-function startQuiz(){show('s-quiz');buildDots();renderQ();}
-function buildDots(){const w=document.getElementById('prog-dots');w.innerHTML='';for(let i=0;i<12;i++){const d=document.createElement('div');d.className='prog-dot'+(i===0?' active':'');d.id='dot-'+i;w.appendChild(d);}}
-function updateDots(){for(let i=0;i<12;i++){const d=document.getElementById('dot-'+i);if(!d)continue;d.className='prog-dot'+(i<current?' done':i===current?' active':'');}}
+
+function startQuiz(){
+  document.getElementById('prog-dots').innerHTML=answers.map((_,i)=>`<div class="prog-dot" id="dot-${i}"></div>`).join('');
+  show('s-quiz'); renderQ();
+}
 
 function renderQ(){
   const q=QUESTIONS[current];
   document.getElementById('q-num-label').textContent=(current+1)+' / 12';
   document.getElementById('q-text').textContent=q.text;
-  updateDots();
+  answers.forEach((_,i)=>{const d=document.getElementById('dot-'+i);d.className='prog-dot'+(i<current?' done':i===current?' active':'');});
   const btn=document.getElementById('next-btn');
   btn.disabled=answers[current]===null;
   btn.textContent=current===11?'See results →':'Next →';
-  const wrap=document.getElementById('options');
-  wrap.innerHTML='';
-  q.opts.forEach((o,i)=>{
-    const label=document.createElement('label');
-    label.className='opt-label'+(answers[current]===i?' selected':'');
-    label.innerHTML=`<input type="radio" name="q${current}" value="${i}" ${answers[current]===i?'checked':''}><span>${o.text}</span>`;
-    label.querySelector('input').addEventListener('change',()=>selectOpt(i,label));
-    wrap.appendChild(label);
-  });
+  document.getElementById('options').innerHTML=q.opts.map((o,i)=>`
+    <label class="opt-label ${answers[current]===i?'selected':''}">
+      <input type="radio" name="q" onchange="selectOpt(${i})" ${answers[current]===i?'checked':''}>
+      <span>${o.text}</span>
+    </label>`).join('');
 }
 
-function selectOpt(i,labelEl){answers[current]=i;document.querySelectorAll('.opt-label').forEach(l=>l.classList.remove('selected'));labelEl.classList.add('selected');document.getElementById('next-btn').disabled=false;}
+function selectOpt(i){answers[current]=i; renderQ();}
 
 function nextQ(){
-  if(current===11){
-    runTransition();
-    return;
-  }
-  current++;
-  renderQ();
+  if(current===11) return runTransition();
+  current++; renderQ();
 }
 
 function runTransition() {
   show('s-transition');
-  const loader = document.getElementById('emoji-loader');
-  const emojis = ['⚡','🔨','🌿','🏛','🌊','🦉','🚀','🏃','🌸','🕯','🧭','🔭'];
-  let idx = 0;
-  
-  emojiInterval = setInterval(() => {
-    loader.textContent = emojis[idx % emojis.length];
-    idx++;
-  }, 250);
-
-  setTimeout(() => {
-    clearInterval(emojiInterval);
-    showResult();
-  }, 2200); 
+  const loader=document.getElementById('emoji-loader'), emojis=['⚡','🌿','🌊','🚀','🔭','🌸','🦉','🛠'];
+  let idx=0;
+  const interval=setInterval(()=>loader.textContent=emojis[idx++%emojis.length],200);
+  setTimeout(()=>{clearInterval(interval); showResult();},2200);
 }
 
 function showResult(){
   const scores={creator:0,preserver:0,reflector:0,mover:0,tender:0,seeker:0};
-  QUESTIONS.forEach((q,qi)=>{const ai=answers[qi];if(ai===null)return;q.opts[ai].w.forEach((v,ti)=>{scores[TYPES[ti]]+=v;});});
+  QUESTIONS.forEach((q,qi)=>q.opts[answers[qi]].w.forEach((v,ti)=>scores[TYPES[ti]]+=v));
   const total=Object.values(scores).reduce((a,b)=>a+b,0)||1;
-  const pcts={};TYPES.forEach(t=>pcts[t]=Math.round(scores[t]/total*100));
+  const pcts={}; TYPES.forEach(t=>pcts[t]=Math.round(scores[t]/total*100));
   const sorted=TYPES.slice().sort((a,b)=>pcts[b]-pcts[a]);
-  const primary=sorted[0],secondary=sorted[1],d=TYPE_DATA[primary];
+  const pri=sorted[0], sec=sorted[1], d=TYPE_DATA[pri];
 
-  document.getElementById('r-hero').style.background=RESULT_BG[primary];
-  document.getElementById('r-name').textContent=d.label;
-  document.getElementById('r-name').style.color=RESULT_COLOR[primary];
-  document.getElementById('r-secondary').textContent='with traces of '+LABEL[secondary];
-  document.getElementById('r-secondary').style.color=RESULT_COLOR[secondary];
-
-  const band=document.getElementById('r-band');
-  band.innerHTML='';
-  sorted.forEach(t=>{if(!pcts[t])return;const seg=document.createElement('div');seg.className='result-band-seg';seg.style.background=BAR_COLOR[t];seg.style.flex=pcts[t];band.appendChild(seg);});
-
+  const hero=document.getElementById('r-hero');
+  hero.style.background=`var(--${pri}-l)`;
+  document.getElementById('r-name').style.color=`var(--${pri})`;
+  document.getElementById('r-name').textContent=TYPE_MAP[pri];
+  document.getElementById('r-secondary').textContent=`with traces of ${TYPE_MAP[sec]}`;
+  document.getElementById('r-secondary').style.color=`var(--${sec})`;
+  
   document.getElementById('r-emoji').textContent=d.emoji;
   document.getElementById('r-tagline').textContent=d.tagline;
   document.getElementById('r-desc').textContent=d.desc;
   document.getElementById('r-shadow-name').textContent=d.shadow_name;
-  document.getElementById('r-shadow-name').style.color=SHADOW_COLOR[primary];
+  document.getElementById('r-shadow-name').style.color=`var(--${pri})`;
   document.getElementById('r-shadow-desc').textContent=d.shadow;
 
-  const barsWrap=document.getElementById('r-bars');
-  barsWrap.innerHTML='';
-  sorted.forEach(t=>{
-    if(!pcts[t])return;
-    const row=document.createElement('div');
-    row.className='blend-row';
-    row.innerHTML=`<span class="blend-name" style="color:${RESULT_COLOR[t]}">${LABEL[t]}</span><div class="blend-track"><div class="blend-bar" style="width:0%;background:${BAR_COLOR[t]}" data-pct="${pcts[t]}"></div></div><span class="blend-pct">${pcts[t]}%</span>`;
-    barsWrap.appendChild(row);
-  });
+  document.getElementById('r-band').innerHTML=sorted.filter(t=>pcts[t]>0).map(t=>`<div class="result-band-seg" style="background:var(--${t}); flex:${pcts[t]}"></div>`).join('');
+  document.getElementById('r-bars').innerHTML=sorted.filter(t=>pcts[t]>0).map(t=>`
+    <div class="blend-row">
+      <span class="blend-name" style="color:var(--${t})">${TYPE_MAP[t]}</span>
+      <div class="blend-track"><div class="blend-bar" style="background:var(--${t})" data-pct="${pcts[t]}"></div></div>
+      <span class="blend-pct">${pcts[t]}%</span>
+    </div>`).join('');
 
   show('s-result');
-  setTimeout(()=>{document.querySelectorAll('.blend-bar').forEach(el=>{el.style.width=el.dataset.pct+'%';});},150);
+  setTimeout(()=>{document.querySelectorAll('.blend-bar').forEach(b=>b.style.width=b.dataset.pct+'%');},100);
 }
-
-function restart(){current=0;answers=new Array(12).fill(null);show('s-intro');}
 </script>
 </body>
 </html>
