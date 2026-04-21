@@ -34,70 +34,109 @@
   --page-bg:  #f5f2e8;
   --ink:      #000000;
   --ink-light:#636363;
-  --border:   rgba(58,53,48,0.12);
+  --border:    rgba(58,53,48,0.12);
   --warm-grey:#d4d0c8;
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
 html{scroll-behavior:smooth;}
 body{background:var(--page-bg);color:var(--ink);font-family:-apple-system,'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:15px;line-height:1.6;min-height:100vh;}
-.screen{display:none;}.screen.active{display:block;}
+.screen{display:none;}.screen.active{display:flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh;}
 
-#s-intro{max-width:640px;margin:0 auto;padding:48px 24px 64px;}
-.intro-wheel-row{display:flex;align-items:center;gap:28px;margin-bottom:28px;}
+/* INTRO STYLING */
+#s-intro { padding: 24px; text-align: center; }
 
-/*  
-.wheel-wrap{width:100px;height:100px;flex-shrink:0;cursor:pointer;}
-.wheel-svg{width:100px;height:100px;display:block;animation:spin 20s linear infinite;}
-.wheel-wrap:hover .wheel-svg{animation-duration:4s;}
-@keyframes spin{to{transform:rotate(360deg);}}
-*/
+.intro-sub { 
+  font-size: 0.75rem; 
+  color: var(--ink); 
+  opacity: 0.4; 
+  max-width: 340px; 
+  margin-bottom: 60px; /* Space between text and cube */
+  line-height: 1.6;
+}
 
-  .intro-headline{flex:1;}
-.intro-title{font-size:2.2rem;font-weight:700;line-height:1.05;color:var(--ink);margin-bottom:6px;}
-.intro-sub{font-size:0.85rem;color:var(--ink-light);line-height:1.5;}
-  
-/*  
-.type-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:28px;}
-.type-card{border-radius:10px;padding:12px 14px;font-weight:700;font-size:0.82rem;line-height:1.2;}
-.type-card .type-name{font-size:1rem;font-weight:700;display:block;margin-bottom:2px;}
-.type-card .type-shadow{font-size:0.72rem;font-weight:400;opacity:0.65;}
-*/
-  
+.intro-center {
+  perspective: 1000px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.intro-instruction {
+  margin-top: 50px;
+  font-size: 0.62rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  opacity: 0.3;
+  font-weight: 700;
+}
+
+/* CUBE */
+.cube {
+  position:relative;
+  width:110px;
+  height:110px;
+  transform-style:preserve-3d;
+  animation:rotateCube 18s infinite linear;
+}
+@keyframes rotateCube {
+  0%   { transform: rotateX(-25deg) rotateY(0deg); }
+  100% { transform: rotateX(-25deg) rotateY(360deg); }
+}
+.face {
+  position:absolute;
+  width:110px;
+  height:110px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-weight:700;
+  font-size:0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  backface-visibility:hidden;
+  border: 1px solid rgba(255,255,255,0.1);
+}
+.front  { transform: rotateY(0deg) translateZ(55px); }
+.back   { transform: rotateY(180deg) translateZ(55px); }
+.right  { transform: rotateY(90deg) translateZ(55px); }
+.left   { transform: rotateY(-90deg) translateZ(55px); }
+.top    { transform: rotateX(90deg) translateZ(55px); }
+.bottom { transform: rotateX(-90deg) translateZ(55px); }
+
 .tc-creator  {background:var(--creator-bg);  color:var(--creator-color);}
 .tc-preserver{background:var(--preserver-bg);color:var(--preserver-color);}
 .tc-reflector{background:var(--reflector-bg);color:var(--reflector-color);}
 .tc-mover    {background:var(--mover-bg);color:var(--mover-color);} 
 .tc-tender   {background:var(--tender-bg);   color:var(--tender-color);}
 .tc-seeker   {background:var(--seeker-bg);   color:var(--seeker-color);}
-  
-hr.intro-rule{border:none;border-top:1px solid var(--border);margin-bottom:20px;}
-.begin-btn{font-family:inherit;font-size:0.9rem;font-weight:700;background:var(--ink);color:var(--page-bg);border:none;padding:10px 28px;border-radius:6px;cursor:pointer;transition:opacity 0.15s;}
-.begin-btn:hover{opacity:0.8;}
-#s-quiz{max-width:640px;margin:0 auto;padding:32px 24px 64px;}
-.quiz-meta{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;}
+
+/* QUIZ STYLING */
+#s-quiz { width: 100%; max-width: 640px; margin: 0 auto; padding: 40px 24px; justify-content: flex-start; padding-top: 80px; }
+.quiz-meta{width: 100%; display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;}
 .q-num{font-size:0.72rem;font-weight:700;color:var(--ink-light);letter-spacing:0.1em;text-transform:uppercase;}
 .prog-dots{display:flex;gap:4px;}
 .prog-dot{width:6px;height:6px;border-radius:50%;background:var(--warm-grey);transition:background 0.2s;}
 .prog-dot.done{background:var(--ink-light);}
 .prog-dot.active{background:var(--ink);width:14px;border-radius:3px;}
-.q-text{font-size:1.25rem;font-weight:700;line-height:1.3;color:var(--ink);margin-bottom:20px;}
-  
-.options{display:flex;flex-direction:column;gap:8px;margin-bottom:28px;}
+.q-text{font-size:1.25rem;font-weight:700;line-height:1.3;color:var(--ink);margin-bottom:20px; width: 100%;}
+.options{width: 100%; display:flex;flex-direction:column;gap:8px;margin-bottom:28px;}
 .opt-label{display:flex;align-items:flex-start;gap:12px;padding:11px 14px;border:1.5px solid var(--border);border-radius:8px;cursor:pointer;background:white;transition:border-color 0.15s,background 0.15s;font-size:0.88rem;color:var(--ink);line-height:1.5;}
 .opt-label:hover{border-color:rgba(58,53,48,0.3);background:#fdfcf9;}
 .opt-label.selected{border-color:var(--ink);background:#fdfcf9;}
-.opt-label input[type="radio"]{margin-top:3px;flex-shrink:0;accent-color:var(--ink);width:15px;height:15px;}
-.quiz-footer{display:flex;align-items:center;justify-content:space-between;}
+.opt-label input[type="radio"]{display: none;}
+.quiz-footer{width: 100%; display:flex;align-items:center;justify-content:space-between;}
 .next-btn{font-family:inherit;font-size:0.85rem;font-weight:700;background:var(--ink);color:var(--page-bg);border:none;padding:9px 24px;border-radius:6px;cursor:pointer;transition:opacity 0.15s;}
-.next-btn:disabled{opacity:0.25;cursor:default;}
-.next-btn:not(:disabled):hover{opacity:0.8;}
-.skip-note{font-size:0.72rem;color:var(--ink-light);}
-#s-transition{max-width:640px;margin:0 auto;padding:80px 24px;text-align:center;}
-.trans-wheel{width:60px;height:60px;animation:spin 1.5s linear infinite;display:block;margin:0 auto 16px;}
-.trans-text{font-size:0.78rem;color:var(--ink-light);letter-spacing:0.12em;text-transform:uppercase;}
-#s-result{min-height:100vh;}
-  
-.result-hero{padding:40px 24px 32px;border-bottom:1px solid var(--border);}
+.next-btn:disabled{opacity:0.1;cursor:default;}
+
+/* TRANSITION */
+#s-transition { text-align: center; }
+.emoji-loader { font-size: 2.5rem; margin-bottom: 20px; min-height: 4rem; display: flex; align-items: center; justify-content: center; }
+.trans-text { font-size: 0.65rem; letter-spacing: 0.15em; text-transform: uppercase; opacity: 0.4; }
+
+/* RESULTS */
+#s-result { display: block; min-height: 100vh; }
+.result-hero{padding:60px 24px 32px;border-bottom:1px solid var(--border);}
 .result-hero-inner{max-width:640px;margin:0 auto;}
 .result-kicker{font-size:0.7rem;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;margin-bottom:6px;opacity:0.55;}
 .result-name{font-size:3rem;font-weight:700;line-height:1;margin-bottom:6px;}
@@ -113,92 +152,20 @@ hr.intro-rule{border:none;border-top:1px solid var(--border);margin-bottom:20px;
 .blend-track{flex:1;height:3px;background:rgba(58,53,48,0.1);border-radius:2px;}
 .blend-bar{height:3px;border-radius:2px;transition:width 1.1s cubic-bezier(0.16,1,0.3,1);}
 .blend-pct{font-size:0.7rem;color:var(--ink-light);min-width:30px;text-align:right;}
-.result-desc{font-size:0.88rem;line-height:1.85;color:var(--ink);}
-  
+.result-desc{font-size:0.88rem;color:var(--ink);}
 .shadow-section{background:#2e2a26;color:#f0ece4;border-radius:10px;padding:20px;}
 .shadow-label{font-size:0.65rem;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;opacity:0.45;margin-bottom:6px;}
 .shadow-name{font-size:1.3rem;font-weight:700;margin-bottom:8px;}
-.shadow-desc{font-size:0.84rem;line-height:1.8;opacity:0.72;}
-  
-.restart-row{padding:0;}
-.restart-btn{font-family:inherit;font-size:0.8rem;font-weight:700;background:transparent;border:1.5px solid var(--border);color:var(--ink-light);padding:8px 20px;border-radius:6px;cursor:pointer;transition:border-color 0.15s,color 0.15s;}
-.restart-btn:hover{border-color:var(--ink);color:var(--ink);}
-@media(max-width:480px){.type-grid{grid-template-columns:repeat(2,1fr);}.intro-wheel-row{flex-direction:column;align-items:flex-start;}.result-name{font-size:2.2rem;}}
+.shadow-desc{font-size:0.84rem;opacity:0.72;}
+.restart-btn{font-family:inherit;font-size:0.8rem;font-weight:700;background:transparent;border:1.5px solid var(--border);color:var(--ink-light);padding:8px 20px;border-radius:6px;cursor:pointer;margin-top: 20px;}
 
-.intro-instruction{margin-top:20px;font-size:0.7rem;color:var(--ink-light);} 
-.intro-center {
-  height:100vh;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-  perspective:1000px;
-  cursor:pointer;
-}
-  
-/* CUBE */
-.cube {
-  position:relative;
-  width:140px;
-  height:140px;
-  transform-style:preserve-3d;
-  animation:rotateCube 20s infinite linear;
-}
-
-.intro-center:hover .cube {
-  animation-duration:8s;
-}
-
-/* UPDATED ROTATION: shows ALL faces */
-@keyframes rotateCube {
-  0%   { transform: rotateX(-25deg) rotateY(0deg); }
-  25%  { transform: rotateX(15deg) rotateY(90deg); }
-  50%  { transform: rotateX(-25deg) rotateY(180deg); }
-  75%  { transform: rotateX(15deg) rotateY(270deg); }
-  100% { transform: rotateX(-25deg) rotateY(360deg); }
-}
-
-.face {
-  position:absolute;
-  width:140px;
-  height:140px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-weight:700;
-  font-size:0.9rem;
-  /* FIX: remove rounded corners to avoid "holes" feel */
-  border-radius:0;
-  backface-visibility:hidden;
-}
-
-.front  { transform: rotateY(0deg) translateZ(70px); }
-.back   { transform: rotateY(180deg) translateZ(70px); }
-.right  { transform: rotateY(90deg) translateZ(70px); }
-.left   { transform: rotateY(-90deg) translateZ(70px); }
-.top    { transform: rotateX(90deg) translateZ(70px); }
-.bottom { transform: rotateX(-90deg) translateZ(70px); }
-
-.tc-creator  { background:var(--creator-bg); color:var(--creator-color); }
-.tc-preserver{ background:var(--preserver-bg); color:var(--preserver-color); }
-.tc-reflector{ background:var(--reflector-bg); color:var(--reflector-color); }
-.tc-mover    { background:var(--mover-bg); color:var(--mover-color); }
-.tc-tender   { background:var(--tender-bg); color:var(--tender-color); }
-.tc-seeker   { background:var(--seeker-bg); color:var(--seeker-color); }
-
+@media(max-width:480px){.result-name{font-size:2.2rem;}}
 </style>
 </head>
 <body>
 
 <div class="screen active" id="s-intro">
-  <div class="intro-wheel-row">
-    <div class="intro-headline">
-      <h1 class="intro-title">What kind of force are you?</h1>
-      <p class="intro-sub">Twelve questions. No right answers. Reveal your blend of multitudes, and its corresponding shadow tendencies.</p>
-    </div>
-
-  </div>
-  </div>
+  <p class="intro-sub">Twelve questions. No right answers. Reveal your blend of multitudes, and its corresponding shadow tendencies.</p>
   
   <div class="intro-center" onclick="startQuiz()">
     <div class="cube">
@@ -211,8 +178,7 @@ hr.intro-rule{border:none;border-top:1px solid var(--border);margin-bottom:20px;
     </div>
     <div class="intro-instruction">click to begin</div>
   </div>
- 
-
+</div>
 
 <div class="screen" id="s-quiz">
   <div class="quiz-meta">
@@ -227,37 +193,8 @@ hr.intro-rule{border:none;border-top:1px solid var(--border);margin-bottom:20px;
 </div>
 
 <div class="screen" id="s-transition">
-  <svg class="trans-wheel" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-    <defs><clipPath id="tc"><circle cx="100" cy="100" r="97"/></clipPath></defs>
-    <g clip-path="url(#tc)">
-      <path d="M100,100 L100.0,3.0 A97,97 0 0,1 125.105,6.305 Z" fill="#c47878"/>
-      <path d="M100,100 L125.105,6.305 A97,97 0 0,1 148.5,15.996 Z" fill="#c49060"/>
-      <path d="M100,100 L148.5,15.996 A97,97 0 0,1 168.589,31.411 Z" fill="#b8a840"/>
-      <path d="M100,100 L168.589,31.411 A97,97 0 0,1 184.004,51.5 Z" fill="#78a860"/>
-      <path d="M100,100 L184.004,51.5 A97,97 0 0,1 193.695,74.895 Z" fill="#40a890"/>
-      <path d="M100,100 L193.695,74.895 A97,97 0 0,1 197.0,100.0 Z" fill="#4878b8"/>
-      <path d="M100,100 L197.0,100.0 A97,97 0 0,1 193.695,125.105 Z" fill="#7858a8"/>
-      <path d="M100,100 L193.695,125.105 A97,97 0 0,1 184.004,148.5 Z" fill="#b84888"/>
-      <path d="M100,100 L184.004,148.5 A97,97 0 0,1 168.589,168.589 Z" fill="#c47878"/>
-      <path d="M100,100 L168.589,168.589 A97,97 0 0,1 148.5,184.004 Z" fill="#c49060"/>
-      <path d="M100,100 L148.5,184.004 A97,97 0 0,1 125.105,193.695 Z" fill="#b8a840"/>
-      <path d="M100,100 L125.105,193.695 A97,97 0 0,1 100.0,197.0 Z" fill="#78a860"/>
-      <path d="M100,100 L100.0,197.0 A97,97 0 0,1 74.895,193.695 Z" fill="#40a890"/>
-      <path d="M100,100 L74.895,193.695 A97,97 0 0,1 51.5,184.004 Z" fill="#4878b8"/>
-      <path d="M100,100 L51.5,184.004 A97,97 0 0,1 31.411,168.589 Z" fill="#7858a8"/>
-      <path d="M100,100 L31.411,168.589 A97,97 0 0,1 15.996,148.5 Z" fill="#b84888"/>
-      <path d="M100,100 L15.996,148.5 A97,97 0 0,1 6.305,125.105 Z" fill="#c47878"/>
-      <path d="M100,100 L6.305,125.105 A97,97 0 0,1 3.0,100.0 Z" fill="#c49060"/>
-      <path d="M100,100 L3.0,100.0 A97,97 0 0,1 6.305,74.895 Z" fill="#78a860"/>
-      <path d="M100,100 L6.305,74.895 A97,97 0 0,1 15.996,51.5 Z" fill="#40a890"/>
-      <path d="M100,100 L15.996,51.5 A97,97 0 0,1 31.411,31.411 Z" fill="#4878b8"/>
-      <path d="M100,100 L31.411,31.411 A97,97 0 0,1 51.5,15.996 Z" fill="#7858a8"/>
-      <path d="M100,100 L51.5,15.996 A97,97 0 0,1 74.895,6.305 Z" fill="#b84888"/>
-      <path d="M100,100 L74.895,6.305 A97,97 0 0,1 100.0,3.0 Z" fill="#c47878"/>
-    </g>
-    <circle cx="100" cy="100" r="5" fill="#f5f2e8"/>
-  </svg>
-  <p class="trans-text">Reading the pattern...</p>
+  <div class="emoji-loader" id="emoji-loader">⚡</div>
+  <p class="trans-text">Synthesizing pattern...</p>
 </div>
 
 <div class="screen" id="s-result">
@@ -292,35 +229,37 @@ const SHADOW_COLOR={creator:'#c0a0d0',preserver:'#80c8a8',reflector:'#90a8d0',mo
 const LABEL={creator:'Creator',preserver:'Preserver',reflector:'Reflector',mover:'Mover',tender:'Nurturer',seeker:'Seeker'};
 
 const TYPE_DATA={
-  creator:{label:'Creator',emoji:'⚡ 🔨 💥 🛠',tagline:"You bring things into being that didn't exist before.",desc:"You think in possibilities and futures. Driven by the need to make, build, disrupt — not for its own sake, but because the current version of things isn't good enough. You tolerate uncertainty better than most.",shadow_name:'The Destroyer',shadow:"Your drive to create can flatten what already exists — relationships, structures, traditions — without noticing. You may leave wreckage behind you and call it progress. The things you break aren't always yours to break."},
-  preserver:{label:'Preserver',emoji:'🌿 🏛 📖 🔒',tagline:'You hold things together that would otherwise fall apart.',desc:"You understand that most of what's valuable was built slowly and can be lost quickly. You resist change that hasn't been thought through. You are the continuity others take for granted.",shadow_name:'The Decayer',shadow:"Held too tightly, preservation becomes resistance. You may protect things past their usefulness, or confuse familiarity with value. Stagnation can look a lot like stability from the inside."},
-  reflector:{label:'Reflector',emoji:'🌊 🦉 📡 🌀',tagline:'You process the world deeply before responding to it.',desc:"You observe more than you act. You find meaning in what others overlook. Your insights often arrive after everyone else has moved on — and are usually better for it.",shadow_name:'The Consumer',shadow:"Reflection without action can become a way of avoiding the world. You may absorb experiences, ideas, and people without giving much back — mistaking depth of feeling for depth of contribution."},
-  mover:{label:'Mover',emoji:'🚀 🏃 🔥 💨',tagline:'You generate momentum — in yourself and in others.',desc:"Energised by progress, pace, and forward motion. You don't wait for permission and find inaction physically uncomfortable. People around you get swept up — sometimes gratefully, sometimes not.",shadow_name:'The Agitator',shadow:"Speed without direction is just disruption. You can bulldoze slower people, mistake urgency for importance, and leave half-finished things in your wake. Not everything needs to move faster."},
-  tender:{label:'Nurturer',emoji:'🌸 🕯 💌 🫶',tagline:'You are most alive when being there for someone.',desc:"You notice when people are struggling before they say anything. You create safety, warmth, and belonging — often invisibly. Your presence changes the emotional temperature of a room.",shadow_name:'The Enabler',shadow:"Care without boundaries becomes self-erasure. You may hold others up at the cost of your own foundation, or protect people from consequences that would actually help them grow."},
-  seeker:{label:'Seeker',emoji:'🧭 🔭 🌍 ✨',tagline:'You follow the question wherever it leads.',desc:"Driven by curiosity more than answers. You change your mind readily, find the edges of things more interesting than the centre, and feel most alive in unfamiliar territory — intellectually or literally.",shadow_name:'The Escapist',shadow:"The horizon is always more interesting than where you've arrived. You may flee depth for novelty, commitment for possibility, and real relationships for the idea of them. Seeking can be a beautiful way of never being found."}
+  creator:{label:'Creator',emoji:'⚡ 🔨 💥 🛠',tagline:"You bring things into being that didn't exist before.",desc:"You think in possibilities and futures. Driven by the need to build and disrupt because the current version of things isn't good enough.",shadow_name:'The Destroyer',shadow:"Your drive to create can flatten what already exists. You may leave wreckage behind you and call it progress."},
+  preserver:{label:'Preserver',emoji:'🌿 🏛 📖 🔒',tagline:'You hold things together that would otherwise fall apart.',desc:"You understand that most of what's valuable was built slowly and can be lost quickly. You are the continuity others take for granted.",shadow_name:'The Decayer',shadow:"Held too tightly, preservation becomes resistance. Stagnation can look a lot like stability from the inside."},
+  reflector:{label:'Reflector',emoji:'🌊 🦉 📡 🌀',tagline:'You process the world deeply before responding to it.',desc:"You observe more than you act. You find meaning in what others overlook. Your insights often arrive after everyone else has moved on.",shadow_name:'The Consumer',shadow:"Reflection without action can become a way of avoiding the world. You may mistake depth of feeling for depth of contribution."},
+  mover:{label:'Mover',emoji:'🚀 🏃 🔥 💨',tagline:'You generate momentum — in yourself and in others.',desc:"Energised by progress, pace, and forward motion. You don't wait for permission and find inaction physically uncomfortable.",shadow_name:'The Agitator',shadow:"Speed without direction is just disruption. You can bulldoze slower people and mistake urgency for importance."},
+  tender:{label:'Nurturer',emoji:'🌸 🕯 💌 🫶',tagline:'You are most alive when being there for someone.',desc:"You notice when people are struggling before they say anything. You create safety, warmth, and belonging — often invisibly.",shadow_name:'The Enabler',shadow:"Care without boundaries becomes self-erasure. You may protect people from consequences that would help them grow."},
+  seeker:{label:'Seeker',emoji:'🧭 🔭 🌍 ✨',tagline:'You follow the question wherever it leads.',desc:"Driven by curiosity more than answers. You change your mind readily and feel most alive in unfamiliar territory.",shadow_name:'The Escapist',shadow:"The horizon is always more interesting than where you've arrived. You may flee depth for novelty and commitment for possibility."}
 };
 
 const QUESTIONS=[
-  {text:"You find an old library that only you can see. It has exactly one section. Which?",opts:[{text:"Blueprints — every great thing imagined but never built.",w:[4,0,0,1,0,1]},{text:"Endangered things — languages, recipes, traditions on the edge of vanishing.",w:[0,4,0,0,1,0]},{text:"Inner lives — diaries, letters, the thoughts people never said out loud.",w:[0,0,3,0,2,1]},{text:"Elsewhere — every place in the world you haven't been yet.",w:[0,0,0,1,0,4]}]},
+  {text:"You find an old library that only you can see. It has exactly one section. Which?",opts:[{text:"Blueprints — every great thing imagined but never built.",w:[4,0,0,1,0,1]},{text:"Endangered things — languages and traditions on the edge of vanishing.",w:[0,4,0,0,1,0]},{text:"Inner lives — the thoughts people never said out loud.",w:[0,0,3,0,2,1]},{text:"Elsewhere — every place in the world you haven't been yet.",w:[0,0,0,1,0,4]}]},
   {text:"What do you find hardest to forgive in other people?",opts:[{text:"Wasted potential. People who could do more and don't.",w:[3,0,1,2,0,0]},{text:"Carelessness with things that took a long time to build.",w:[0,4,0,0,1,0]},{text:"Shallowness. People who never ask why.",w:[0,0,4,0,0,2]},{text:"Passivity. Waiting for someone else to fix things.",w:[1,0,0,4,0,0]},{text:"Cruelty — especially the casual kind people don't notice.",w:[0,0,1,0,4,0]},{text:"Certainty. People who stopped being curious.",w:[1,0,1,0,0,4]}]},
-  {text:"If you were a weather pattern, which one would you be?",opts:[{text:"A thunderstorm — dramatic arrival, clears the air, moves on.",w:[3,0,0,3,0,0]},{text:"A long mild season — dependable, nourishing, easily taken for granted.",w:[0,4,0,0,2,0]},{text:"Morning fog — makes familiar things strange, building intrigue.",w:[0,0,4,0,0,1]},{text:"A pleasant wind from somewhere, carrying a smell you can't quite place.",w:[0,0,1,0,0,4]},{text:"Steady rain — present, gentle — the kind that fills rivers slowly.",w:[0,1,0,0,4,0]}]},
+  {text:"If you were a weather pattern, which one would you be?",opts:[{text:"A thunderstorm — dramatic arrival, clears the air, moves on.",w:[3,0,0,3,0,0]},{text:"A long mild season — dependable, nourishing, taken for granted.",w:[0,4,0,0,2,0]},{text:"Morning fog — makes familiar things strange.",w:[0,0,4,0,0,1]},{text:"A pleasant wind from somewhere, carrying a strange smell.",w:[0,0,1,0,0,4]},{text:"Steady rain — present, gentle — filling rivers slowly.",w:[0,1,0,0,4,0]}]},
   {text:"A civilisation collapsed 2,000 years ago. What pulls your attention?",opts:[{text:"What they invented. What they imagined into existence.",w:[4,0,0,0,0,1]},{text:"What they preserved — rituals, language, ways of living.",w:[0,4,0,0,1,0]},{text:"What it felt like to live through. The day-to-day of ordinary people.",w:[0,0,3,0,2,0]},{text:"What caused it. The tipping point no one saw coming.",w:[1,1,1,1,0,2]}]},
   {text:"What's your life's recurring flaw — the one that keeps showing up?",opts:[{text:"Starting things I don't finish.",w:[3,0,0,2,0,1]},{text:"Holding on too long to things that have already ended.",w:[0,4,0,0,1,0]},{text:"Living in my head instead of the world.",w:[0,0,4,0,0,1]},{text:"Moving so fast I miss what's right in front of me.",w:[0,0,0,4,0,1]},{text:"Losing myself in other people's needs.",w:[0,0,0,0,4,1]},{text:"Never feeling like I've found the right thing yet.",w:[0,0,1,0,0,4]}]},
   {text:"You inherit a large, rambling house. Your first instinct?",opts:[{text:"Knock out a wall. Rethink the whole thing.",w:[4,0,0,2,0,0]},{text:"Go through every drawer. Learn who lived here before.",w:[0,3,2,0,0,1]},{text:"Sit in each room alone before deciding anything.",w:[0,0,4,0,0,1]},{text:"Fill it with people immediately. Too quiet.",w:[0,0,0,2,3,0]},{text:"Find the room that might be haunted.",w:[0,0,1,0,0,4]}]},
   {text:"An institution you love is changing in ways you don't like. You...",opts:[{text:"Build something new alongside it — make the old irrelevant.",w:[4,0,0,1,0,0]},{text:"Work from within. Slow it down. Protect what matters.",w:[0,4,0,0,1,0]},{text:"Write about what's being lost. Bear witness.",w:[0,1,3,0,0,1]},{text:"Organise people. Make noise. Force the conversation.",w:[0,0,0,4,1,0]}]},
   {text:"What kind of conversation leaves you most alive?",opts:[{text:"One where we figured something out neither of us could alone.",w:[3,0,1,1,0,1]},{text:"One where someone shared something they'd never told anyone.",w:[0,0,2,0,4,0]},{text:"One that changed my mind about something.",w:[1,0,2,0,0,3]},{text:"One that turned into a plan. That ended with doing something.",w:[1,0,0,4,0,1]}]},
   {text:"One object to carry for the rest of your life. You choose...",opts:[{text:"A blank notebook — for everything you're still going to make.",w:[4,0,1,0,0,1]},{text:"A photograph of something you never want to forget.",w:[0,4,0,0,2,0]},{text:"A compass — not for direction, but for orientation.",w:[0,0,0,2,0,4]},{text:"A key. You'll find the door eventually.",w:[0,0,2,1,0,3]},{text:"Something that belonged to someone you love.",w:[0,2,1,0,4,0]},{text:"Nothing. You'd rather travel light.",w:[1,0,0,3,0,2]}]},
-  {text:"Which, of these, is most true about you?",opts:[{text:"I am always working on something that doesn't exist yet.",w:[4,0,0,1,0,1]},{text:"I am a keeper — of stories, people, traditions, promises.",w:[0,4,0,0,2,0]},{text:"I process the world more than I act on it — and I'm okay with that.",w:[0,0,4,0,0,1]},{text:"I generate energy in a room. Things move differently when I'm there.",w:[1,0,0,4,0,0]},{text:"People come to me when they're struggling. I don't mind.",w:[0,0,0,0,4,0]},{text:"Always mid-question. Never stay anywhere long enough to call it home.",w:[0,0,1,1,0,4]}]},
-  {text:"The world is ending in 50 years. You spend your time...",opts:[{text:"Trying to stop it. Or building something that survives.",w:[4,0,0,2,0,0]},{text:"Preserving everything worth keeping. Making sure it's recorded.",w:[0,4,1,0,0,0]},{text:"Trying to understand it. What led here. What it means.",w:[0,0,4,0,0,2]},{text:"Making the most of the time left. Events, experiences, people.",w:[0,0,0,3,0,2]},{text:"Making sure the people around me are okay. Helping them navigate this uncertainty.",w:[0,0,0,0,4,0]}]},
-  {text:"After you're gone, what do you want said about you?",opts:[{text:"They made something that mattered. Changed the world in meaningful ways.",w:[4,0,0,1,0,0]},{text:"They held things together. They kept what was good.",w:[0,4,0,0,1,0]},{text:"They saw what others missed. They understood deeply.",w:[0,0,4,0,0,1]},{text:"They made things happen. They got people moving.",w:[0,0,0,4,0,0]},{text:"They made people feel less alone.",w:[0,0,0,0,4,0]},{text:"They never stopped asking questions. Always becoming.",w:[0,0,1,0,0,4]}]}
+  {text:"Which, of these, is most true about you?",opts:[{text:"I am always working on something that doesn't exist yet.",w:[4,0,0,1,0,1]},{text:"I am a keeper — of stories, people, traditions, promises.",w:[0,4,0,0,2,0]},{text:"I process the world more than I act on it.",w:[0,0,4,0,0,1]},{text:"I generate energy. Things move differently when I'm there.",w:[1,0,0,4,0,0]},{text:"People come to me when they're struggling.",w:[0,0,0,0,4,0]},{text:"Always mid-question. Never stay anywhere long enough.",w:[0,0,1,1,0,4]}]},
+  {text:"The world is ending in 50 years. You spend your time...",opts:[{text:"Trying to stop it. Or building something that survives.",w:[4,0,0,2,0,0]},{text:"Preserving everything worth keeping.",w:[0,4,1,0,0,0]},{text:"Trying to understand it. What led here.",w:[0,0,4,0,0,2]},{text:"Making the most of the time left. Experiences, people.",w:[0,0,0,3,0,2]},{text:"Helping people around me navigate this uncertainty.",w:[0,0,0,0,4,0]}]},
+  {text:"After you're gone, what do you want said about you?",opts:[{text:"They made something that mattered.",w:[4,0,0,1,0,0]},{text:"They held things together. They kept what was good.",w:[0,4,0,0,1,0]},{text:"They saw what others missed. They understood deeply.",w:[0,0,4,0,0,1]},{text:"They made things happen. They got people moving.",w:[0,0,0,4,0,0]},{text:"They made people feel less alone.",w:[0,0,0,0,4,0]},{text:"They never stopped asking questions. Always becoming.",w:[0,0,1,0,0,4]}]}
 ];
 
 let current=0,answers=new Array(12).fill(null);
+let emojiInterval;
 
 function show(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');window.scrollTo(0,0);}
 function startQuiz(){show('s-quiz');buildDots();renderQ();}
 function buildDots(){const w=document.getElementById('prog-dots');w.innerHTML='';for(let i=0;i<12;i++){const d=document.createElement('div');d.className='prog-dot'+(i===0?' active':'');d.id='dot-'+i;w.appendChild(d);}}
 function updateDots(){for(let i=0;i<12;i++){const d=document.getElementById('dot-'+i);if(!d)continue;d.className='prog-dot'+(i<current?' done':i===current?' active':'');}}
+
 function renderQ(){
   const q=QUESTIONS[current];
   document.getElementById('q-num-label').textContent=(current+1)+' / 12';
@@ -339,8 +278,34 @@ function renderQ(){
     wrap.appendChild(label);
   });
 }
+
 function selectOpt(i,labelEl){answers[current]=i;document.querySelectorAll('.opt-label').forEach(l=>l.classList.remove('selected'));labelEl.classList.add('selected');document.getElementById('next-btn').disabled=false;}
-function nextQ(){if(current===11){show('s-transition');setTimeout(showResult,1600);return;}current++;renderQ();}
+
+function nextQ(){
+  if(current===11){
+    runTransition();
+    return;
+  }
+  current++;
+  renderQ();
+}
+
+function runTransition() {
+  show('s-transition');
+  const loader = document.getElementById('emoji-loader');
+  const emojis = ['⚡','🔨','🌿','🏛','🌊','🦉','🚀','🏃','🌸','🕯','🧭','🔭'];
+  let idx = 0;
+  
+  emojiInterval = setInterval(() => {
+    loader.textContent = emojis[idx % emojis.length];
+    idx++;
+  }, 250);
+
+  setTimeout(() => {
+    clearInterval(emojiInterval);
+    showResult();
+  }, 2200); 
+}
 
 function showResult(){
   const scores={creator:0,preserver:0,reflector:0,mover:0,tender:0,seeker:0};
@@ -350,17 +315,11 @@ function showResult(){
   const sorted=TYPES.slice().sort((a,b)=>pcts[b]-pcts[a]);
   const primary=sorted[0],secondary=sorted[1],d=TYPE_DATA[primary];
 
-  const hero=document.getElementById('r-hero');
-  hero.style.background=RESULT_BG[primary];
-
-  const nameEl=document.getElementById('r-name');
-  nameEl.textContent=d.label;
-  nameEl.style.color=RESULT_COLOR[primary];
-
-  // "with traces of X" — coloured in the secondary archetype's colour
-  const secEl=document.getElementById('r-secondary');
-  secEl.textContent='with traces of '+LABEL[secondary];
-  secEl.style.color=RESULT_COLOR[secondary];
+  document.getElementById('r-hero').style.background=RESULT_BG[primary];
+  document.getElementById('r-name').textContent=d.label;
+  document.getElementById('r-name').style.color=RESULT_COLOR[primary];
+  document.getElementById('r-secondary').textContent='with traces of '+LABEL[secondary];
+  document.getElementById('r-secondary').style.color=RESULT_COLOR[secondary];
 
   const band=document.getElementById('r-band');
   band.innerHTML='';
