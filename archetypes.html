@@ -40,15 +40,15 @@
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
 html{scroll-behavior:smooth;}
 body{background:var(--page-bg);color:var(--ink);font-family:-apple-system,'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:15px;line-height:1.6;min-height:100vh;}
+.screen{display:none;}.screen.active{display:block;}
 
-.screen{display:none;height:100vh;}
-.screen.active{display:flex;align-items:center;justify-content:center;flex-direction:column;}
+.dice{display:none;height:100vh;}
+.dice.active{display:flex;align-items:center;justify-content:center;flex-direction:column;}
 
 #s-intro{max-width:640px;margin:0 auto;padding:48px 24px 64px;}
 .intro-wheel-row{display:flex;align-items:center;gap:28px;margin-bottom:28px;}
 
 /*  
-.screen{display:none;}.screen.active{display:block;}
 .wheel-wrap{width:100px;height:100px;flex-shrink:0;cursor:pointer;}
 .wheel-svg{width:100px;height:100px;display:block;animation:spin 20s linear infinite;}
 .wheel-wrap:hover .wheel-svg{animation-duration:4s;}
@@ -131,37 +131,54 @@ hr.intro-rule{border:none;border-top:1px solid var(--border);margin-bottom:20px;
 .intro-instruction{margin-top:20px;font-size:0.7rem;color:var(--ink-light);} 
 .intro-center{perspective:1000px;cursor:pointer;}
 /* CUBE */
-.cube{
-  width:140px;height:140px;position:relative;
+.cube {
+  position:relative;
+  width:140px;
+  height:140px;
   transform-style:preserve-3d;
-  animation:rotateCube 24s infinite ease-in-out;
+  animation:rotateCube 20s infinite linear;
 }
 
+.intro-center:hover .cube {
+  animation-duration:8s;
+}
+
+/* UPDATED ROTATION: shows ALL faces */
 @keyframes rotateCube {
-  0%   { transform: rotateX(-20deg) rotateY(0deg); }
-  100% { transform: rotateX(-20deg) rotateY(360deg); }
+  0%   { transform: rotateX(-25deg) rotateY(0deg); }
+  25%  { transform: rotateX(15deg) rotateY(90deg); }
+  50%  { transform: rotateX(-25deg) rotateY(180deg); }
+  75%  { transform: rotateX(15deg) rotateY(270deg); }
+  100% { transform: rotateX(-25deg) rotateY(360deg); }
 }
 
-.face{
-  position:absolute;width:140px;height:140px;
-  display:flex;align-items:center;justify-content:center;
-  font-weight:700;font-size:0.9rem;
-  border-radius:0;backface-visibility:hidden;
+.face {
+  position:absolute;
+  width:140px;
+  height:140px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-weight:700;
+  font-size:0.9rem;
+  /* FIX: remove rounded corners to avoid "holes" feel */
+  border-radius:0;
+  backface-visibility:hidden;
 }
 
-.front{transform:rotateY(0deg) translateZ(70px);} 
-.back{transform:rotateY(180deg) translateZ(70px);} 
-.right{transform:rotateY(90deg) translateZ(70px);} 
-.left{transform:rotateY(-90deg) translateZ(70px);} 
-.top{transform:rotateX(90deg) translateZ(70px);} 
-.bottom{transform:rotateX(-90deg) translateZ(70px);} 
+.front  { transform: rotateY(0deg) translateZ(70px); }
+.back   { transform: rotateY(180deg) translateZ(70px); }
+.right  { transform: rotateY(90deg) translateZ(70px); }
+.left   { transform: rotateY(-90deg) translateZ(70px); }
+.top    { transform: rotateX(90deg) translateZ(70px); }
+.bottom { transform: rotateX(-90deg) translateZ(70px); }
 
-.tc-creator{background:var(--creator-bg);color:var(--creator-color);} 
-.tc-preserver{background:var(--preserver-bg);color:var(--preserver-color);} 
-.tc-reflector{background:var(--reflector-bg);color:var(--reflector-color);} 
-.tc-mover{background:var(--mover-bg);color:var(--mover-color);} 
-.tc-tender{background:var(--tender-bg);color:var(--tender-color);} 
-.tc-seeker{background:var(--seeker-bg);color:var(--seeker-color);} 
+.tc-creator  { background:var(--creator-bg); color:var(--creator-color); }
+.tc-preserver{ background:var(--preserver-bg); color:var(--preserver-color); }
+.tc-reflector{ background:var(--reflector-bg); color:var(--reflector-color); }
+.tc-mover    { background:var(--mover-bg); color:var(--mover-color); }
+.tc-tender   { background:var(--tender-bg); color:var(--tender-color); }
+.tc-seeker   { background:var(--seeker-bg); color:var(--seeker-color); }
 
 </style>
 </head>
@@ -175,6 +192,8 @@ hr.intro-rule{border:none;border-top:1px solid var(--border);margin-bottom:20px;
     </div>
 
   </div>
+  </div>
+  
   <div class="intro-center" onclick="startQuiz()">
     <div class="cube">
       <div class="face front tc-creator">Creator</div>
@@ -186,9 +205,8 @@ hr.intro-rule{border:none;border-top:1px solid var(--border);margin-bottom:20px;
     </div>
     <div class="intro-instruction">click to begin</div>
   </div>
-  
  
-</div>
+
 
 <div class="screen" id="s-quiz">
   <div class="quiz-meta">
