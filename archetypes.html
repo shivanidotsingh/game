@@ -42,9 +42,6 @@ html{scroll-behavior:smooth;}
 body{background:var(--page-bg);color:var(--ink);font-family:-apple-system,'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:15px;line-height:1.6;min-height:100vh;}
 .screen{display:none;}.screen.active{display:block;}
 
-.dice{display:none;height:100vh;}
-.dice.active{display:flex;align-items:center;justify-content:center;flex-direction:column;}
-
 #s-intro{max-width:640px;margin:0 auto;padding:48px 24px 64px;}
 .intro-wheel-row{display:flex;align-items:center;gap:28px;margin-bottom:28px;}
 
@@ -129,7 +126,16 @@ hr.intro-rule{border:none;border-top:1px solid var(--border);margin-bottom:20px;
 @media(max-width:480px){.type-grid{grid-template-columns:repeat(2,1fr);}.intro-wheel-row{flex-direction:column;align-items:flex-start;}.result-name{font-size:2.2rem;}}
 
 .intro-instruction{margin-top:20px;font-size:0.7rem;color:var(--ink-light);} 
-.intro-center{perspective:1000px;cursor:pointer;}
+.intro-center {
+  height:100vh;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  perspective:1000px;
+  cursor:pointer;
+}
+  
 /* CUBE */
 .cube {
   position:relative;
