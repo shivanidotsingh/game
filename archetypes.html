@@ -11,11 +11,11 @@
   --preserver: #2a7a6e; --preserver-l: #d4e2df;
   --reflector: #4a5878; --reflector-l: #dee2e8;
   --mover:     #cc3300; --mover-l:     #ffebe6;
-  --tender:    #a84868; --tender-l:    #f2e1e7;
+  --nurturer:    #a84868; --nurturer-l:    #f2e1e7;
   --seeker:    #d4a017; --seeker-l:    #fdf5e6;
-  --bg:   #f5f2e8;
-  --ink:  #1a1612;
-  --ink-l:#636363;
+  --bg:     #f5f2e8;
+  --ink:    #1a1612;
+  --ink-l:  #636363;
   --border: rgba(0,0,0,0.1);
 }
 
@@ -31,72 +31,19 @@ body {
 
 /* ── SCREENS ── */
 .screen { display: none; }
-.screen.active {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  min-height: 100vh;
-  padding: 24px;
-}
-#s-quiz.active {
-  justify-content: flex-start;
-  padding-top: 72px;
-  max-width: 620px;
-  margin: 0 auto;
-  width: 100%;
-  align-items: flex-start;
-}
+.screen.active { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; padding: 24px; }
+#s-quiz.active  { justify-content: flex-start; padding-top: 72px; max-width: 620px; margin: 0 auto; width: 100%; align-items: flex-start; }
 #s-result.active { display: block; padding: 0; }
 
 /* ── INTRO ── */
-.intro-sub {
-  font-size: 0.85rem;
-  color: var(--ink-l);
-  max-width: 360px;
-  text-align: center;
-  margin-bottom: 56px;
-}
-.intro-center {
-  cursor: pointer;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-.intro-instruction {
-  margin-top: 44px;
-  font-size: 0.65rem;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: var(--ink-l);
-  opacity: 0.5;
-}
+.intro-sub { font-size: 0.85rem; color: var(--ink-l); max-width: 360px; text-align: center; margin-bottom: 56px; }
+.intro-center { cursor: pointer; display: flex; flex-direction: column; align-items: center; }
+.intro-instruction { margin-top: 44px; font-size: 0.65rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--ink-l); opacity: 0.5; }
 
 /* ── CUBE ── */
-.cube {
-  position: relative;
-  width: 110px;
-  height: 110px;
-  transform-style: preserve-3d;
-  animation: rotateCube 20s linear infinite;
-}
-@keyframes rotateCube {
-  from { transform: rotateX(-25deg) rotateY(0deg); }
-  to   { transform: rotateX(-25deg) rotateY(360deg); }
-}
-.face {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 5px;
-  font-size: 0.78rem;
-  font-weight: 600;
-  backface-visibility: hidden;
-  border: 1px solid rgba(0,0,0,0.06);
-}
+.cube { position: relative; width: 110px; height: 110px; transform-style: preserve-3d; animation: rotateCube 20s linear infinite; }
+@keyframes rotateCube { from { transform: rotateX(-25deg) rotateY(0deg); } to { transform: rotateX(-25deg) rotateY(360deg); } }
+.face { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 5px; font-size: 0.78rem; font-weight: 600; backface-visibility: hidden; border: 1px solid rgba(0,0,0,0.06); }
 .front  { transform: rotateY(0deg)   translateZ(55px); }
 .back   { transform: rotateY(180deg) translateZ(55px); }
 .right  { transform: rotateY(90deg)  translateZ(55px); }
@@ -107,166 +54,74 @@ body {
 .f-preserver { background: var(--preserver-l); color: var(--preserver); }
 .f-reflector { background: var(--reflector-l); color: var(--reflector); }
 .f-mover     { background: var(--mover-l);     color: var(--mover);     }
-.f-tender    { background: var(--tender-l);    color: var(--tender);    }
+.f-nurturer    { background: var(--nurturer-l);    color: var(--nurturer);    }
 .f-seeker    { background: var(--seeker-l);    color: var(--seeker);    }
 
 /* ── QUIZ ── */
-.quiz-meta {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  width: 100%;
-  margin-bottom: 28px;
-}
-.q-num {
-  font-size: 0.72rem;
-  color: var(--ink-l);
-}
+.quiz-meta { display: flex; align-items: center; justify-content: space-between; width: 100%; margin-bottom: 28px; }
+.q-num { font-size: 0.72rem; color: var(--ink-l); }
+
 .prog-dots { display: flex; gap: 4px; align-items: center; }
-.prog-dot {
-  width: 6px; height: 6px;
-  border-radius: 50%;
-  background: rgba(0,0,0,0.12);
-  transition: all 0.2s;
-}
+.prog-dot { width: 6px; height: 6px; border-radius: 50%; background: rgba(0,0,0,0.12); transition: all 0.2s; }
 .prog-dot.done   { background: var(--ink-l); }
 .prog-dot.active { background: var(--ink); width: 14px; border-radius: 3px; }
 
-.q-text {
-  font-size: 1.2rem;
-  font-weight: 700;
-  line-height: 1.4;
-  margin-bottom: 20px;
-  width: 100%;
-}
+.q-text { font-size: 1.2rem; font-weight: 700; line-height: 1.4; margin-bottom: 20px; width: 100%; }
 
-.options {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  width: 100%;
-  margin-bottom: 24px;
-}
-.opt-label {
-  display: flex;
-  align-items: flex-start;
-  gap: 10px;
+.options { display: flex; flex-direction: column; gap: 8px; width: 100%; margin-bottom: 24px; }
+
+.opt {
   padding: 11px 14px;
   border: 1.5px solid var(--border);
   border-radius: 8px;
   cursor: pointer;
   background: #fff;
   font-size: 0.88rem;
+  line-height: 1.5;
   transition: border-color 0.15s, background 0.15s;
+  user-select: none;
 }
-.opt-label:hover    { border-color: rgba(0,0,0,0.25); background: #fdfcf8; }
-.opt-label.selected { border-color: var(--ink); background: #fdfcf8; }
-.opt-label input[type="radio"] {
-  margin-top: 3px;
-  flex-shrink: 0;
-  accent-color: var(--ink);
-  cursor: pointer;
-}
+.opt:hover    { border-color: rgba(0,0,0,0.25); background: #fdfcf8; }
+.opt.selected { border-color: var(--ink); background: #fdfcf8; }
 
-.next-btn {
-  font-family: inherit;
-  font-size: 0.85rem;
-  font-weight: 600;
-  background: var(--ink);
-  color: var(--bg);
-  border: none;
-  padding: 10px 24px;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: opacity 0.15s;
-}
+.next-btn { font-family: inherit; font-size: 0.85rem; font-weight: 600; background: var(--ink); color: var(--bg); border: none; padding: 10px 24px; border-radius: 6px; cursor: pointer; transition: opacity 0.15s; }
 .next-btn:disabled { opacity: 0.15; cursor: default; }
 .next-btn:not(:disabled):hover { opacity: 0.8; }
 
 /* ── TRANSITION ── */
 .emoji-loader { font-size: 2.4rem; margin-bottom: 12px; }
-.trans-text {
-  font-size: 0.75rem;
-  color: var(--ink-l);
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-}
+.trans-text { font-size: 0.75rem; color: var(--ink-l); letter-spacing: 0.15em; text-transform: uppercase; }
 
 /* ── RESULT ── */
-.result-hero {
-  padding: 52px 24px 32px;
-  border-bottom: 1px solid var(--border);
-}
+.result-hero { padding: 52px 24px 32px; border-bottom: 1px solid var(--border); }
 .result-hero-inner { max-width: 620px; margin: 0 auto; }
-
-.result-emoji   { font-size: 1.4rem; margin-bottom: 12px; letter-spacing: 3px; }
-.result-name    { font-size: 2.8rem; font-weight: 700; line-height: 1; margin-bottom: 6px; }
-.result-secondary { font-size: 0.88rem; color: var(--ink-l); margin-bottom: 16px; }
-.result-desc .shadow-desc { font-size: 1rem; max-width: 460px; color: var(--ink); opacity: 0.5; }
+.result-emoji     { font-size: 1.4rem; margin-bottom: 12px; letter-spacing: 3px; }
+.result-name      { font-size: 2.8rem; font-weight: 700; line-height: 1; margin-bottom: 6px; }
+.result-secondary { font-size: 0.88rem; font-style: italic; margin-bottom: 16px; }
+.result-desc      { font-size: 0.95rem; line-height: 1.7; opacity: 0.75; max-width: 460px; }
 
 .result-band { height: 4px; display: flex; }
 .result-band-seg { flex: 1; }
 
-.result-body {
-  max-width: 620px;
-  margin: 0 auto;
-  padding-top: 30px;
-  display: flex;
-  flex-direction: column;
-  gap: 28px;
-}
+.result-body { max-width: 620px; margin: 0 auto; padding: 30px 24px 80px; display: flex; flex-direction: column; gap: 28px; }
 
-.section-label {
-  font-size: 0.68rem;
-  color: var(--ink-l);
-  text-transform: uppercase;
-  letter-spacing: 0.12em;
-  margin-bottom: 6px;
-}
-.blend-row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
-.blend-name {
-  font-size: 0.72rem;
-  font-weight: 600;
-  min-width: 82px;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-}
+.blend-row  { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+.blend-name { font-size: 0.72rem; font-weight: 600; min-width: 82px; text-transform: uppercase; letter-spacing: 0.05em; }
 .blend-track { flex: 1; height: 3px; background: rgba(0,0,0,0.07); border-radius: 2px; }
 .blend-bar   { height: 3px; border-radius: 2px; width: 0; transition: width 1.2s cubic-bezier(0.16,1,0.3,1); }
 .blend-pct   { font-size: 0.7rem; color: var(--ink-l); min-width: 28px; text-align: right; }
 
-.shadow-section {
-  background: #2a2620;
-  color: #f0ece4;
-  border-radius: 10px;
-  padding: 22px;
-}
-.shadow-label {
-  font-size: 0.65rem;
-  text-transform: uppercase;
-  letter-spacing: 0.15em;
-  opacity: 0.4;
-  margin-bottom: 6px;
-}
-.shadow-name { font-size: 1.5rem; font-weight: 700; margin-bottom: 4px; }
+.shadow-section { background: #2a2620; color: #f0ece4; border-radius: 10px; padding: 22px; }
+.shadow-label   { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.15em; opacity: 0.4; margin-bottom: 6px; }
+.shadow-name    { font-size: 1.5rem; font-weight: 700; margin-bottom: 4px; }
+.shadow-desc    { font-size: 0.88rem; line-height: 1.7; opacity: 0.72; }
 
-.restart-btn {
-  font-family: inherit;
-  font-size: 0.8rem;
-  background: transparent;
-  border: 1.5px solid var(--border);
-  color: var(--ink-l);
-  padding: 8px 20px;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: border-color 0.15s, color 0.15s;
-}
+.restart-btn { font-family: inherit; font-size: 0.8rem; background: transparent; border: 1.5px solid var(--border); color: var(--ink-l); padding: 8px 20px; border-radius: 6px; cursor: pointer; transition: border-color 0.15s, color 0.15s; }
 .restart-btn:hover { border-color: var(--ink); color: var(--ink); }
 
 @media (max-width: 480px) {
   .result-name { font-size: 2.2rem; }
   #s-quiz.active { padding-top: 48px; }
-  .result-body { padding: 32px 24px 32px; }
 }
 </style>
 </head>
@@ -274,8 +129,7 @@ body {
 
 <!-- INTRO -->
 <div class="screen active" id="s-intro">
-  <p class="intro-sub">Twelve questions. No right answers. Reveal your dominant archetype — and its corresponding dark tendencies.
-  </p>
+  <p class="intro-sub">Twelve questions. No right answers. Reveal your dominant archetype — and its corresponding dark tendencies.</p>
   <div class="intro-center" onclick="startQuiz()">
     <div class="cube">
       <div class="face front  f-creator">  <span>💥</span>Creator</div>
@@ -283,7 +137,7 @@ body {
       <div class="face right  f-mover">    <span>🚀</span>Mover</div>
       <div class="face left   f-reflector"><span>🪞</span>Reflector</div>
       <div class="face top    f-seeker">   <span>🔭</span>Seeker</div>
-      <div class="face bottom f-tender">   <span>🌸</span>Nurturer</div>
+      <div class="face bottom f-nurturer">   <span>🌸</span>Nurturer</div>
     </div>
     <div class="intro-instruction">click to begin</div>
   </div>
@@ -309,21 +163,16 @@ body {
 <!-- RESULT -->
 <div class="screen" id="s-result">
   <div class="result-hero" id="r-hero">
-    
     <div class="result-hero-inner">
       <div class="result-emoji"     id="r-emoji"></div>
       <div class="result-name"      id="r-name"></div>
       <div class="result-secondary" id="r-secondary"></div>
-      <div class="result-desc" id="r-desc"></div>
-
+      <div class="result-desc"      id="r-desc"></div>
     </div>
-    
   </div>
   <div class="result-band" id="r-band"></div>
   <div class="result-body">
-    <div>
-      <div id="r-bars"></div>
-    </div>
+    <div id="r-bars"></div>
     <div class="shadow-section">
       <div class="shadow-label">Your shadow</div>
       <div class="shadow-name" id="r-shadow-name"></div>
@@ -334,16 +183,16 @@ body {
 </div>
 
 <script>
-const TYPES   = ['creator','preserver','reflector','mover','tender','seeker'];
-const TYPE_MAP = { creator:'Creator', preserver:'Preserver', reflector:'Reflector', mover:'Mover', tender:'Nurturer', seeker:'Seeker' };
+const TYPES    = ['creator','preserver','reflector','mover','nurturer','seeker'];
+const TYPE_MAP = { creator:'Creator', preserver:'Preserver', reflector:'Reflector', mover:'Mover', nurturer:'Nurturer', seeker:'Seeker' };
 
 const TYPE_DATA = {
-  creator:   { emoji:'⚡ 🔨 💥 🛠',   desc:"You bring things into being that didn't exist before. You think in possibilities and futures. Driven by the need to build and disrupt because the current version of things isn't good enough.",                shadow_name:'The Destroyer', shadow:"Your drive to create can flatten what already exists. You may leave wreckage behind you and call it progress." },
+  creator:   { emoji:'⚡ 🔨 💥 🛠', desc:"You bring things into being that didn't exist before. You think in possibilities and futures. Driven by the need to build and disrupt because the current version of things isn't good enough.",                shadow_name:'The Destroyer', shadow:"Your drive to create can flatten what already exists. You may leave wreckage behind you and call it progress." },
   preserver: { emoji:'🌿 📖 🔒 🏛',  desc:"You hold things together that would otherwise fall apart. You understand that most of what's valuable was built slowly and can be lost quickly. You are the continuity others take for granted.",                    shadow_name:'The Decayer',   shadow:"Held too tightly, preservation becomes resistance. Stagnation can look a lot like stability from the inside." },
   reflector: { emoji:'🌊 🦉 📡 🪞',  desc:"You process the world deeply before responding to it. You observe more than you act. You find meaning in what others overlook. Your insights often arrive after everyone else has moved on.",                  shadow_name:'The Consumer',  shadow:"Reflection without action can become a way of avoiding the world. You may mistake depth of feeling for depth of contribution." },
-  mover:     { emoji:'🚀 🏃 🔥 💨',  desc:"You generate momentum — in yourself and in others. Energised by progress, pace, and forward motion. You don't wait for permission and find inaction physically uncomfortable.",                             shadow_name:'The Agitator', shadow:"Speed without direction is just disruption. You can bulldoze slower people and mistake urgency for importance." },
-  tender:    { emoji:'🌸 💌 🍵 🕯',  desc:"You are most alive when being there for someone. You notice when people are struggling before they say anything. You create safety, warmth, and belonging — often invisibly.",                           shadow_name:'The Enabler',  shadow:"Care without boundaries becomes self-erasure. You may protect people from consequences that would help them grow." },
-  seeker:    { emoji:'🌍 🧭 ✨ 🔭',  desc:"You follow the question wherever it leads. Driven by curiosity more than answers. You change your mind readily and feel most alive in unfamiliar territory.",                                      shadow_name:'The Escapist', shadow:"The horizon is always more interesting than where you've arrived. You may flee depth for novelty and commitment for possibility." }
+  mover:     { emoji:'🚀 🔥 🏃 💨',  desc:"You generate momentum — in yourself and in others. Energised by progress, pace, and forward motion. You don't wait for permission and find inaction physically uncomfortable.",                             shadow_name:'The Agitator',  shadow:"Speed without direction is just disruption. You can bulldoze slower people and mistake urgency for importance." },
+  nurturer:    { emoji:'🌸 💌 🍵 🕯',  desc:"You are most alive when being there for someone. You notice when people are struggling before they say anything. You create safety, warmth, and belonging — often invisibly.",                           shadow_name:'The Enabler',   shadow:"Care without boundaries becomes self-erasure. You may protect people from consequences that would help them grow." },
+  seeker:    { emoji:'🌍 🧭 ✨ 🔭',  desc:"You follow the question wherever it leads. Driven by curiosity more than answers. You change your mind readily and feel most alive in unfamiliar territory.",                                      shadow_name:'The Escapist',  shadow:"The horizon is always more interesting than where you've arrived. You may flee depth for novelty and commitment for possibility." }
 };
 
 const QUESTIONS = [
@@ -388,14 +237,16 @@ function renderQ() {
   const btn = document.getElementById('next-btn');
   btn.disabled    = answers[current] === null;
   btn.textContent = current === 11 ? 'See results →' : 'Next →';
-  document.getElementById('options').innerHTML = q.opts.map((o, i) => `
-    <label class="opt-label${answers[current] === i ? ' selected' : ''}">
-      <input type="radio" name="q" onchange="selectOpt(${i})" ${answers[current] === i ? 'checked' : ''}>
-      <span>${o.text}</span>
-    </label>`).join('');
+  document.getElementById('options').innerHTML = q.opts.map((o, i) =>
+    `<div class="opt${answers[current] === i ? ' selected' : ''}" onclick="selectOpt(${i})">${o.text}</div>`
+  ).join('');
 }
 
-function selectOpt(i) { answers[current] = i; renderQ(); }
+function selectOpt(i) {
+  answers[current] = i;
+  document.querySelectorAll('.opt').forEach((el, j) => el.classList.toggle('selected', j === i));
+  document.getElementById('next-btn').disabled = false;
+}
 
 function nextQ() {
   if (current === 11) return runTransition();
@@ -413,7 +264,7 @@ function runTransition() {
 }
 
 function showResult() {
-  const scores = { creator:0, preserver:0, reflector:0, mover:0, tender:0, seeker:0 };
+  const scores = { creator:0, preserver:0, reflector:0, mover:0, nurturer:0, seeker:0 };
   QUESTIONS.forEach((q, qi) => q.opts[answers[qi]].w.forEach((v, ti) => scores[TYPES[ti]] += v));
   const total = Object.values(scores).reduce((a, b) => a + b, 0) || 1;
   const pcts  = {};
@@ -421,16 +272,16 @@ function showResult() {
   const sorted = TYPES.slice().sort((a, b) => pcts[b] - pcts[a]);
   const pri = sorted[0], sec = sorted[1], d = TYPE_DATA[pri];
 
-  document.getElementById('r-hero').style.background       = `var(--${pri}-l)`;
-  document.getElementById('r-name').style.color            = `var(--${pri})`;
-  document.getElementById('r-name').textContent            = TYPE_MAP[pri];
-  document.getElementById('r-secondary').textContent       = `with traces of ${TYPE_MAP[sec]}`;
-  document.getElementById('r-secondary').style.color       = `var(--${sec})`;
-  document.getElementById('r-emoji').textContent           = d.emoji;
-  document.getElementById('r-desc').textContent            = d.desc;
-  document.getElementById('r-shadow-name').textContent     = d.shadow_name;
-  document.getElementById('r-shadow-name').style.color     = `var(--${pri})`;
-  document.getElementById('r-shadow-desc').textContent     = d.shadow;
+  document.getElementById('r-hero').style.background   = `var(--${pri}-l)`;
+  document.getElementById('r-name').style.color        = `var(--${pri})`;
+  document.getElementById('r-name').textContent        = TYPE_MAP[pri];
+  document.getElementById('r-secondary').textContent   = `with traces of ${TYPE_MAP[sec]}`;
+  document.getElementById('r-secondary').style.color   = `var(--${sec})`;
+  document.getElementById('r-emoji').textContent       = d.emoji;
+  document.getElementById('r-desc').textContent        = d.desc;
+  document.getElementById('r-shadow-name').textContent = d.shadow_name;
+  document.getElementById('r-shadow-name').style.color = `var(--${pri})`;
+  document.getElementById('r-shadow-desc').textContent = d.shadow;
 
   document.getElementById('r-band').innerHTML = sorted
     .filter(t => pcts[t] > 0)
