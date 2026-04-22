@@ -7,22 +7,25 @@
 <title> archetypical </title>
 <style>
 :root {
-  /* 6 PRIMARY + 6 LIGHT VARIANTS */
-  --creator:   #7a6890; --creator-l:   #e2dde6; /* Purple */
-  --preserver: #2a7a6e; --preserver-l: #d4e2df; /* Green */
-  --reflector: #4a5878; --reflector-l: #dee2e8; /* Blue */
-  --mover:     #cc3300; --mover-l:     #ffebe6; /* Flame Red (High Energy) */
-  --tender:    #a84868; --tender-l:    #f2e1e7; /* Rose (Soft Care) */
-  --seeker:    #d4a017; --seeker-l:    #fdf5e6; /* Amber (Discovery) */
-  
+  --creator:   #7a6890; --creator-l:   #e2dde6;
+  --preserver: #2a7a6e; --preserver-l: #d4e2df;
+  --reflector: #4a5878; --reflector-l: #dee2e8;
+  --mover:     #cc3300; --mover-l:     #ffebe6;
+  --tender:    #a84868; --tender-l:    #f2e1e7;
+  --seeker:    #d4a017; --seeker-l:    #fdf5e6;
   --page-bg: #f5f2e8; --ink: #000; --ink-l: #636363;
   --border: rgba(58,53,48,0.12); --warm-grey: #d4d0c8;
 }
 
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
 body{background:var(--page-bg);color:var(--ink);font-family:-apple-system,sans-serif;font-size:15px;line-height:1.6;min-height:100vh;}
-.screen{display:none; flex-direction:column; align-items:center; justify-content:center; min-height:100vh; padding:24px;}
-.screen.active{display:flex;}
+
+/* All screens hidden by default; only .active shows */
+.screen{display:none;}
+.screen.active{display:flex; flex-direction:column; align-items:center; justify-content:center; min-height:100vh; padding:24px;}
+
+/* Result screen overrides flex to block since it scrolls */
+#s-result.active{display:block; padding:0;}
 
 /* INTRO */
 .intro-sub{font-size:0.75rem; opacity:0.4; max-width:340px; text-align:center; margin-bottom:60px; line-height:1.6;}
@@ -32,18 +35,22 @@ body{background:var(--page-bg);color:var(--ink);font-family:-apple-system,sans-s
 /* CUBE */
 .cube{position:relative; width:110px; height:110px; transform-style:preserve-3d; animation:rotateCube 20s infinite linear;}
 @keyframes rotateCube{0%{transform:rotateX(-25deg) rotateY(0deg);} 100%{transform:rotateX(-25deg) rotateY(360deg);}}
-.face{position:absolute; width:110px; height:110px; display:flex; flex-direction:column; align-items:center; justify-content:center; font-weight:700; font-size:0.75rem; text-transform:uppercase; letter-spacing:0.05em; backface-visibility:hidden; border:1px solid rgba(0,0,0,0.05);}
-.front{transform:rotateY(0deg) translateZ(55px);} .back{transform:rotateY(180deg) translateZ(55px);} .right{transform:rotateY(90deg) translateZ(55px);} .left{transform:rotateY(-90deg) translateZ(55px);} .top{transform:rotateX(90deg) translateZ(55px);} .bottom{transform:rotateX(-90deg) translateZ(55px);}
-
-.f-creator{background:var(--creator-l); color:var(--creator);}
+.face{position:absolute; width:110px; height:110px; display:flex; flex-direction:column; align-items:center; justify-content:center; font-weight:700; font-size:0.75rem; backface-visibility:hidden; border:1px solid rgba(0,0,0,0.05);}
+.front {transform:rotateY(0deg)   translateZ(55px);}
+.back  {transform:rotateY(180deg) translateZ(55px);}
+.right {transform:rotateY(90deg)  translateZ(55px);}
+.left  {transform:rotateY(-90deg) translateZ(55px);}
+.top   {transform:rotateX(90deg)  translateZ(55px);}
+.bottom{transform:rotateX(-90deg) translateZ(55px);}
+.f-creator  {background:var(--creator-l);   color:var(--creator);}
 .f-preserver{background:var(--preserver-l); color:var(--preserver);}
 .f-reflector{background:var(--reflector-l); color:var(--reflector);}
-.f-mover{background:var(--mover-l); color:var(--mover);}
-.f-tender{background:var(--tender-l); color:var(--tender);}
-.f-seeker{background:var(--seeker-l); color:var(--seeker);}
+.f-mover    {background:var(--mover-l);     color:var(--mover);}
+.f-tender   {background:var(--tender-l);    color:var(--tender);}
+.f-seeker   {background:var(--seeker-l);    color:var(--seeker);}
 
 /* QUIZ */
-#s-quiz{max-width:640px; margin:0 auto; justify-content:flex-start; padding-top:80px;}
+#s-quiz.active{justify-content:flex-start; padding-top:80px; max-width:640px; margin:0 auto; width:100%;}
 .quiz-meta{width:100%; display:flex; align-items:center; justify-content:space-between; margin-bottom:24px;}
 .q-num{font-size:0.72rem; font-weight:700; color:var(--ink-l); text-transform:uppercase;}
 .prog-dots{display:flex; gap:4px;}
@@ -59,8 +66,11 @@ body{background:var(--page-bg);color:var(--ink);font-family:-apple-system,sans-s
 .next-btn{font-family:inherit; font-weight:700; background:var(--ink); color:var(--page-bg); border:none; padding:10px 24px; border-radius:6px; cursor:pointer;}
 .next-btn:disabled{opacity:0.1; cursor:default;}
 
+/* TRANSITION */
+.emoji-loader{font-size:2.5rem; margin-bottom:16px;}
+.trans-text{font-size:0.78rem; color:var(--ink-l); letter-spacing:0.12em; text-transform:uppercase;}
+
 /* RESULTS */
-#s-result{display:block; padding:0;}
 .result-hero{padding:60px 24px 32px; border-bottom:1px solid var(--border);}
 .result-hero-inner{max-width:640px; margin:0 auto;}
 .result-emoji{font-size:1.6rem; margin-bottom:10px; letter-spacing:4px;}
@@ -81,7 +91,8 @@ body{background:var(--page-bg);color:var(--ink);font-family:-apple-system,sans-s
 .shadow-label{font-size:0.65rem; font-weight:700; text-transform:uppercase; opacity:0.4; margin-bottom:8px;}
 .shadow-name{font-size:1.3rem; font-weight:700; margin-bottom:8px;}
 .shadow-desc{font-size:0.86rem; opacity:0.75; line-height:1.7;}
-.restart-btn{background:transparent; border:1.5px solid var(--border); color:var(--ink-l); padding:8px 20px; border-radius:6px; cursor:pointer; font-weight:700; margin-top:10px;}
+.restart-btn{background:transparent; border:1.5px solid var(--border); color:var(--ink-l); padding:8px 20px; border-radius:6px; cursor:pointer; font-weight:700; margin-top:10px; font-family:inherit;}
+.restart-btn:hover{border-color:var(--ink); color:var(--ink);}
 
 @media(max-width:480px){.result-name{font-size:2.2rem;}}
 </style>
@@ -168,18 +179,26 @@ const QUESTIONS=[
 
 let current=0, answers=new Array(12).fill(null);
 
-function show(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');window.scrollTo(0,0);}
+function show(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0,0);
+}
 
 function startQuiz(){
   document.getElementById('prog-dots').innerHTML=answers.map((_,i)=>`<div class="prog-dot" id="dot-${i}"></div>`).join('');
-  show('s-quiz'); renderQ();
+  show('s-quiz');
+  renderQ();
 }
 
 function renderQ(){
   const q=QUESTIONS[current];
   document.getElementById('q-num-label').textContent=(current+1)+' / 12';
   document.getElementById('q-text').textContent=q.text;
-  answers.forEach((_,i)=>{const d=document.getElementById('dot-'+i);d.className='prog-dot'+(i<current?' done':i===current?' active':'');});
+  answers.forEach((_,i)=>{
+    const d=document.getElementById('dot-'+i);
+    if(d) d.className='prog-dot'+(i<current?' done':i===current?' active':'');
+  });
   const btn=document.getElementById('next-btn');
   btn.disabled=answers[current]===null;
   btn.textContent=current===11?'See results →':'Next →';
@@ -190,26 +209,29 @@ function renderQ(){
     </label>`).join('');
 }
 
-function selectOpt(i){answers[current]=i; renderQ();}
+function selectOpt(i){ answers[current]=i; renderQ(); }
 
 function nextQ(){
   if(current===11) return runTransition();
-  current++; renderQ();
+  current++;
+  renderQ();
 }
 
-function runTransition() {
+function runTransition(){
   show('s-transition');
-  const loader=document.getElementById('emoji-loader'), emojis=['⚡','🌿','🌊','🚀','🔭','🌸','🦉','🛠'];
+  const loader=document.getElementById('emoji-loader');
+  const emojis=['⚡','🌿','🌊','🚀','🔭','🌸','🦉','🛠'];
   let idx=0;
   const interval=setInterval(()=>loader.textContent=emojis[idx++%emojis.length],200);
-  setTimeout(()=>{clearInterval(interval); showResult();},2200);
+  setTimeout(()=>{ clearInterval(interval); showResult(); },2200);
 }
 
 function showResult(){
   const scores={creator:0,preserver:0,reflector:0,mover:0,tender:0,seeker:0};
   QUESTIONS.forEach((q,qi)=>q.opts[answers[qi]].w.forEach((v,ti)=>scores[TYPES[ti]]+=v));
   const total=Object.values(scores).reduce((a,b)=>a+b,0)||1;
-  const pcts={}; TYPES.forEach(t=>pcts[t]=Math.round(scores[t]/total*100));
+  const pcts={};
+  TYPES.forEach(t=>pcts[t]=Math.round(scores[t]/total*100));
   const sorted=TYPES.slice().sort((a,b)=>pcts[b]-pcts[a]);
   const pri=sorted[0], sec=sorted[1], d=TYPE_DATA[pri];
 
@@ -219,7 +241,6 @@ function showResult(){
   document.getElementById('r-name').textContent=TYPE_MAP[pri];
   document.getElementById('r-secondary').textContent=`with traces of ${TYPE_MAP[sec]}`;
   document.getElementById('r-secondary').style.color=`var(--${sec})`;
-  
   document.getElementById('r-emoji').textContent=d.emoji;
   document.getElementById('r-tagline').textContent=d.tagline;
   document.getElementById('r-desc').textContent=d.desc;
@@ -227,7 +248,10 @@ function showResult(){
   document.getElementById('r-shadow-name').style.color=`var(--${pri})`;
   document.getElementById('r-shadow-desc').textContent=d.shadow;
 
-  document.getElementById('r-band').innerHTML=sorted.filter(t=>pcts[t]>0).map(t=>`<div class="result-band-seg" style="background:var(--${t}); flex:${pcts[t]}"></div>`).join('');
+  document.getElementById('r-band').innerHTML=sorted.filter(t=>pcts[t]>0).map(t=>
+    `<div class="result-band-seg" style="background:var(--${t}); flex:${pcts[t]}"></div>`
+  ).join('');
+
   document.getElementById('r-bars').innerHTML=sorted.filter(t=>pcts[t]>0).map(t=>`
     <div class="blend-row">
       <span class="blend-name" style="color:var(--${t})">${TYPE_MAP[t]}</span>
@@ -236,11 +260,14 @@ function showResult(){
     </div>`).join('');
 
   show('s-result');
-  setTimeout(()=>{document.querySelectorAll('.blend-bar').forEach(b=>b.style.width=b.dataset.pct+'%');},100);
+  setTimeout(()=>{ document.querySelectorAll('.blend-bar').forEach(b=>b.style.width=b.dataset.pct+'%'); },100);
 }
 
-  function restart(){current=0;answers=new Array(12).fill(null);show('s-intro');}
-
+function restart(){
+  current=0;
+  answers=new Array(12).fill(null);
+  show('s-intro');
+}
 </script>
 </body>
 </html>
