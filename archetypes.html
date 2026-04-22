@@ -202,7 +202,7 @@ body {
 .result-emoji   { font-size: 1.4rem; margin-bottom: 12px; letter-spacing: 3px; }
 .result-name    { font-size: 2.8rem; font-weight: 700; line-height: 1; margin-bottom: 6px; }
 .result-secondary { font-size: 0.88rem; color: var(--ink-l); margin-bottom: 16px; }
-.result-tagline { font-size: 1rem; font-weight: 600; max-width: 460px; color: var(--ink); opacity: 0.75; }
+.result-tagline .result-desc .shadow-desc { font-size: 1rem; max-width: 460px; color: var(--ink); opacity: 0.7; }
 
 .result-band { height: 4px; display: flex; }
 .result-band-seg { flex: 1; }
@@ -210,7 +210,6 @@ body {
 .result-body {
   max-width: 620px;
   margin: 0 auto;
-  padding: 32px 24px 80px;
   display: flex;
   flex-direction: column;
   gap: 28px;
@@ -221,7 +220,7 @@ body {
   color: var(--ink-l);
   text-transform: uppercase;
   letter-spacing: 0.12em;
-  margin-bottom: 12px;
+  margin-bottom: 6px;
 }
 .blend-row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
 .blend-name {
@@ -234,8 +233,6 @@ body {
 .blend-track { flex: 1; height: 3px; background: rgba(0,0,0,0.07); border-radius: 2px; }
 .blend-bar   { height: 3px; border-radius: 2px; width: 0; transition: width 1.2s cubic-bezier(0.16,1,0.3,1); }
 .blend-pct   { font-size: 0.7rem; color: var(--ink-l); min-width: 28px; text-align: right; }
-
-.result-desc { font-size: 0.9rem; color: var(--ink); }
 
 .shadow-section {
   background: #2a2620;
@@ -250,8 +247,7 @@ body {
   opacity: 0.4;
   margin-bottom: 6px;
 }
-.shadow-name { font-size: 1.2rem; font-weight: 700; margin-bottom: 8px; }
-.shadow-desc { font-size: 0.88rem; opacity: 0.72; }
+.shadow-name { font-size: 1.5rem; font-weight: 700; margin-bottom: 4px; }
 
 .restart-btn {
   font-family: inherit;
