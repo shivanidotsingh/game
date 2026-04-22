@@ -202,7 +202,7 @@ body {
 .result-emoji   { font-size: 1.4rem; margin-bottom: 12px; letter-spacing: 3px; }
 .result-name    { font-size: 2.8rem; font-weight: 700; line-height: 1; margin-bottom: 6px; }
 .result-secondary { font-size: 0.88rem; color: var(--ink-l); margin-bottom: 16px; }
-.result-tagline .result-desc .shadow-desc { font-size: 1rem; max-width: 460px; color: var(--ink); opacity: 0.7; }
+.result-desc .shadow-desc { font-size: 1rem; max-width: 460px; color: var(--ink); opacity: 0.5; }
 
 .result-band { height: 4px; display: flex; }
 .result-band-seg { flex: 1; }
@@ -210,6 +210,7 @@ body {
 .result-body {
   max-width: 620px;
   margin: 0 auto;
+  padding-top: 30px;
   display: flex;
   flex-direction: column;
   gap: 28px;
@@ -312,7 +313,6 @@ body {
       <div class="result-emoji"     id="r-emoji"></div>
       <div class="result-name"      id="r-name"></div>
       <div class="result-secondary" id="r-secondary"></div>
-      <div class="result-tagline"   id="r-tagline"></div>
       <div class="result-desc" id="r-desc"></div>
 
     </div>
@@ -337,12 +337,12 @@ const TYPES   = ['creator','preserver','reflector','mover','tender','seeker'];
 const TYPE_MAP = { creator:'Creator', preserver:'Preserver', reflector:'Reflector', mover:'Mover', tender:'Nurturer', seeker:'Seeker' };
 
 const TYPE_DATA = {
-  creator:   { emoji:'⚡ 🔨 💥 🛠', tagline:"You bring things into being that didn't exist before.",         desc:"You think in possibilities and futures. Driven by the need to build and disrupt because the current version of things isn't good enough.",                shadow_name:'The Destroyer', shadow:"Your drive to create can flatten what already exists. You may leave wreckage behind you and call it progress." },
-  preserver: { emoji:'🌿 📖 🔒 🏛',  tagline:'You hold things together that would otherwise fall apart.',     desc:"You understand that most of what's valuable was built slowly and can be lost quickly. You are the continuity others take for granted.",                    shadow_name:'The Decayer',   shadow:"Held too tightly, preservation becomes resistance. Stagnation can look a lot like stability from the inside." },
-  reflector: { emoji:'🌊 🦉 📡 🪞',  tagline:'You process the world deeply before responding to it.',         desc:"You observe more than you act. You find meaning in what others overlook. Your insights often arrive after everyone else has moved on.",                  shadow_name:'The Consumer',  shadow:"Reflection without action can become a way of avoiding the world. You may mistake depth of feeling for depth of contribution." },
-  mover:     { emoji:'🚀 🏃 🔥 💨',  tagline:'You generate momentum — in yourself and in others.',            desc:"Energised by progress, pace, and forward motion. You don't wait for permission and find inaction physically uncomfortable.",                             shadow_name:'The Agitator', shadow:"Speed without direction is just disruption. You can bulldoze slower people and mistake urgency for importance." },
-  tender:    { emoji:'🌸 💌 🍵 🕯',  tagline:'You are most alive when being there for someone.',              desc:"You notice when people are struggling before they say anything. You create safety, warmth, and belonging — often invisibly.",                           shadow_name:'The Enabler',  shadow:"Care without boundaries becomes self-erasure. You may protect people from consequences that would help them grow." },
-  seeker:    { emoji:'🌍 🧭 ✨ 🔭',  tagline:'You follow the question wherever it leads.',                     desc:"Driven by curiosity more than answers. You change your mind readily and feel most alive in unfamiliar territory.",                                      shadow_name:'The Escapist', shadow:"The horizon is always more interesting than where you've arrived. You may flee depth for novelty and commitment for possibility." }
+  creator:   { emoji:'⚡ 🔨 💥 🛠',   desc:"You bring things into being that didn't exist before. You think in possibilities and futures. Driven by the need to build and disrupt because the current version of things isn't good enough.",                shadow_name:'The Destroyer', shadow:"Your drive to create can flatten what already exists. You may leave wreckage behind you and call it progress." },
+  preserver: { emoji:'🌿 📖 🔒 🏛',  desc:"You hold things together that would otherwise fall apart. You understand that most of what's valuable was built slowly and can be lost quickly. You are the continuity others take for granted.",                    shadow_name:'The Decayer',   shadow:"Held too tightly, preservation becomes resistance. Stagnation can look a lot like stability from the inside." },
+  reflector: { emoji:'🌊 🦉 📡 🪞',  desc:"You process the world deeply before responding to it. You observe more than you act. You find meaning in what others overlook. Your insights often arrive after everyone else has moved on.",                  shadow_name:'The Consumer',  shadow:"Reflection without action can become a way of avoiding the world. You may mistake depth of feeling for depth of contribution." },
+  mover:     { emoji:'🚀 🏃 🔥 💨',  desc:"You generate momentum — in yourself and in others. Energised by progress, pace, and forward motion. You don't wait for permission and find inaction physically uncomfortable.",                             shadow_name:'The Agitator', shadow:"Speed without direction is just disruption. You can bulldoze slower people and mistake urgency for importance." },
+  tender:    { emoji:'🌸 💌 🍵 🕯',  desc:"You are most alive when being there for someone. You notice when people are struggling before they say anything. You create safety, warmth, and belonging — often invisibly.",                           shadow_name:'The Enabler',  shadow:"Care without boundaries becomes self-erasure. You may protect people from consequences that would help them grow." },
+  seeker:    { emoji:'🌍 🧭 ✨ 🔭',  desc:"You follow the question wherever it leads. Driven by curiosity more than answers. You change your mind readily and feel most alive in unfamiliar territory.",                                      shadow_name:'The Escapist', shadow:"The horizon is always more interesting than where you've arrived. You may flee depth for novelty and commitment for possibility." }
 };
 
 const QUESTIONS = [
@@ -426,7 +426,6 @@ function showResult() {
   document.getElementById('r-secondary').textContent       = `with traces of ${TYPE_MAP[sec]}`;
   document.getElementById('r-secondary').style.color       = `var(--${sec})`;
   document.getElementById('r-emoji').textContent           = d.emoji;
-  document.getElementById('r-tagline').textContent         = d.tagline;
   document.getElementById('r-desc').textContent            = d.desc;
   document.getElementById('r-shadow-name').textContent     = d.shadow_name;
   document.getElementById('r-shadow-name').style.color     = `var(--${pri})`;
