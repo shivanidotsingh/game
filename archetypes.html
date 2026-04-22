@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22> 🔮 </text></svg>">
-<title> archetypical </title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🔮</text></svg>">
+<title>archetypical</title>
 <style>
 :root {
   --creator:   #7a6890; --creator-l:   #e2dde6;
@@ -13,133 +13,319 @@
   --mover:     #cc3300; --mover-l:     #ffebe6;
   --tender:    #a84868; --tender-l:    #f2e1e7;
   --seeker:    #d4a017; --seeker-l:    #fdf5e6;
-  --page-bg: #f5f2e8; --ink: #000; --ink-l: #636363;
-  --border: rgba(58,53,48,0.12); --warm-grey: #d4d0c8;
+  --bg:   #f5f2e8;
+  --ink:  #1a1612;
+  --ink-l:#636363;
+  --border: rgba(0,0,0,0.1);
 }
 
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
-body{background:var(--page-bg);color:var(--ink);font-family:-apple-system,sans-serif;font-size:15px;line-height:1.6;min-height:100vh;}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-/* All screens hidden by default; only .active shows */
-.screen{display:none;}
-.screen.active{display:flex; flex-direction:column; align-items:center; justify-content:center; min-height:100vh; padding:24px;}
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: -apple-system, 'Helvetica Neue', sans-serif;
+  font-size: 15px;
+  line-height: 1.2;
+}
 
-/* Result screen overrides flex to block since it scrolls */
-#s-result.active{display:block; padding:0;}
+/* ── SCREENS ── */
+.screen { display: none; }
+.screen.active {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 24px;
+}
+#s-quiz.active {
+  justify-content: flex-start;
+  padding-top: 72px;
+  max-width: 620px;
+  margin: 0 auto;
+  width: 100%;
+  align-items: flex-start;
+}
+#s-result.active { display: block; padding: 0; }
 
-/* INTRO */
-.intro-sub{font-size:0.75rem; opacity:0.4; max-width:340px; text-align:center; margin-bottom:60px; line-height:1.6;}
-.intro-center{perspective:1000px; cursor:pointer; display:flex; flex-direction:column; align-items:center;}
-.intro-instruction{margin-top:50px; font-size:0.62rem; letter-spacing:0.25em; text-transform:uppercase; opacity:0.3; font-weight:700;}
+/* ── INTRO ── */
+.intro-sub {
+  font-size: 0.85rem;
+  color: var(--ink-l);
+  max-width: 320px;
+  text-align: center;
+  margin-bottom: 56px;
+}
+.intro-center {
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.intro-instruction {
+  margin-top: 44px;
+  font-size: 0.65rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ink-l);
+  opacity: 0.5;
+}
 
-/* CUBE */
-.cube{position:relative; width:110px; height:110px; transform-style:preserve-3d; animation:rotateCube 20s infinite linear;}
-@keyframes rotateCube{0%{transform:rotateX(-25deg) rotateY(0deg);} 100%{transform:rotateX(-25deg) rotateY(360deg);}}
-.face{position:absolute; width:110px; height:110px; display:flex; flex-direction:column; align-items:center; justify-content:center; font-weight:700; font-size:0.75rem; backface-visibility:hidden; border:1px solid rgba(0,0,0,0.05);}
-.front {transform:rotateY(0deg)   translateZ(55px);}
-.back  {transform:rotateY(180deg) translateZ(55px);}
-.right {transform:rotateY(90deg)  translateZ(55px);}
-.left  {transform:rotateY(-90deg) translateZ(55px);}
-.top   {transform:rotateX(90deg)  translateZ(55px);}
-.bottom{transform:rotateX(-90deg) translateZ(55px);}
-.f-creator  {background:var(--creator-l);   color:var(--creator);}
-.f-preserver{background:var(--preserver-l); color:var(--preserver);}
-.f-reflector{background:var(--reflector-l); color:var(--reflector);}
-.f-mover    {background:var(--mover-l);     color:var(--mover);}
-.f-tender   {background:var(--tender-l);    color:var(--tender);}
-.f-seeker   {background:var(--seeker-l);    color:var(--seeker);}
+/* ── CUBE ── */
+.cube {
+  position: relative;
+  width: 110px;
+  height: 110px;
+  transform-style: preserve-3d;
+  animation: rotateCube 20s linear infinite;
+}
+@keyframes rotateCube {
+  from { transform: rotateX(-25deg) rotateY(0deg); }
+  to   { transform: rotateX(-25deg) rotateY(360deg); }
+}
+.face {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  backface-visibility: hidden;
+  border: 1px solid rgba(0,0,0,0.06);
+}
+.front  { transform: rotateY(0deg)   translateZ(55px); }
+.back   { transform: rotateY(180deg) translateZ(55px); }
+.right  { transform: rotateY(90deg)  translateZ(55px); }
+.left   { transform: rotateY(-90deg) translateZ(55px); }
+.top    { transform: rotateX(90deg)  translateZ(55px); }
+.bottom { transform: rotateX(-90deg) translateZ(55px); }
+.f-creator   { background: var(--creator-l);   color: var(--creator);   }
+.f-preserver { background: var(--preserver-l); color: var(--preserver); }
+.f-reflector { background: var(--reflector-l); color: var(--reflector); }
+.f-mover     { background: var(--mover-l);     color: var(--mover);     }
+.f-tender    { background: var(--tender-l);    color: var(--tender);    }
+.f-seeker    { background: var(--seeker-l);    color: var(--seeker);    }
 
-/* QUIZ */
-#s-quiz.active{justify-content:flex-start; padding-top:80px; max-width:640px; margin:0 auto; width:100%;}
-.quiz-meta{width:100%; display:flex; align-items:center; justify-content:space-between; margin-bottom:24px;}
-.q-num{font-size:0.72rem; font-weight:700; color:var(--ink-l); text-transform:uppercase;}
-.prog-dots{display:flex; gap:4px;}
-.prog-dot{width:6px; height:6px; border-radius:50%; background:var(--warm-grey); transition:0.2s;}
-.prog-dot.done{background:var(--ink-l);}
-.prog-dot.active{background:var(--ink); width:14px; border-radius:3px;}
-.q-text{font-size:1.25rem; font-weight:700; width:100%; margin-bottom:20px;}
-.options{width:100%; display:flex; flex-direction:column; gap:8px; margin-bottom:28px;}
-.opt-label{display:flex; padding:12px 14px; border:1.5px solid var(--border); border-radius:8px; cursor:pointer; background:white; font-size:0.88rem; transition:0.15s;}
-.opt-label:hover{background:#fdfcf9; border-color:rgba(0,0,0,0.2);}
-.opt-label.selected{border-color:var(--ink); background:#fdfcf9;}
-.opt-label input{display:none;}
-.next-btn{font-family:inherit; font-weight:700; background:var(--ink); color:var(--page-bg); border:none; padding:10px 24px; border-radius:6px; cursor:pointer;}
-.next-btn:disabled{opacity:0.1; cursor:default;}
+/* ── QUIZ ── */
+.quiz-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  margin-bottom: 28px;
+}
+.q-num {
+  font-size: 0.72rem;
+  color: var(--ink-l);
+}
+.prog-dots { display: flex; gap: 4px; align-items: center; }
+.prog-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: rgba(0,0,0,0.12);
+  transition: all 0.2s;
+}
+.prog-dot.done   { background: var(--ink-l); }
+.prog-dot.active { background: var(--ink); width: 14px; border-radius: 3px; }
 
-/* TRANSITION */
-.emoji-loader{font-size:2.5rem; margin-bottom:16px;}
-.trans-text{font-size:0.78rem; color:var(--ink-l); letter-spacing:0.12em; text-transform:uppercase;}
+.q-text {
+  font-size: 1.2rem;
+  font-weight: 700;
+  line-height: 1.4;
+  margin-bottom: 20px;
+  width: 100%;
+}
 
-/* RESULTS */
-.result-hero{padding:60px 24px 32px; border-bottom:1px solid var(--border);}
-.result-hero-inner{max-width:640px; margin:0 auto;}
-.result-emoji{font-size:1.6rem; margin-bottom:10px; letter-spacing:4px;}
-.result-kicker{font-size:0.7rem; font-weight:700; text-transform:uppercase; opacity:0.5; margin-bottom:6px;}
-.result-name{font-size:3rem; font-weight:700; line-height:1; margin-bottom:6px;}
-.result-secondary{font-size:0.78rem; margin-bottom:14px; font-weight:600;}
-.result-tagline{font-size:1rem; font-weight:700; max-width:480px; opacity:0.75;}
-.result-band{height:4px; display:flex;}
-.result-band-seg{height:100%;}
-.result-body{max-width:640px; margin:0 auto; padding:32px 24px 80px; display:flex; flex-direction:column; gap:28px;}
-.section-label{font-size:0.68rem; font-weight:700; text-transform:uppercase; color:var(--ink-l); margin-bottom:12px;}
-.blend-row{display:flex; align-items:center; gap:10px; margin-bottom:8px;}
-.blend-name{font-size:0.72rem; font-weight:700; min-width:85px; text-transform:uppercase;}
-.blend-track{flex:1; height:3px; background:rgba(0,0,0,0.06); border-radius:2px;}
-.blend-bar{height:100%; border-radius:2px; width:0; transition:width 1.2s cubic-bezier(0.16,1,0.3,1);}
-.blend-pct{font-size:0.7rem; color:var(--ink-l); min-width:30px; text-align:right;}
-.shadow-section{background:#2e2a26; color:#f0ece4; border-radius:10px; padding:24px;}
-.shadow-label{font-size:0.65rem; font-weight:700; text-transform:uppercase; opacity:0.4; margin-bottom:8px;}
-.shadow-name{font-size:1.3rem; font-weight:700; margin-bottom:8px;}
-.shadow-desc{font-size:0.86rem; opacity:0.75; line-height:1.7;}
-.restart-btn{background:transparent; border:1.5px solid var(--border); color:var(--ink-l); padding:8px 20px; border-radius:6px; cursor:pointer; font-weight:700; margin-top:10px; font-family:inherit;}
-.restart-btn:hover{border-color:var(--ink); color:var(--ink);}
+.options {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+  margin-bottom: 24px;
+}
+.opt-label {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 11px 14px;
+  border: 1.5px solid var(--border);
+  border-radius: 8px;
+  cursor: pointer;
+  background: #fff;
+  font-size: 0.88rem;
+  transition: border-color 0.15s, background 0.15s;
+}
+.opt-label:hover    { border-color: rgba(0,0,0,0.25); background: #fdfcf8; }
+.opt-label.selected { border-color: var(--ink); background: #fdfcf8; }
+.opt-label input[type="radio"] {
+  margin-top: 3px;
+  flex-shrink: 0;
+  accent-color: var(--ink);
+  cursor: pointer;
+}
 
-@media(max-width:480px){.result-name{font-size:2.2rem;}}
+.next-btn {
+  font-family: inherit;
+  font-size: 0.85rem;
+  font-weight: 600;
+  background: var(--ink);
+  color: var(--bg);
+  border: none;
+  padding: 10px 24px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: opacity 0.15s;
+}
+.next-btn:disabled { opacity: 0.15; cursor: default; }
+.next-btn:not(:disabled):hover { opacity: 0.8; }
+
+/* ── TRANSITION ── */
+.emoji-loader { font-size: 2.4rem; margin-bottom: 12px; }
+.trans-text {
+  font-size: 0.75rem;
+  color: var(--ink-l);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+
+/* ── RESULT ── */
+.result-hero {
+  padding: 52px 24px 32px;
+  border-bottom: 1px solid var(--border);
+}
+.result-hero-inner { max-width: 620px; margin: 0 auto; }
+
+.result-emoji   { font-size: 1.4rem; margin-bottom: 12px; letter-spacing: 3px; }
+.result-name    { font-size: 2.8rem; font-weight: 700; line-height: 1; margin-bottom: 6px; }
+.result-secondary { font-size: 0.88rem; color: var(--ink-l); margin-bottom: 16px; }
+.result-tagline { font-size: 1rem; font-weight: 600; max-width: 460px; color: var(--ink); opacity: 0.75; }
+
+.result-band { height: 4px; display: flex; }
+.result-band-seg { flex: 1; }
+
+.result-body {
+  max-width: 620px;
+  margin: 0 auto;
+  padding: 32px 24px 80px;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+.section-label {
+  font-size: 0.68rem;
+  color: var(--ink-l);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  margin-bottom: 12px;
+}
+.blend-row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+.blend-name {
+  font-size: 0.72rem;
+  font-weight: 600;
+  min-width: 82px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.blend-track { flex: 1; height: 3px; background: rgba(0,0,0,0.07); border-radius: 2px; }
+.blend-bar   { height: 3px; border-radius: 2px; width: 0; transition: width 1.2s cubic-bezier(0.16,1,0.3,1); }
+.blend-pct   { font-size: 0.7rem; color: var(--ink-l); min-width: 28px; text-align: right; }
+
+.result-desc { font-size: 0.9rem; color: var(--ink); }
+
+.shadow-section {
+  background: #2a2620;
+  color: #f0ece4;
+  border-radius: 10px;
+  padding: 22px;
+}
+.shadow-label {
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  opacity: 0.4;
+  margin-bottom: 6px;
+}
+.shadow-name { font-size: 1.2rem; font-weight: 700; margin-bottom: 8px; }
+.shadow-desc { font-size: 0.88rem; opacity: 0.72; }
+
+.restart-btn {
+  font-family: inherit;
+  font-size: 0.8rem;
+  background: transparent;
+  border: 1.5px solid var(--border);
+  color: var(--ink-l);
+  padding: 8px 20px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: border-color 0.15s, color 0.15s;
+}
+.restart-btn:hover { border-color: var(--ink); color: var(--ink); }
+
+@media (max-width: 480px) {
+  .result-name { font-size: 2.2rem; }
+  #s-quiz.active { padding-top: 48px; }
+}
 </style>
 </head>
 <body>
 
+<!-- INTRO -->
 <div class="screen active" id="s-intro">
   <p class="intro-sub">Twelve questions. No right answers. Reveal your blend of multitudes, and its corresponding shadow tendencies.</p>
   <div class="intro-center" onclick="startQuiz()">
     <div class="cube">
-      <div class="face front f-creator"><span>💥</span>Creator</div>
-      <div class="face back f-preserver"><span>🌿</span>Preserver</div>
-      <div class="face right f-mover"><span>🚀</span>Mover</div>
-      <div class="face left f-reflector"><span>🪞</span>Reflector</div>
-      <div class="face top f-seeker"><span>🔭</span>Seeker</div>
-      <div class="face bottom f-tender"><span>🌸</span>Nurturer</div>
+      <div class="face front  f-creator">  <span>💥</span>Creator</div>
+      <div class="face back   f-preserver"><span>🌿</span>Preserver</div>
+      <div class="face right  f-mover">    <span>🚀</span>Mover</div>
+      <div class="face left   f-reflector"><span>🪞</span>Reflector</div>
+      <div class="face top    f-seeker">   <span>🔭</span>Seeker</div>
+      <div class="face bottom f-tender">   <span>🌸</span>Nurturer</div>
     </div>
     <div class="intro-instruction">click to begin</div>
   </div>
 </div>
 
+<!-- QUIZ -->
 <div class="screen" id="s-quiz">
-  <div class="quiz-meta"><span class="q-num" id="q-num-label"></span><div class="prog-dots" id="prog-dots"></div></div>
+  <div class="quiz-meta">
+    <span class="q-num" id="q-num-label"></span>
+    <div class="prog-dots" id="prog-dots"></div>
+  </div>
   <div class="q-text" id="q-text"></div>
   <div class="options" id="options"></div>
   <button class="next-btn" id="next-btn" onclick="nextQ()" disabled>Next →</button>
 </div>
 
+<!-- TRANSITION -->
 <div class="screen" id="s-transition">
   <div class="emoji-loader" id="emoji-loader">⚡</div>
   <p class="trans-text">Synthesizing pattern...</p>
 </div>
 
+<!-- RESULT -->
 <div class="screen" id="s-result">
   <div class="result-hero" id="r-hero">
+    
     <div class="result-hero-inner">
-      <div class="result-emoji" id="r-emoji"></div>
-      <div class="result-kicker">your archetype</div>
-      <div class="result-name" id="r-name"></div>
+      <div class="result-emoji"     id="r-emoji"></div>
+      <div class="result-name"      id="r-name"></div>
       <div class="result-secondary" id="r-secondary"></div>
-      <div class="result-tagline" id="r-tagline"></div>
+      <div class="result-tagline"   id="r-tagline"></div>
+      <div class="result-desc" id="r-desc"></div>
+
     </div>
+    
   </div>
   <div class="result-band" id="r-band"></div>
   <div class="result-body">
-    <div><div class="section-label">Your blend</div><div id="r-bars"></div></div>
-    <div class="result-desc" id="r-desc"></div>
+    <div>
+      <div id="r-bars"></div>
+    </div>
     <div class="shadow-section">
       <div class="shadow-label">Your shadow</div>
       <div class="shadow-name" id="r-shadow-name"></div>
@@ -150,122 +336,126 @@ body{background:var(--page-bg);color:var(--ink);font-family:-apple-system,sans-s
 </div>
 
 <script>
-const TYPES=['creator','preserver','reflector','mover','tender','seeker'];
-const TYPE_MAP={creator:'Creator',preserver:'Preserver',reflector:'Reflector',mover:'Mover',tender:'Nurturer',seeker:'Seeker'};
+const TYPES   = ['creator','preserver','reflector','mover','tender','seeker'];
+const TYPE_MAP = { creator:'Creator', preserver:'Preserver', reflector:'Reflector', mover:'Mover', tender:'Nurturer', seeker:'Seeker' };
 
-const TYPE_DATA={
-  creator:{emoji:'⚡ 🔨 💥 🛠',tagline:"You bring things into being that didn't exist before.",desc:"You think in possibilities and futures. Driven by the need to build and disrupt because the current version of things isn't good enough.",shadow_name:'The Destroyer',shadow:"Your drive to create can flatten what already exists. You may leave wreckage behind you and call it progress."},
-  preserver:{emoji:'🌿 📖 🔒 🏛',tagline:'You hold things together that would otherwise fall apart.',desc:"You understand that most of what's valuable was built slowly and can be lost quickly. You are the continuity others take for granted.",shadow_name:'The Decayer',shadow:"Held too tightly, preservation becomes resistance. Stagnation can look a lot like stability from the inside."},
-  reflector:{emoji:'🌊 🦉 📡 🪞',tagline:'You process the world deeply before responding to it.',desc:"You observe more than you act. You find meaning in what others overlook. Your insights often arrive after everyone else has moved on.",shadow_name:'The Consumer',shadow:"Reflection without action can become a way of avoiding the world. You may mistake depth of feeling for depth of contribution."},
-  mover:{emoji:'🚀 🏃 🔥 💨',tagline:'You generate momentum — in yourself and in others.',desc:"Energised by progress, pace, and forward motion. You don't wait for permission and find inaction physically uncomfortable.",shadow_name:'The Agitator',shadow:"Speed without direction is just disruption. You can bulldoze slower people and mistake urgency for importance."},
-  tender:{emoji:'🌸 💌 🍵 🕯',tagline:'You are most alive when being there for someone.',desc:"You notice when people are struggling before they say anything. You create safety, warmth, and belonging — often invisibly.",shadow_name:'The Enabler',shadow:"Care without boundaries becomes self-erasure. You may protect people from consequences that would help them grow."},
-  seeker:{emoji:'🌍 🧭 ✨ 🔭',tagline:'You follow the question wherever it leads.',desc:"Driven by curiosity more than answers. You change your mind readily and feel most alive in unfamiliar territory.",shadow_name:'The Escapist',shadow:"The horizon is always more interesting than where you've arrived. You may flee depth for novelty and commitment for possibility."}
+const TYPE_DATA = {
+  creator:   { emoji:'⚡ 🔨 💥 🛠', tagline:"You bring things into being that didn't exist before.",         desc:"You think in possibilities and futures. Driven by the need to build and disrupt because the current version of things isn't good enough.",                shadow_name:'The Destroyer', shadow:"Your drive to create can flatten what already exists. You may leave wreckage behind you and call it progress." },
+  preserver: { emoji:'🌿 📖 🔒 🏛',  tagline:'You hold things together that would otherwise fall apart.',     desc:"You understand that most of what's valuable was built slowly and can be lost quickly. You are the continuity others take for granted.",                    shadow_name:'The Decayer',   shadow:"Held too tightly, preservation becomes resistance. Stagnation can look a lot like stability from the inside." },
+  reflector: { emoji:'🌊 🦉 📡 🪞',  tagline:'You process the world deeply before responding to it.',         desc:"You observe more than you act. You find meaning in what others overlook. Your insights often arrive after everyone else has moved on.",                  shadow_name:'The Consumer',  shadow:"Reflection without action can become a way of avoiding the world. You may mistake depth of feeling for depth of contribution." },
+  mover:     { emoji:'🚀 🏃 🔥 💨',  tagline:'You generate momentum — in yourself and in others.',            desc:"Energised by progress, pace, and forward motion. You don't wait for permission and find inaction physically uncomfortable.",                             shadow_name:'The Agitator', shadow:"Speed without direction is just disruption. You can bulldoze slower people and mistake urgency for importance." },
+  tender:    { emoji:'🌸 💌 🍵 🕯',  tagline:'You are most alive when being there for someone.',              desc:"You notice when people are struggling before they say anything. You create safety, warmth, and belonging — often invisibly.",                           shadow_name:'The Enabler',  shadow:"Care without boundaries becomes self-erasure. You may protect people from consequences that would help them grow." },
+  seeker:    { emoji:'🌍 🧭 ✨ 🔭',  tagline:'You follow the question wherever it leads.',                     desc:"Driven by curiosity more than answers. You change your mind readily and feel most alive in unfamiliar territory.",                                      shadow_name:'The Escapist', shadow:"The horizon is always more interesting than where you've arrived. You may flee depth for novelty and commitment for possibility." }
 };
 
-const QUESTIONS=[
-  {text:"You find an old library that only you can see. It has exactly one section. Which?",opts:[{text:"Blueprints — every great thing imagined but never built.",w:[4,0,0,1,0,1]},{text:"Endangered things — languages and traditions on the edge of vanishing.",w:[0,4,0,0,1,0]},{text:"Inner lives — the thoughts people never said out loud.",w:[0,0,3,0,2,1]},{text:"Elsewhere — every place in the world you haven't been yet.",w:[0,0,0,1,0,4]}]},
-  {text:"What do you find hardest to forgive in other people?",opts:[{text:"Wasted potential. People who could do more and don't.",w:[3,0,1,2,0,0]},{text:"Carelessness with things that took a long time to build.",w:[0,4,0,0,1,0]},{text:"Shallowness. People who never ask why.",w:[0,0,4,0,0,2]},{text:"Passivity. Waiting for someone else to fix things.",w:[1,0,0,4,0,0]},{text:"Cruelty — especially the casual kind people don't notice.",w:[0,0,1,0,4,0]},{text:"Certainty. People who stopped being curious.",w:[1,0,1,0,0,4]}]},
-  {text:"If you were a weather pattern, which one would you be?",opts:[{text:"A thunderstorm — dramatic arrival, clears the air, moves on.",w:[3,0,0,3,0,0]},{text:"A long mild season — dependable, nourishing, taken for granted.",w:[0,4,0,0,2,0]},{text:"Morning fog — makes familiar things strange.",w:[0,0,4,0,0,1]},{text:"A pleasant wind from somewhere, carrying a strange smell.",w:[0,0,1,0,0,4]},{text:"Steady rain — present, gentle — filling rivers slowly.",w:[0,1,0,0,4,0]}]},
-  {text:"A civilisation collapsed 2,000 years ago. What pulls your attention?",opts:[{text:"What they invented. What they imagined into existence.",w:[4,0,0,0,0,1]},{text:"What they preserved — rituals, language, ways of living.",w:[0,4,0,0,1,0]},{text:"What it felt like to live through. The day-to-day of ordinary people.",w:[0,0,3,0,2,0]},{text:"What caused it. The tipping point no one saw coming.",w:[1,1,1,1,0,2]}]},
-  {text:"What's your life's recurring flaw — the one that keeps showing up?",opts:[{text:"Starting things I don't finish.",w:[3,0,0,2,0,1]},{text:"Holding on too long to things that have already ended.",w:[0,4,0,0,1,0]},{text:"Living in my head instead of the world.",w:[0,0,4,0,0,1]},{text:"Moving so fast I miss what's right in front of me.",w:[0,0,0,4,0,1]},{text:"Losing myself in other people's needs.",w:[0,0,0,0,4,1]},{text:"Never feeling like I've found the right thing yet.",w:[0,0,1,0,0,4]}]},
-  {text:"You inherit a large, rambling house. Your first instinct?",opts:[{text:"Knock out a wall. Rethink the whole thing.",w:[4,0,0,2,0,0]},{text:"Go through every drawer. Learn who lived here before.",w:[0,3,2,0,0,1]},{text:"Sit in each room alone before deciding anything.",w:[0,0,4,0,0,1]},{text:"Fill it with people immediately. Too quiet.",w:[0,0,0,2,3,0]},{text:"Find the room that might be haunted.",w:[0,0,1,0,0,4]}]},
-  {text:"An institution you love is changing in ways you don't like. You...",opts:[{text:"Build something new alongside it — make the old irrelevant.",w:[4,0,0,1,0,0]},{text:"Work from within. Slow it down. Protect what matters.",w:[0,4,0,0,1,0]},{text:"Write about what's being lost. Bear witness.",w:[0,1,3,0,0,1]},{text:"Organise people. Make noise. Force the conversation.",w:[0,0,0,4,1,0]}]},
-  {text:"What kind of conversation leaves you most alive?",opts:[{text:"One where we figured something out neither of us could alone.",w:[3,0,1,1,0,1]},{text:"One where someone shared something they'd never told anyone.",w:[0,0,2,0,4,0]},{text:"One that changed my mind about something.",w:[1,0,2,0,0,3]},{text:"One that turned into a plan. That ended with doing something.",w:[1,0,0,4,0,1]}]},
-  {text:"One object to carry for the rest of your life. You choose...",opts:[{text:"A blank notebook — for everything you're still going to make.",w:[4,0,1,0,0,1]},{text:"A photograph of something you never want to forget.",w:[0,4,0,0,2,0]},{text:"A compass — not for direction, but for orientation.",w:[0,0,0,2,0,4]},{text:"A key. You'll find the door eventually.",w:[0,0,2,1,0,3]},{text:"Something that belonged to someone you love.",w:[0,2,1,0,4,0]},{text:"Nothing. You'd rather travel light.",w:[1,0,0,3,0,2]}]},
-  {text:"Which, of these, is most true about you?",opts:[{text:"I am always working on something that doesn't exist yet.",w:[4,0,0,1,0,1]},{text:"I am a keeper — of stories, people, traditions, promises.",w:[0,4,0,0,2,0]},{text:"I process the world more than I act on it.",w:[0,0,4,0,0,1]},{text:"I generate energy. Things move differently when I'm there.",w:[1,0,0,4,0,0]},{text:"People come to me when they're struggling.",w:[0,0,0,0,4,0]},{text:"Always mid-question. Never stay anywhere long enough.",w:[0,0,1,1,0,4]}]},
-  {text:"The world is ending in 50 years. You spend your time...",opts:[{text:"Trying to stop it. Or building something that survives.",w:[4,0,0,2,0,0]},{text:"Preserving everything worth keeping.",w:[0,4,1,0,0,0]},{text:"Trying to understand it. What led here.",w:[0,0,4,0,0,2]},{text:"Making the most of the time left. Experiences, people.",w:[0,0,0,3,0,2]},{text:"Helping people around me navigate this uncertainty.",w:[0,0,0,0,4,0]}]},
-  {text:"After you're gone, what do you want said about you?",opts:[{text:"They made something that mattered.",w:[4,0,0,1,0,0]},{text:"They held things together. They kept what was good.",w:[0,4,0,0,1,0]},{text:"They saw what others missed. They understood deeply.",w:[0,0,4,0,0,1]},{text:"They made things happen. They got people moving.",w:[0,0,0,4,0,0]},{text:"They made people feel less alone.",w:[0,0,0,0,4,0]},{text:"They never stopped asking questions. Always becoming.",w:[0,0,1,0,0,4]}]}
+const QUESTIONS = [
+  { text:"You find an old library that only you can see. It has exactly one section. Which?", opts:[{text:"Blueprints — every great thing imagined but never built.",w:[4,0,0,1,0,1]},{text:"Endangered things — languages and traditions on the edge of vanishing.",w:[0,4,0,0,1,0]},{text:"Inner lives — the thoughts people never said out loud.",w:[0,0,3,0,2,1]},{text:"Elsewhere — every place in the world you haven't been yet.",w:[0,0,0,1,0,4]}]},
+  { text:"What do you find hardest to forgive in other people?", opts:[{text:"Wasted potential. People who could do more and don't.",w:[3,0,1,2,0,0]},{text:"Carelessness with things that took a long time to build.",w:[0,4,0,0,1,0]},{text:"Shallowness. People who never ask why.",w:[0,0,4,0,0,2]},{text:"Passivity. Waiting for someone else to fix things.",w:[1,0,0,4,0,0]},{text:"Cruelty — especially the casual kind people don't notice.",w:[0,0,1,0,4,0]},{text:"Certainty. People who stopped being curious.",w:[1,0,1,0,0,4]}]},
+  { text:"If you were a weather pattern, which one would you be?", opts:[{text:"A thunderstorm — dramatic arrival, clears the air, moves on.",w:[3,0,0,3,0,0]},{text:"A long mild season — dependable, nourishing, taken for granted.",w:[0,4,0,0,2,0]},{text:"Morning fog — makes familiar things strange.",w:[0,0,4,0,0,1]},{text:"A pleasant wind from somewhere, carrying a strange smell.",w:[0,0,1,0,0,4]},{text:"Steady rain — present, gentle — filling rivers slowly.",w:[0,1,0,0,4,0]}]},
+  { text:"A civilisation collapsed 2,000 years ago. What pulls your attention?", opts:[{text:"What they invented. What they imagined into existence.",w:[4,0,0,0,0,1]},{text:"What they preserved — rituals, language, ways of living.",w:[0,4,0,0,1,0]},{text:"What it felt like to live through. The day-to-day of ordinary people.",w:[0,0,3,0,2,0]},{text:"What caused it. The tipping point no one saw coming.",w:[1,1,1,1,0,2]}]},
+  { text:"What's your life's recurring flaw — the one that keeps showing up?", opts:[{text:"Starting things I don't finish.",w:[3,0,0,2,0,1]},{text:"Holding on too long to things that have already ended.",w:[0,4,0,0,1,0]},{text:"Living in my head instead of the world.",w:[0,0,4,0,0,1]},{text:"Moving so fast I miss what's right in front of me.",w:[0,0,0,4,0,1]},{text:"Losing myself in other people's needs.",w:[0,0,0,0,4,1]},{text:"Never feeling like I've found the right thing yet.",w:[0,0,1,0,0,4]}]},
+  { text:"You inherit a large, rambling house. Your first instinct?", opts:[{text:"Knock out a wall. Rethink the whole thing.",w:[4,0,0,2,0,0]},{text:"Go through every drawer. Learn who lived here before.",w:[0,3,2,0,0,1]},{text:"Sit in each room alone before deciding anything.",w:[0,0,4,0,0,1]},{text:"Fill it with people immediately. Too quiet.",w:[0,0,0,2,3,0]},{text:"Find the room that might be haunted.",w:[0,0,1,0,0,4]}]},
+  { text:"An institution you love is changing in ways you don't like. You...", opts:[{text:"Build something new alongside it — make the old irrelevant.",w:[4,0,0,1,0,0]},{text:"Work from within. Slow it down. Protect what matters.",w:[0,4,0,0,1,0]},{text:"Write about what's being lost. Bear witness.",w:[0,1,3,0,0,1]},{text:"Organise people. Make noise. Force the conversation.",w:[0,0,0,4,1,0]}]},
+  { text:"What kind of conversation leaves you most alive?", opts:[{text:"One where we figured something out neither of us could alone.",w:[3,0,1,1,0,1]},{text:"One where someone shared something they'd never told anyone.",w:[0,0,2,0,4,0]},{text:"One that changed my mind about something.",w:[1,0,2,0,0,3]},{text:"One that turned into a plan. That ended with doing something.",w:[1,0,0,4,0,1]}]},
+  { text:"One object to carry for the rest of your life. You choose...", opts:[{text:"A blank notebook — for everything you're still going to make.",w:[4,0,1,0,0,1]},{text:"A photograph of something you never want to forget.",w:[0,4,0,0,2,0]},{text:"A compass — not for direction, but for orientation.",w:[0,0,0,2,0,4]},{text:"A key. You'll find the door eventually.",w:[0,0,2,1,0,3]},{text:"Something that belonged to someone you love.",w:[0,2,1,0,4,0]},{text:"Nothing. You'd rather travel light.",w:[1,0,0,3,0,2]}]},
+  { text:"Which, of these, is most true about you?", opts:[{text:"I am always working on something that doesn't exist yet.",w:[4,0,0,1,0,1]},{text:"I am a keeper — of stories, people, traditions, promises.",w:[0,4,0,0,2,0]},{text:"I process the world more than I act on it.",w:[0,0,4,0,0,1]},{text:"I generate energy. Things move differently when I'm there.",w:[1,0,0,4,0,0]},{text:"People come to me when they're struggling.",w:[0,0,0,0,4,0]},{text:"Always mid-question. Never stay anywhere long enough.",w:[0,0,1,1,0,4]}]},
+  { text:"The world is ending in 50 years. You spend your time...", opts:[{text:"Trying to stop it. Or building something that survives.",w:[4,0,0,2,0,0]},{text:"Preserving everything worth keeping.",w:[0,4,1,0,0,0]},{text:"Trying to understand it. What led here.",w:[0,0,4,0,0,2]},{text:"Making the most of the time left. Experiences, people.",w:[0,0,0,3,0,2]},{text:"Helping people around me navigate this uncertainty.",w:[0,0,0,0,4,0]}]},
+  { text:"After you're gone, what do you want said about you?", opts:[{text:"They made something that mattered.",w:[4,0,0,1,0,0]},{text:"They held things together. They kept what was good.",w:[0,4,0,0,1,0]},{text:"They saw what others missed. They understood deeply.",w:[0,0,4,0,0,1]},{text:"They made things happen. They got people moving.",w:[0,0,0,4,0,0]},{text:"They made people feel less alone.",w:[0,0,0,0,4,0]},{text:"They never stopped asking questions. Always becoming.",w:[0,0,1,0,0,4]}]}
 ];
 
-let current=0, answers=new Array(12).fill(null);
+let current = 0;
+let answers  = new Array(12).fill(null);
 
-function show(id){
-  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+function show(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
-  window.scrollTo(0,0);
+  window.scrollTo(0, 0);
 }
 
-function startQuiz(){
-  document.getElementById('prog-dots').innerHTML=answers.map((_,i)=>`<div class="prog-dot" id="dot-${i}"></div>`).join('');
+function startQuiz() {
+  document.getElementById('prog-dots').innerHTML = answers.map((_, i) =>
+    `<div class="prog-dot" id="dot-${i}"></div>`).join('');
   show('s-quiz');
   renderQ();
 }
 
-function renderQ(){
-  const q=QUESTIONS[current];
-  document.getElementById('q-num-label').textContent=(current+1)+' / 12';
-  document.getElementById('q-text').textContent=q.text;
-  answers.forEach((_,i)=>{
-    const d=document.getElementById('dot-'+i);
-    if(d) d.className='prog-dot'+(i<current?' done':i===current?' active':'');
+function renderQ() {
+  const q = QUESTIONS[current];
+  document.getElementById('q-num-label').textContent = (current + 1) + ' / 12';
+  document.getElementById('q-text').textContent = q.text;
+  answers.forEach((_, i) => {
+    const d = document.getElementById('dot-' + i);
+    if (d) d.className = 'prog-dot' + (i < current ? ' done' : i === current ? ' active' : '');
   });
-  const btn=document.getElementById('next-btn');
-  btn.disabled=answers[current]===null;
-  btn.textContent=current===11?'See results →':'Next →';
-  document.getElementById('options').innerHTML=q.opts.map((o,i)=>`
-    <label class="opt-label ${answers[current]===i?'selected':''}">
-      <input type="radio" name="q" onchange="selectOpt(${i})" ${answers[current]===i?'checked':''}>
+  const btn = document.getElementById('next-btn');
+  btn.disabled    = answers[current] === null;
+  btn.textContent = current === 11 ? 'See results →' : 'Next →';
+  document.getElementById('options').innerHTML = q.opts.map((o, i) => `
+    <label class="opt-label${answers[current] === i ? ' selected' : ''}">
+      <input type="radio" name="q" onchange="selectOpt(${i})" ${answers[current] === i ? 'checked' : ''}>
       <span>${o.text}</span>
     </label>`).join('');
 }
 
-function selectOpt(i){ answers[current]=i; renderQ(); }
+function selectOpt(i) { answers[current] = i; renderQ(); }
 
-function nextQ(){
-  if(current===11) return runTransition();
+function nextQ() {
+  if (current === 11) return runTransition();
   current++;
   renderQ();
 }
 
-function runTransition(){
+function runTransition() {
   show('s-transition');
-  const loader=document.getElementById('emoji-loader');
-  const emojis=['⚡','🌿','🌊','🚀','🔭','🌸','🦉','🛠'];
-  let idx=0;
-  const interval=setInterval(()=>loader.textContent=emojis[idx++%emojis.length],200);
-  setTimeout(()=>{ clearInterval(interval); showResult(); },2200);
+  const loader = document.getElementById('emoji-loader');
+  const emojis = ['⚡','🌿','🌊','🚀','🔭','🌸','🦉','🛠'];
+  let idx = 0;
+  const iv = setInterval(() => loader.textContent = emojis[idx++ % emojis.length], 200);
+  setTimeout(() => { clearInterval(iv); showResult(); }, 2200);
 }
 
-function showResult(){
-  const scores={creator:0,preserver:0,reflector:0,mover:0,tender:0,seeker:0};
-  QUESTIONS.forEach((q,qi)=>q.opts[answers[qi]].w.forEach((v,ti)=>scores[TYPES[ti]]+=v));
-  const total=Object.values(scores).reduce((a,b)=>a+b,0)||1;
-  const pcts={};
-  TYPES.forEach(t=>pcts[t]=Math.round(scores[t]/total*100));
-  const sorted=TYPES.slice().sort((a,b)=>pcts[b]-pcts[a]);
-  const pri=sorted[0], sec=sorted[1], d=TYPE_DATA[pri];
+function showResult() {
+  const scores = { creator:0, preserver:0, reflector:0, mover:0, tender:0, seeker:0 };
+  QUESTIONS.forEach((q, qi) => q.opts[answers[qi]].w.forEach((v, ti) => scores[TYPES[ti]] += v));
+  const total = Object.values(scores).reduce((a, b) => a + b, 0) || 1;
+  const pcts  = {};
+  TYPES.forEach(t => pcts[t] = Math.round(scores[t] / total * 100));
+  const sorted = TYPES.slice().sort((a, b) => pcts[b] - pcts[a]);
+  const pri = sorted[0], sec = sorted[1], d = TYPE_DATA[pri];
 
-  const hero=document.getElementById('r-hero');
-  hero.style.background=`var(--${pri}-l)`;
-  document.getElementById('r-name').style.color=`var(--${pri})`;
-  document.getElementById('r-name').textContent=TYPE_MAP[pri];
-  document.getElementById('r-secondary').textContent=`with traces of ${TYPE_MAP[sec]}`;
-  document.getElementById('r-secondary').style.color=`var(--${sec})`;
-  document.getElementById('r-emoji').textContent=d.emoji;
-  document.getElementById('r-tagline').textContent=d.tagline;
-  document.getElementById('r-desc').textContent=d.desc;
-  document.getElementById('r-shadow-name').textContent=d.shadow_name;
-  document.getElementById('r-shadow-name').style.color=`var(--${pri})`;
-  document.getElementById('r-shadow-desc').textContent=d.shadow;
+  document.getElementById('r-hero').style.background       = `var(--${pri}-l)`;
+  document.getElementById('r-name').style.color            = `var(--${pri})`;
+  document.getElementById('r-name').textContent            = TYPE_MAP[pri];
+  document.getElementById('r-secondary').textContent       = `with traces of ${TYPE_MAP[sec]}`;
+  document.getElementById('r-secondary').style.color       = `var(--${sec})`;
+  document.getElementById('r-emoji').textContent           = d.emoji;
+  document.getElementById('r-tagline').textContent         = d.tagline;
+  document.getElementById('r-desc').textContent            = d.desc;
+  document.getElementById('r-shadow-name').textContent     = d.shadow_name;
+  document.getElementById('r-shadow-name').style.color     = `var(--${pri})`;
+  document.getElementById('r-shadow-desc').textContent     = d.shadow;
 
-  document.getElementById('r-band').innerHTML=sorted.filter(t=>pcts[t]>0).map(t=>
-    `<div class="result-band-seg" style="background:var(--${t}); flex:${pcts[t]}"></div>`
-  ).join('');
+  document.getElementById('r-band').innerHTML = sorted
+    .filter(t => pcts[t] > 0)
+    .map(t => `<div class="result-band-seg" style="background:var(--${t});flex:${pcts[t]}"></div>`)
+    .join('');
 
-  document.getElementById('r-bars').innerHTML=sorted.filter(t=>pcts[t]>0).map(t=>`
-    <div class="blend-row">
-      <span class="blend-name" style="color:var(--${t})">${TYPE_MAP[t]}</span>
-      <div class="blend-track"><div class="blend-bar" style="background:var(--${t})" data-pct="${pcts[t]}"></div></div>
-      <span class="blend-pct">${pcts[t]}%</span>
-    </div>`).join('');
+  document.getElementById('r-bars').innerHTML = sorted
+    .filter(t => pcts[t] > 0)
+    .map(t => `
+      <div class="blend-row">
+        <span class="blend-name" style="color:var(--${t})">${TYPE_MAP[t]}</span>
+        <div class="blend-track"><div class="blend-bar" style="background:var(--${t})" data-pct="${pcts[t]}"></div></div>
+        <span class="blend-pct">${pcts[t]}%</span>
+      </div>`).join('');
 
   show('s-result');
-  setTimeout(()=>{ document.querySelectorAll('.blend-bar').forEach(b=>b.style.width=b.dataset.pct+'%'); },100);
+  setTimeout(() => document.querySelectorAll('.blend-bar').forEach(b => b.style.width = b.dataset.pct + '%'), 100);
 }
 
-function restart(){
-  current=0;
-  answers=new Array(12).fill(null);
+function restart() {
+  current = 0;
+  answers = new Array(12).fill(null);
   show('s-intro');
 }
 </script>
