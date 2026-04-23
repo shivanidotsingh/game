@@ -118,71 +118,7 @@ body {
 .result-band-seg { flex: 1; }
 
 .result-body { max-width: 620px; margin: 0 auto; padding: 30px 24px 80px; display: flex; flex-direction: column; gap: 28px; }
-.radar-wrap {
-  width: 100%;
-  max-width: 620px;
-  margin: 0 auto;
-  border-radius: 18px;
-  background: linear-gradient(180deg, #3f52e8 0%, #5a63ef 100%);
-  padding: 18px;
-  overflow: hidden;
-  box-shadow: inset 0 0 0 1px rgba(255,255,255,0.06);
-}
 
-#radar-chart {
-  width: 100%;
-  height: auto;
-  display: block;
-}
-
-.radar-axis-label {
-  font-family: -apple-system, 'Helvetica Neue', sans-serif;
-  font-size: 14px;
-  font-weight: 700;
-  fill: rgba(255,255,255,0.96);
-  letter-spacing: 0.01em;
-}
-
-.radar-grid {
-  stroke: rgba(255,255,255,0.14);
-  stroke-width: 1;
-  fill: none;
-}
-
-.radar-spoke {
-  stroke: rgba(255,255,255,0.14);
-  stroke-width: 1;
-}
-
-.radar-polygon {
-  fill: rgba(255, 231, 255, 0.10);
-  stroke: rgba(255, 214, 248, 0.95);
-  stroke-width: 2;
-  stroke-dasharray: 7 7;
-}
-
-.radar-point {
-  filter: drop-shadow(0 0 8px rgba(255, 153, 235, 0.45));
-}
-
-.radar-point-bg {
-  fill: rgba(255, 255, 255, 0.92);
-  stroke: rgba(255, 183, 240, 0.95);
-  stroke-width: 2;
-}
-
-.radar-emoji {
-  font-size: 24px;
-  dominant-baseline: middle;
-  text-anchor: middle;
-}
-
-@media (max-width: 480px) {
-  .radar-wrap { padding: 12px; border-radius: 14px; }
-  .radar-axis-label { font-size: 12px; }
-  .radar-emoji { font-size: 20px; }
-}
-  
 .blend-row  { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
 .blend-name { font-size: 0.72rem; font-weight: 600; min-width: 82px; text-transform: uppercase; letter-spacing: 0.05em; }
 .blend-track { flex: 1; height: 3px; background: rgba(0,0,0,0.07); border-radius: 2px; }
@@ -242,17 +178,15 @@ body {
 <div class="screen" id="s-result">
   <div class="result-hero" id="r-hero">
     <div class="result-hero-inner">
-      <div class="result-emoji" id="r-emoji"></div>
-      <div class="result-name" id="r-name"></div>
+      <div class="result-emoji"     id="r-emoji"></div>
+      <div class="result-name"      id="r-name"></div>
       <div class="result-secondary" id="r-secondary"></div>
-      <div class="result-desc" id="r-desc"></div>
+      <div class="result-desc"      id="r-desc"></div>
     </div>
   </div>
   <div class="result-band" id="r-band"></div>
   <div class="result-body">
-    <div class="radar-wrap">
-      <svg id="radar-chart" viewBox="0 0 640 640" aria-label="Archetype radar chart" role="img"></svg>
-    </div>
+    <div id="r-bars"></div>
     <div class="shadow-section">
       <div class="shadow-label">Your shadow</div>
       <div class="shadow-name" id="r-shadow-name"></div>
@@ -420,110 +354,6 @@ function runTransition() {
   setTimeout(() => { clearInterval(iv); showResult(); }, 2200);
 }
 
-const TYPE_EMOJI = {
-  creator: '💥',
-  preserver: '🌿',
-  reflector: '🪞',
-  mover: '🚀',
-  tender: '🌸',
-  seeker: '🔭'
-};
-
-function polar(cx, cy, r, angleDeg) {
-  const a = (angleDeg - 90) * Math.PI / 180;
-  return { x: cx + r * Math.cos(a), y: cy + r * Math.sin(a) };
-}
-
-function pointsToPath(points) {
-  return points.map((p, i) => `${i ? 'L' : 'M'} ${p.x.toFixed(2)} ${p.y.toFixed(2)}`).join(' ') + ' Z';
-}
-
-function drawRadarChart(scores, primaryType) {
-  const svg = document.getElementById('radar-chart');
-  if (!svg) return;
-
-  const cx = 320, cy = 320;
-  const outer = 210;
-  const levels = 4;
-  const step = outer / levels;
-  const labels = {
-    creator: 'Creator',
-    preserver: 'Preserver',
-    reflector: 'Reflector',
-    mover: 'Mover',
-    tender: 'Tender',
-    seeker: 'Seeker'
-  };
-  const order = ['creator', 'preserver', 'reflector', 'mover', 'tender', 'seeker'];
-  const maxScore = Math.max(...order.map(t => scores[t] || 0), 1);
-  const angles = order.map((_, i) => i * 60);
-
-  svg.innerHTML = '';
-  const ns = 'http://www.w3.org/2000/svg';
-
-  for (let l = 1; l <= levels; l++) {
-    const r = step * l;
-    const ring = document.createElementNS(ns, 'polygon');
-    ring.setAttribute('points', order.map((_, i) => {
-      const p = polar(cx, cy, r, angles[i]);
-      return `${p.x},${p.y}`;
-    }).join(' '));
-    ring.setAttribute('class', 'radar-grid');
-    svg.appendChild(ring);
-  }
-
-  angles.forEach((angle) => {
-    const p = polar(cx, cy, outer, angle);
-    const spoke = document.createElementNS(ns, 'line');
-    spoke.setAttribute('x1', cx);
-    spoke.setAttribute('y1', cy);
-    spoke.setAttribute('x2', p.x);
-    spoke.setAttribute('y2', p.y);
-    spoke.setAttribute('class', 'radar-spoke');
-    svg.appendChild(spoke);
-  });
-
-  const pts = order.map((t, i) => {
-    const value = (scores[t] || 0) / maxScore;
-    return polar(cx, cy, outer * value, angles[i]);
-  });
-
-  const poly = document.createElementNS(ns, 'path');
-  poly.setAttribute('d', pointsToPath(pts));
-  poly.setAttribute('class', 'radar-polygon');
-  svg.appendChild(poly);
-
-  order.forEach((t, i) => {
-    const labelPos = polar(cx, cy, outer + 44, angles[i]);
-    const label = document.createElementNS(ns, 'text');
-    label.setAttribute('x', labelPos.x);
-    label.setAttribute('y', labelPos.y);
-    label.setAttribute('class', 'radar-axis-label');
-    label.setAttribute('text-anchor', labelPos.x < cx - 10 ? 'end' : labelPos.x > cx + 10 ? 'start' : 'middle');
-    label.setAttribute('dominant-baseline', labelPos.y < cy - 10 ? 'auto' : labelPos.y > cy + 10 ? 'hanging' : 'middle');
-    label.textContent = labels[t];
-    svg.appendChild(label);
-  });
-
-  order.forEach((t, i) => {
-    const p = pts[i];
-
-    const bg = document.createElementNS(ns, 'circle');
-    bg.setAttribute('cx', p.x);
-    bg.setAttribute('cy', p.y);
-    bg.setAttribute('r', t === primaryType ? 18 : 15);
-    bg.setAttribute('class', 'radar-point-bg');
-    svg.appendChild(bg);
-
-    const emoji = document.createElementNS(ns, 'text');
-    emoji.setAttribute('x', p.x);
-    emoji.setAttribute('y', p.y + 1);
-    emoji.setAttribute('class', 'radar-emoji radar-point');
-    emoji.textContent = TYPE_EMOJI[t];
-    svg.appendChild(emoji);
-  });
-}
-
 function showResult() {
   const scores = { creator:0, preserver:0, reflector:0, mover:0, tender:0, seeker:0 };
   QUESTIONS.forEach((q, qi) => q.opts[answers[qi]].w.forEach((v, ti) => scores[TYPES[ti]] += v));
@@ -538,19 +368,28 @@ function showResult() {
   document.getElementById('r-name').textContent        = TYPE_MAP[pri];
   document.getElementById('r-secondary').textContent   = `with traces of ${TYPE_MAP[sec]}`;
   document.getElementById('r-secondary').style.color   = `var(--${sec})`;
-  document.getElementById('r-emoji').textContent       = d.emoji || TYPE_EMOJI[pri];
+  document.getElementById('r-emoji').textContent       = d.emoji;
   document.getElementById('r-desc').textContent        = d.desc;
   document.getElementById('r-shadow-name').textContent = d.shadow_name;
-  document.getElementById('r-shadow-name').style.color  = `var(--${pri})`;
-  document.getElementById('r-shadow-desc').textContent  = d.shadow;
+  document.getElementById('r-shadow-name').style.color = `var(--${pri})`;
+  document.getElementById('r-shadow-desc').textContent = d.shadow;
 
   document.getElementById('r-band').innerHTML = sorted
     .filter(t => pcts[t] > 0)
     .map(t => `<div class="result-band-seg" style="background:var(--${t});flex:${pcts[t]}"></div>`)
     .join('');
 
+  document.getElementById('r-bars').innerHTML = sorted
+    .filter(t => pcts[t] > 0)
+    .map(t => `
+      <div class="blend-row">
+        <span class="blend-name" style="color:var(--${t})">${TYPE_MAP[t]}</span>
+        <div class="blend-track"><div class="blend-bar" style="background:var(--${t})" data-pct="${pcts[t]}"></div></div>
+        <span class="blend-pct">${pcts[t]}%</span>
+      </div>`).join('');
+
   show('s-result');
-  drawRadarChart(scores, pri);
+  setTimeout(() => document.querySelectorAll('.blend-bar').forEach(b => b.style.width = b.dataset.pct + '%'), 100);
 }
 
 function restart() {
