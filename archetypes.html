@@ -107,35 +107,87 @@ body {
 .trans-text { font-size: 0.75rem; color: var(--ink-l); letter-spacing: 0.15em; text-transform: uppercase; }
 
 /* ── RESULT ── */
-.result-hero { padding: 52px 24px 32px; border-bottom: 1px solid var(--border); }
-.result-hero-inner { max-width: 620px; margin: 0 auto; }
-.result-emoji     { font-size: 1.4rem; margin-bottom: 12px; letter-spacing: 3px; }
-.result-name      { font-size: 2.8rem; font-weight: 700; line-height: 1; margin-bottom: 6px; }
-.result-secondary { font-size: 0.88rem; font-style: italic; margin-bottom: 16px; }
-.result-desc      { font-size: 0.95rem; line-height: 1.7; opacity: 0.75; max-width: 460px; }
+.result-page {
+  min-height: 100vh;
+  padding: 56px 28px 64px;
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  max-width: 620px;
+  margin: 0 auto;
+}
 
-.result-band { height: 4px; display: flex; }
-.result-band-seg { flex: 1; }
+.r-name {
+  font-size: 2rem;
+  font-weight: 700;
+  line-height: 1.25;
+  margin-bottom: 10px;
+}
+.r-shadow-part { opacity: 0.65; }
+.r-traces-part { font-weight: 700; }
 
-.result-body { max-width: 620px; margin: 0 auto; padding: 30px 24px 80px; display: flex; flex-direction: column; gap: 28px; }
+.r-secondary { display: none; } /* now embedded in r-name */
 
-.blend-row  { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
-.blend-name { font-size: 0.72rem; font-weight: 600; min-width: 82px; text-transform: uppercase; letter-spacing: 0.05em; }
-.blend-track { flex: 1; height: 3px; background: rgba(0,0,0,0.07); border-radius: 2px; }
-.blend-bar   { height: 3px; border-radius: 2px; width: 0; transition: width 1.2s cubic-bezier(0.16,1,0.3,1); }
-.blend-pct   { font-size: 0.7rem; color: var(--ink-l); min-width: 28px; text-align: right; }
+.r-btn-row {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.r-btn {
+  font-family: inherit; font-size: 0.8rem; font-weight: 600;
+  background: transparent;
+  border: 1.5px solid rgba(0,0,0,0.2);
+  color: var(--ink);
+  padding: 9px 18px;
+  cursor: pointer;
+  display: flex; align-items: center; gap: 7px;
+  transition: background 0.15s, border-color 0.15s;
+}
+.r-btn:hover { background: rgba(0,0,0,0.06); border-color: rgba(0,0,0,0.35); }
+.r-btn:disabled { opacity: 0.4; cursor: default; }
+.share-feedback {
+  font-size: 0.72rem; color: var(--ink-l); opacity: 0;
+  transition: opacity 0.3s; align-self: center;
+}
 
-.shadow-section { background: #2a2620; color: #f0ece4; border-radius: 10px; padding: 22px; }
-.shadow-label   { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.15em; opacity: 0.4; margin-bottom: 6px; }
-.shadow-name    { font-size: 1.5rem; font-weight: 700; margin-bottom: 4px; }
-.shadow-desc    { font-size: 0.88rem; line-height: 1.7; opacity: 0.72; }
+.r-eyebrow {
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  opacity: 0.45;
+  margin-bottom: 5px;
+}
+.r-desc {
+  font-size: 0.92rem;
+  line-height: 1.78;
+  opacity: 0.78;
+  max-width: 460px;
+}
 
-.restart-btn { font-family: inherit; font-size: 0.8rem; background: transparent; border: 1.5px solid var(--border); color: var(--ink-l); padding: 8px 20px; border-radius: 6px; cursor: pointer; transition: border-color 0.15s, color 0.15s; }
-.restart-btn:hover { border-color: var(--ink); color: var(--ink); }
+/* treemap */
+.treemap {
+  width: 100%;
+  aspect-ratio: 5 / 3;
+  position: relative;
+  overflow: hidden;
+}
+.tm-cell {
+  position: absolute;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+/* legend */
+.blend-legend { display: flex; flex-wrap: wrap; gap: 6px 16px; }
+.legend-item  { display: flex; align-items: center; gap: 6px; font-size: 0.72rem; opacity: 0.6; }
+.legend-dot   { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+
 
 @media (max-width: 480px) {
-  .result-name { font-size: 2.2rem; }
+  .r-name { font-size: 2rem; }
   #s-quiz.active { padding-top: 48px; }
+  .result-page { padding: 40px 20px 48px; }
 }
 </style>
 </head>
@@ -176,23 +228,29 @@ body {
 
 <!-- RESULT -->
 <div class="screen" id="s-result">
-  <div class="result-hero" id="r-hero">
-    <div class="result-hero-inner">
-      <div class="result-emoji"     id="r-emoji"></div>
-      <div class="result-name"      id="r-name"></div>
-      <div class="result-secondary" id="r-secondary"></div>
-      <div class="result-desc"      id="r-desc"></div>
+  <div id="r-page">
+    <div class="result-page">
+      <div>
+        <div class="r-name" id="r-name"></div>
+        <div class="r-desc" id="r-desc"></div>
+        <div class="r-eyebrow" style="margin-top:20px" id="r-flip-label">On the flip side</div>
+        <div class="r-desc" style="margin-top:4px" id="r-shadow-desc"></div>
+      </div>
+      <div>
+        <div class="treemap" id="r-treemap"></div>
+      </div>
+      <div class="r-btn-row">
+        <button class="r-btn" id="share-btn" onclick="shareResult()">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M7 1v8M4 4l3-3 3 3M2 10v2a1 1 0 001 1h8a1 1 0 001-1v-2" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Save as image
+        </button>
+        <button class="r-btn" onclick="restart()">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M1.5 7a5.5 5.5 0 1 0 1.1-3.3" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/><path d="M1.5 2.5V4.5H3.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Start again
+        </button>
+        <span class="share-feedback" id="share-feedback">Saved ✓</span>
+      </div>
     </div>
-  </div>
-  <div class="result-band" id="r-band"></div>
-  <div class="result-body">
-    <div id="r-bars"></div>
-    <div class="shadow-section">
-      <div class="shadow-label">Your shadow</div>
-      <div class="shadow-name" id="r-shadow-name"></div>
-      <div class="shadow-desc" id="r-shadow-desc"></div>
-    </div>
-    <button class="restart-btn" onclick="restart()">← Start again</button>
   </div>
 </div>
 
@@ -201,16 +259,15 @@ const TYPES    = ['creator','preserver','reflector','mover','tender','seeker'];
 const TYPE_MAP = { creator:'Creator', preserver:'Preserver', reflector:'Reflector', mover:'Mover', tender:'Nurturer', seeker:'Seeker' };
 
 const TYPE_DATA = {
-  creator:   { desc:"You bring things into being that didn't exist before. You think in possibilities and futures. Driven by the need to build and disrupt because the current version of things isn't good enough.",                shadow_name:'The Destroyer', shadow:"Your drive to create can flatten what already exists. You may leave wreckage behind you and call it progress." },
-  preserver: { desc:"You hold things together that would otherwise fall apart. You understand that most of what's valuable was built slowly and can be lost quickly. You are the continuity others take for granted.",                    shadow_name:'The Decayer',   shadow:"Held too tightly, preservation becomes resistance. Stagnation can look a lot like stability from the inside." },
-  reflector: { desc:"You process the world deeply before responding to it. You observe more than you act. You find meaning in what others overlook. Your insights often arrive after everyone else has moved on.",                  shadow_name:'The Consumer',  shadow:"Reflection without action can become a way of avoiding the world. You may mistake depth of feeling for depth of contribution." },
-  mover:     { desc:"You generate momentum — in yourself and in others. Energised by progress, pace, and forward motion. You don't wait for permission and find inaction physically uncomfortable.",                             shadow_name:'The Agitator',  shadow:"Speed without direction is just disruption. You can bulldoze slower people and mistake urgency for importance." },
-  tender:    { desc:"You are most alive when being there for someone. You notice when people are struggling before they say anything. You create safety, warmth, and belonging — often invisibly.",                           shadow_name:'The Enabler',   shadow:"Care without boundaries becomes self-erasure. You may protect people from consequences that would help them grow." },
-  seeker:    { desc:"You follow the question wherever it leads. Driven by curiosity more than answers. You change your mind readily and feel most alive in unfamiliar territory.",                                      shadow_name:'The Escapist',  shadow:"The horizon is always more interesting than where you've arrived. You may flee depth for novelty and commitment for possibility." }
+  creator:   { emoji:'⚡ 🔨 💥 🛠', desc:"You bring things into being that didn't exist before. You think in possibilities and futures. Driven by the need to build and disrupt because the current version of things isn't good enough.",                shadow_name:'The Destroyer', shadow:"Your drive to create can flatten what already exists. You may leave wreckage behind you and call it progress." },
+  preserver: { emoji:'🌿 📖 🔒 🏛',  desc:"You hold things together that would otherwise fall apart. You understand that most of what's valuable was built slowly and can be lost quickly. You are the continuity others take for granted.",                    shadow_name:'The Decayer',   shadow:"Held too tightly, preservation becomes resistance. Stagnation can look a lot like stability from the inside." },
+  reflector: { emoji:'🌊 🦉 📡 🪞',  desc:"You process the world deeply before responding to it. You observe more than you act. You find meaning in what others overlook. Your insights often arrive after everyone else has moved on.",                  shadow_name:'The Consumer',  shadow:"Reflection without action can become a way of avoiding the world. You may mistake depth of feeling for depth of contribution." },
+  mover:     { emoji:'🚀 🏃 🔥 💨',  desc:"You generate momentum — in yourself and in others. Energised by progress, pace, and forward motion. You don't wait for permission and find inaction physically uncomfortable.",                             shadow_name:'The Agitator',  shadow:"Speed without direction is just disruption. You can bulldoze slower people and mistake urgency for importance." },
+  tender:    { emoji:'🌸 💌 🍵 🕯',  desc:"You are most alive when being there for someone. You notice when people are struggling before they say anything. You create safety, warmth, and belonging — often invisibly.",                           shadow_name:'The Enabler',   shadow:"Care without boundaries becomes self-erasure. You may protect people from consequences that would help them grow." },
+  seeker:    { emoji:'🌍 🧭 ✨ 🔭',  desc:"You follow the question wherever it leads. Driven by curiosity more than answers. You change your mind readily and feel most alive in unfamiliar territory.",                                      shadow_name:'The Escapist',  shadow:"The horizon is always more interesting than where you've arrived. You may flee depth for novelty and commitment for possibility." }
 };
 
 const QUESTIONS = [
-  
   { text:"What do you find hardest to forgive in other people?", opts:[
     {icon:'🦥', text:"Wasted potential. People who could do more and don't.",w:[3,0,1,2,0,0]},
     {icon:'🤦', text:"Carelessness with things that took a long time to build.",w:[0,4,0,0,1,0]},
@@ -218,27 +275,27 @@ const QUESTIONS = [
     {icon:'🧱', text:"Passivity. Waiting for someone else to fix things.",w:[1,0,0,4,0,0]},
     {icon:'🩹', text:"Cruelty — especially the casual kind people don't notice.",w:[0,0,1,0,4,0]},
     {icon:'📌', text:"Certainty. People who stopped being curious.",w:[1,0,1,0,0,4]}]},
- 
+
   { text:"Which of these fictional sections of a library would you be most drawn to?", opts:[
     {icon:'📐', text:"Science Fiction Blueprints — every great thing imagined but never built.",w:[4,0,0,1,0,1]},
     {icon:'🌱', text:"History of languages and traditions on the edge of vanishing.",w:[0,4,0,0,1,0]},
     {icon:'📮', text:"Inner lives and autobiographies — the thoughts people never said out loud.",w:[0,0,3,0,2,1]},
     {icon:'🗺', text:"Travel stories of every place in the world you haven't been yet.",w:[0,0,0,1,0,4]}]},
-  
+
   { text:"If your energy had a weather pattern, which fits best?", opts:[
-    {icon:'⛈️', text:"A thunderstorm that breaks tension and moves on.",w:[3,0,0,3,0,0]}, 
+    {icon:'⛈️', text:"A thunderstorm that breaks tension and moves on.",w:[3,0,0,3,0,0]},
     {icon:'🌸', text:"Soft spring air that notices when you're tired.",w:[0,1,1,0,4,0]},
     {icon:'💨', text:"A wind that carries you toward what's next.",w:[1,0,0,4,0,2]},
     {icon:'🌦️', text:"A nostalgic monsoon that makes the old look new.",w:[0,4,1,0,2,0]},
     {icon:'🌫️', text:"Morning fog that makes familiar things strange.",w:[0,0,4,0,0,1]},
     {icon:'☀️', text:"Clear light revealing paths you hadn't seen.",w:[2,0,2,1,0,4]}]},
-  
+
   { text:"A civilisation collapsed 2,000 years ago. What pulls your attention?", opts:[
     {icon:'⚗️', text:"What they invented. What they imagined into existence.",w:[4,0,0,0,0,1]},
     {icon:'📜', text:"What they preserved — rituals, language, ways of living.",w:[0,4,0,0,1,0]},
     {icon:'🧑‍🌾', text:"What it felt like to live through. The day-to-day of ordinary people.",w:[0,0,3,0,2,0]},
     {icon:'🕳', text:"What caused it. The tipping point no one saw coming.",w:[1,1,1,1,0,2]}]},
- 
+
   { text:"What's your life's recurring flaw — the one that keeps showing up?", opts:[
     {icon:'🧶', text:"Starting things I don't finish.",w:[3,0,0,2,0,1]},
     {icon:'🪤', text:"Holding on too long to things that have already ended.",w:[0,4,0,0,1,0]},
@@ -246,7 +303,7 @@ const QUESTIONS = [
     {icon:'🔭', text:"Never feeling like I've found the right thing.",w:[0,0,1,0,0,4]},
     {icon:'💨', text:"Moving so fast I miss what's right in front of me.",w:[0,0,0,4,0,1]},
     {icon:'🧲', text:"Losing myself in other people's needs.",w:[0,0,0,0,4,1]}]},
-  
+
   { text:"You inherit a large, rambling house. Your first instinct?", opts:[
     {icon:'🔨', text:"Knock out a wall. Rethink the whole thing.",w:[4,0,0,2,0,0]},
     {icon:'🪑', text:"Sit in each room alone before deciding anything.",w:[0,0,4,0,0,1]},
@@ -254,19 +311,19 @@ const QUESTIONS = [
     {icon:'🐈', text:"Go through every drawer. Learn who lived here before.",w:[0,3,2,0,0,1]},
     {icon:'🔧', text:"Walk around noticing what needs fixing first.",w:[0,4,1,0,2,0]},
     {icon:'👻', text:"Find the room that might be haunted.",w:[0,0,1,0,0,4]}]},
-  
+
   { text:"An institution you love is changing in ways you don't like. You...", opts:[
     {icon:'🏗', text:"Build something new alongside it — make the old irrelevant.",w:[4,0,0,1,0,0]},
     {icon:'🕊', text:"Work from within. Slow it down. Protect what matters.",w:[0,4,0,0,1,0]},
     {icon:'✍️', text:"Write about what's being lost. Bear witness.",w:[0,1,3,0,0,1]},
     {icon:'📣', text:"Organise people. Make noise. Force the conversation.",w:[0,0,0,4,1,0]}]},
-  
+
   { text:"What kind of conversation leaves you most alive?", opts:[
     {icon:'🔬', text:"One where we figured something out neither of us could alone.",w:[3,0,1,1,0,1]},
     {icon:'🙊', text:"One where someone shared something they'd never told anyone.",w:[0,0,2,0,4,0]},
     {icon:'🧞', text:"One that changed my mind about something.",w:[1,0,2,0,0,3]},
     {icon:'🕺', text:"One that turned into a plan. That ended with doing something.",w:[1,0,0,4,0,1]}]},
-  
+
   { text:"Which of these impossible spaces would you like to have access to?", opts:[
     {icon:'🛤', text:"A train that never stops moving.",w:[0,0,2,1,0,3]},
     {icon:'🛠', text:"A workshop with all the tools you can imagine.",w:[4,0,1,0,0,1]},
@@ -274,7 +331,7 @@ const QUESTIONS = [
     {icon:'📕', text:"A library where every book has its readers' marginalia.",w:[0,0,0,2,0,4]},
     {icon:'🍜', text:"A kitchen that feeds everyone their comfort food.",w:[0,2,1,0,4,0]},
     {icon:'🪐', text:"A new planet with potential yet to be discovered.",w:[1,0,0,3,0,2]}]},
-  
+
   { text:"Which, of these, is most true about you?", opts:[
     {icon:'🤝', text:"I am a keeper — of stories, people, traditions, promises.",w:[0,4,0,0,2,0]},
     {icon:'🌊', text:"I process the world more than I act on it.",w:[0,0,4,0,0,1]},
@@ -282,7 +339,7 @@ const QUESTIONS = [
     {icon:'🔥', text:"I generate energy. Things move differently when I'm there.",w:[1,0,0,4,0,0]},
     {icon:'🥺', text:"People come to me when they're struggling.",w:[0,0,0,0,4,0]},
     {icon:'🤷', text:"Always mid-question. Never stay anywhere long enough.",w:[0,0,1,1,0,4]}]},
-  
+
   { text:"The world is ending in 50 years. You spend your time...", opts:[
     {icon:'🎆', text:"Making the most of the time left. Experiences, people.",w:[0,0,0,3,0,2]},
     {icon:'📝', text:"Documenting what it feels like to be alive at the end of an era.",w:[0,0,3,0,1,2]},
@@ -290,7 +347,7 @@ const QUESTIONS = [
     {icon:'♻️', text:"Trying to stop it. Or building something that survives.",w:[4,0,0,2,0,0]},
     {icon:'🔍', text:"Trying to understand it. What led here.",w:[0,0,4,0,0,2]},
     {icon:'💑', text:"Helping people around me navigate this uncertainty.",w:[0,0,0,0,4,0]}]},
-  
+
   { text:"After you're gone, what do you want said about you?", opts:[
     {icon:'⚖️', text:"They held things together. They kept what was good.",w:[0,4,0,0,1,0]},
     {icon:'🦉', text:"They saw what others missed. They understood deeply.",w:[0,0,4,0,0,1]},
@@ -365,33 +422,105 @@ function showResult() {
   const sorted = TYPES.slice().sort((a, b) => pcts[b] - pcts[a]);
   const pri = sorted[0], sec = sorted[1], d = TYPE_DATA[pri];
 
-  document.getElementById('r-hero').style.background   = `var(--${pri}-l)`;
-  document.getElementById('r-name').style.color        = `var(--${pri})`;
-  document.getElementById('r-name').textContent        = TYPE_MAP[pri];
-  document.getElementById('r-secondary').textContent   = `with traces of ${TYPE_MAP[sec]}`;
-  document.getElementById('r-secondary').style.color   = `var(--${sec})`;
-  document.getElementById('r-emoji').textContent       = d.emoji;
+  // ── page background: gradient from primary to secondary light colour
+  const page = document.getElementById('r-page');
+  page.style.background = `linear-gradient(140deg, var(--${pri}-l) 0%, var(--${sec}-l) 100%)`;
+  page.style.minHeight  = '100vh';
+
+  // ── title sentence — two colours, "you are a…" framing
+  const shadowWord = d.shadow_name.replace('The ', '');
+  document.getElementById('r-name').innerHTML =
+    `<span style="color:var(--${pri})">You are a ${TYPE_MAP[pri]} who casts the shadow of a ${shadowWord}</span>` +
+    `<span style="color:var(--${sec})"> and has traces of a ${TYPE_MAP[sec]}.</span>`;
+
+  // ── descriptions
   document.getElementById('r-desc').textContent        = d.desc;
-  document.getElementById('r-shadow-name').textContent = d.shadow_name;
-  document.getElementById('r-shadow-name').style.color = `var(--${pri})`;
+  document.getElementById('r-flip-label').textContent  = 'On the flip side';
   document.getElementById('r-shadow-desc').textContent = d.shadow;
 
-  document.getElementById('r-band').innerHTML = sorted
-    .filter(t => pcts[t] > 0)
-    .map(t => `<div class="result-band-seg" style="background:var(--${t});flex:${pcts[t]}"></div>`)
-    .join('');
+  // ── TREEMAP — squarified layout with minimum visible size
+  // Enforce a floor so small types (Mover) always appear
+  const MIN_PCT = 6;
+  const rawActive = sorted.filter(t => pcts[t] > 0).map(t => ({ type: t, pct: pcts[t] }));
+  // boost any cell below MIN_PCT and rescale others proportionally
+  const boosted = rawActive.map(c => ({ ...c, pct: Math.max(c.pct, MIN_PCT) }));
+  const boostedTotal = boosted.reduce((s, c) => s + c.pct, 0);
+  const active = boosted.map(c => ({ ...c, pct: c.pct / boostedTotal * 100 }));
 
-  document.getElementById('r-bars').innerHTML = sorted
-    .filter(t => pcts[t] > 0)
-    .map(t => `
-      <div class="blend-row">
-        <span class="blend-name" style="color:var(--${t})">${TYPE_MAP[t]}</span>
-        <div class="blend-track"><div class="blend-bar" style="background:var(--${t})" data-pct="${pcts[t]}"></div></div>
-        <span class="blend-pct">${pcts[t]}%</span>
-      </div>`).join('');
+  function layout(items, x, y, w, h) {
+    if (!items.length) return [];
+    if (items.length === 1) return [{ ...items[0], x, y, w, h }];
+    const total = items.reduce((s, i) => s + i.pct, 0);
+    let best = Infinity, splitAt = 1, runSum = 0;
+    for (let i = 0; i < items.length - 1; i++) {
+      runSum += items[i].pct;
+      const fA = runSum / total, fB = 1 - fA;
+      const ar = w >= h
+        ? Math.max(fA * w / h, h / (fA * w)) + Math.max(fB * w / h, h / (fB * w))
+        : Math.max(w / (fA * h), fA * h / w) + Math.max(w / (fB * h), fB * h / w);
+      if (ar < best) { best = ar; splitAt = i + 1; }
+    }
+    const frac = items.slice(0, splitAt).reduce((s, i) => s + i.pct, 0) / total;
+    if (w >= h) {
+      const wA = w * frac;
+      return [...layout(items.slice(0, splitAt), x, y, wA, h),
+              ...layout(items.slice(splitAt), x + wA, y, w - wA, h)];
+    } else {
+      const hA = h * frac;
+      return [...layout(items.slice(0, splitAt), x, y, w, hA),
+              ...layout(items.slice(splitAt), x, y + hA, w, h - hA)];
+    }
+  }
+
+  const cells = layout(active, 0, 0, 100, 100);
+  const GAP = 0.5;
+
+  document.getElementById('r-treemap').innerHTML = cells.map(c => {
+    const showLabel = c.w > 16 && c.h > 16;
+    // use original pct for display, not the boosted value
+    const displayPct = pcts[c.type] || '<1';
+    const label = showLabel
+      ? `<span style="display:block;font-size:0.55rem;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:rgba(255,255,255,0.82);line-height:1.4;pointer-events:none">${TYPE_MAP[c.type]}<br>${displayPct}%</span>`
+      : '';
+    return `<div class="tm-cell" style="left:${(c.x+GAP/2).toFixed(2)}%;top:${(c.y+GAP/2).toFixed(2)}%;width:${(c.w-GAP).toFixed(2)}%;height:${(c.h-GAP).toFixed(2)}%;background:var(--${c.type});display:flex;align-items:flex-end;padding:8px 9px">${label}</div>`;
+  }).join('');
 
   show('s-result');
-  setTimeout(() => document.querySelectorAll('.blend-bar').forEach(b => b.style.width = b.dataset.pct + '%'), 100);
+}
+
+function shareResult() {
+  const btn = document.getElementById('share-btn');
+  const feedback = document.getElementById('share-feedback');
+  btn.disabled = true;
+  btn.style.opacity = '0.5';
+
+  html2canvas(document.getElementById('r-page'), {
+    scale: 2,
+    useCORS: true,
+    backgroundColor: null,
+    windowWidth: document.getElementById('r-page').scrollWidth,
+    windowHeight: document.getElementById('r-page').scrollHeight
+  }).then(canvas => {
+    const link = document.createElement('a');
+    link.download = 'my-archetype.png';
+    link.href = canvas.toDataURL('image/png');
+    link.click();
+
+    btn.disabled = false;
+    btn.style.opacity = '1';
+    feedback.style.opacity = '1';
+    setTimeout(() => feedback.style.opacity = '0', 2500);
+
+    canvas.toBlob(blob => {
+      const file = new File([blob], 'my-archetype.png', { type: 'image/png' });
+      if (navigator.canShare && navigator.canShare({ files: [file] })) {
+        navigator.share({ files: [file] }).catch(() => {});
+      }
+    });
+  }).catch(() => {
+    btn.disabled = false;
+    btn.style.opacity = '1';
+  });
 }
 
 function restart() {
@@ -400,5 +529,6 @@ function restart() {
   show('s-intro');
 }
 </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 </body>
 </html>
