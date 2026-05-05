@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Rahul, naam toh suna hoga</title>
+  <link rel="stylesheet" href="style.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+</head>
+<body>
+<div class="container">
+  <div class="flex">
+    <div class="clues-section">
+      <h3>Across</h3>
+      <div id="acrossClues"></div>
+    </div>
+
+    <div class="grid-container">
+      <div class="crossword-grid" id="crossword"></div>
+      <div class="controls">
+        <button class="btn" onclick="clearGrid()">Clear</button>
+        <button class="btn" onclick="checkAnswers()">Check</button>
+      </div>
+      <div class="status" id="status"></div>
+    </div>
+
+    <div class="clues-section">
+      <h3>Down</h3>
+      <div id="downClues"></div>
+    </div>
+  </div>
+</div>
+<script src="crossword.js"></script>
+</body>
+</html>
