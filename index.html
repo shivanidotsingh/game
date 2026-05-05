@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>games ✿</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --cream: #f5f0e8;
+      --ink: #1a1612;
+      --muted: #8a7f72;
+      --accent: #c9502e;
+      --card-bg: #fefcf7;
+      --border: #ddd5c4;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: var(--cream);
+      color: var(--ink);
+      font-family: 'DM Mono', monospace;
+      min-height: 100vh;
+    }
+
+    header {
+      padding: 3.5rem 2rem 1.5rem;
+      max-width: 760px;
+      margin: 0 auto;
+    }
+
+    header h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2rem, 5vw, 3rem);
+      font-weight: 400;
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+    }
+
+    header p {
+      margin-top: 0.6rem;
+      font-size: 0.78rem;
+      color: var(--muted);
+      letter-spacing: 0.04em;
+    }
+
+    header p a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    header p a:hover {
+      text-decoration: underline;
+    }
+
+    .divider {
+      max-width: 760px;
+      margin: 0 auto 2rem;
+      padding: 0 2rem;
+      border: none;
+      border-top: 1px solid var(--border);
+    }
+
+    .grid {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 0 2rem 4rem;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .card {
+      display: block;
+      text-decoration: none;
+      color: inherit;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      overflow: hidden;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      position: relative;
+    }
+
+    .card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+    }
+
+    .card:hover .card-label {
+      color: var(--accent);
+    }
+
+    .card-img {
+      width: 100%;
+      aspect-ratio: 3/4;
+      object-fit: cover;
+      display: block;
+      background: var(--border);
+    }
+
+    /* Placeholder art for cards without real images */
+    .card-placeholder {
+      width: 100%;
+      aspect-ratio: 3/4;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 3rem;
+      background: var(--border);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card-placeholder::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: repeating-linear-gradient(
+        45deg,
+        transparent,
+        transparent 8px,
+        rgba(255,255,255,0.3) 8px,
+        rgba(255,255,255,0.3) 9px
+      );
+    }
+
+    .card-placeholder span {
+      position: relative;
+      z-index: 1;
+    }
+
+    .card-body {
+      padding: 0.8rem 0.9rem 0.9rem;
+      border-top: 1px solid var(--border);
+    }
+
+    .card-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.72rem;
+      font-weight: 400;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      transition: color 0.2s ease;
+    }
+
+    .card-desc {
+      margin-top: 0.3rem;
+      font-size: 0.68rem;
+      color: var(--muted);
+      line-height: 1.5;
+      letter-spacing: 0.01em;
+    }
+
+    /* Upcoming / placeholder cards */
+    .card.upcoming {
+      opacity: 0.55;
+      pointer-events: none;
+      cursor: default;
+    }
+
+    .card.upcoming .card-placeholder {
+      background: #e8e0d0;
+    }
+
+    .card.upcoming::after {
+      content: 'soon';
+      position: absolute;
+      top: 0.6rem;
+      right: 0.6rem;
+      font-size: 0.6rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      background: var(--ink);
+      color: var(--cream);
+      padding: 0.2rem 0.4rem;
+    }
+
+    /* Staggered fade-in */
+    .card {
+      opacity: 0;
+      animation: fadeUp 0.5s ease forwards;
+    }
+
+    .card:nth-child(1) { animation-delay: 0.05s; }
+    .card:nth-child(2) { animation-delay: 0.12s; }
+    .card:nth-child(3) { animation-delay: 0.19s; }
+    .card:nth-child(4) { animation-delay: 0.26s; }
+    .card:nth-child(5) { animation-delay: 0.33s; }
+    .card:nth-child(6) { animation-delay: 0.40s; }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(12px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .card.upcoming { animation: fadeUpDim 0.5s ease forwards; }
+    @keyframes fadeUpDim {
+      from { opacity: 0; transform: translateY(12px); }
+      to   { opacity: 0.55; transform: translateY(0); }
+    }
+
+    footer {
+      text-align: center;
+      padding: 2rem;
+      font-size: 0.65rem;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+      text-transform: uppercase;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>little games ✿</h1>
+    <p>ongoing experiments in play — built with curiosity &amp; claude</p>
+  </header>
+
+  <hr class="divider" />
+
+  <div class="grid">
+
+    <!-- LIVE GAMES -->
+
+    <a href="archetypes.html" class="card">
+      <div class="card-placeholder"><span>🜁</span></div>
+      <div class="card-body">
+        <div class="card-label">Archetypes</div>
+        <div class="card-desc">a personality test that reads between the lines</div>
+      </div>
+    </a>
+
+    <a href="srk.html" class="card">
+      <div class="card-placeholder"><span>✦</span></div>
+      <div class="card-body">
+        <div class="card-label">Solve for SRK</div>
+        <div class="card-desc">a crossword for the devoted &amp; the curious</div>
+      </div>
+    </a>
+
+    <a href="puzzle.html" class="card">
+      <div class="card-placeholder"><span>⬛</span></div>
+      <div class="card-body">
+        <div class="card-label">Puzzle</div>
+        <div class="card-desc">90's style slide puzzle</div>
+      </div>
+    </a>
+
+    <!-- UPCOMING IDEAS 
+
+    <div class="card upcoming">
+      <div class="card-placeholder"><span>◎</span></div>
+      <div class="card-body">
+        <div class="card-label">coming soon</div>
+        <div class="card-desc">something new is in the works</div>
+      </div>
+    </div>
+
+    <div class="card upcoming">
+      <div class="card-placeholder"><span>◎</span></div>
+      <div class="card-body">
+        <div class="card-label">coming soon</div>
+        <div class="card-desc">something new is in the works</div>
+      </div>
+    </div>
+
+    <div class="card upcoming">
+      <div class="card-placeholder"><span>◎</span></div>
+      <div class="card-body">
+        <div class="card-label">coming soon</div>
+        <div class="card-desc">something new is in the works</div>
+      </div>
+    </div> -->
+
+  </div>
+
+</body>
+</html>
