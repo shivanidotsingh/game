@@ -24,7 +24,7 @@
 
     .puzzle-wrapper {
       width: min(90vw, 480px);
-      position: relative; /* needed for spark overlay */
+      position: relative;
     }
 
     .puzzle-grid {
@@ -84,7 +84,24 @@
       }
     }
 
-    /* Tiny upload icon – bottom right, “internet blue” */
+    /* Timer – top left */
+    .timer {
+      position: fixed;
+      top: 12px;
+      left: 12px;
+      font-family: 'Courier New', monospace;
+      font-size: 13px;
+      color: #0645AD;
+      letter-spacing: 0.04em;
+      z-index: 20;
+      transition: color 0.3s ease;
+    }
+
+    .timer.done {
+      color: #2a7a2a;
+    }
+
+    /* Tiny upload icon – bottom right, "internet blue" */
     .upload-button {
       position: fixed;
       bottom: 12px;
@@ -92,7 +109,7 @@
       padding: 4px;
       border: none;
       background: transparent;
-      color: #0645AD; /* classic link blue */
+      color: #0645AD;
       cursor: pointer;
       font-size: 18px;
       line-height: 1;
@@ -124,37 +141,39 @@
       outline-offset: 2px;
     }
 
-/* Modal for reference image */
-.reference-modal {
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.65);
-  display: none;
-  z-index: 30;
-}
+    /* Modal for reference image */
+    .reference-modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.65);
+      display: none;
+      z-index: 30;
+    }
 
-.reference-modal.open {
-  display: block;
-}
+    .reference-modal.open {
+      display: block;
+    }
 
-.reference-inner {
-  max-width: 100vw;
-  max-height: 100vh;
-}
+    .reference-inner {
+      max-width: 100vw;
+      max-height: 100vh;
+    }
 
-.reference-inner img {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  max-width: 45vw;
-  max-height: 45vh;
-  display: block;
-}
-
+    .reference-inner img {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      max-width: 45vw;
+      max-height: 45vh;
+      display: block;
+    }
   </style>
 </head>
 <body>
+  <!-- Timer display -->
+  <div id="timer" class="timer">0:00</div>
+
   <div class="puzzle-wrapper">
     <div id="puzzle" class="puzzle-grid"></div>
   </div>
@@ -185,7 +204,7 @@
     </div>
   </div>
 
-  <!-- Lego click sound: rename the downloaded file to lego-click-short.wav -->
+  <!-- Lego click sound -->
   <audio
     id="slide-sound"
     src="lego-click-short.wav"
@@ -193,8 +212,8 @@
   </audio>
 
   <script>
-    const TOTAL = 12;              // total tiles
-    const EMPTY = TOTAL - 1;       // index of the blank tile (11)
+    const TOTAL = 12;
+    const EMPTY = TOTAL - 1;
     const puzzleEl = document.getElementById('puzzle');
     const wrapperEl = document.querySelector('.puzzle-wrapper');
     const slideSound = document.getElementById('slide-sound');
@@ -203,18 +222,52 @@
     const viewBtn = document.getElementById('view-button');
     const modalEl = document.getElementById('reference-modal');
     const modalImg = document.getElementById('reference-image');
+    const timerEl = document.getElementById('timer');
 
-    // Use separate images for each orientation
-    const IMAGE_LANDSCAPE = 'https://singh.work/mood/images/151.JPG';   // desktop / horizontal
-    const IMAGE_PORTRAIT  = 'https://singh.work/mood/images/134.jpg';  // mobile / vertical
+    // --- Timer state ---
+    let timerInterval = null;
+    let timerSeconds = 0;
+    let timerStarted = false;
 
-    // Store natural image sizes so we can do "cover"-style cropping without distortion
+    function formatTime(s) {
+      const m = Math.floor(s / 60);
+      const sec = s % 60;
+      return `${m}:${sec.toString().padStart(2, '0')}`;
+    }
+
+    function startTimer() {
+      if (timerStarted) return;
+      timerStarted = true;
+      timerInterval = setInterval(() => {
+        timerSeconds++;
+        timerEl.textContent = formatTime(timerSeconds);
+      }, 1000);
+    }
+
+    function stopTimer() {
+      clearInterval(timerInterval);
+      timerEl.classList.add('done');
+      timerEl.textContent = formatTime(timerSeconds) + ' ✓';
+    }
+
+    function resetTimer() {
+      clearInterval(timerInterval);
+      timerInterval = null;
+      timerSeconds = 0;
+      timerStarted = false;
+      timerEl.textContent = '0:00';
+      timerEl.classList.remove('done');
+    }
+
+    // --- Image setup ---
+    const IMAGE_LANDSCAPE = 'https://singh.work/mood/images/151.JPG';
+    const IMAGE_PORTRAIT  = 'https://singh.work/mood/images/134.jpg';
+
     const imageInfo = {
       landscape: { src: IMAGE_LANDSCAPE, width: 0, height: 0, loaded: false },
       portrait:  { src: IMAGE_PORTRAIT,  width: 0, height: 0, loaded: false }
     };
 
-    // Preload both images and record their natural sizes
     ['landscape', 'portrait'].forEach(key => {
       const info = imageInfo[key];
       const img = new Image();
@@ -223,23 +276,15 @@
         info.width = img.naturalWidth;
         info.height = img.naturalHeight;
         info.loaded = true;
-        render(); // in case this orientation is active
+        render();
       };
     });
 
-    // track current object URL (for uploads) to clean it up
     let currentObjectUrl = null;
-
-    // State: array of length 12, values 0..11
-    // 0..10 are image tiles, 11 is empty
     let state = Array.from({ length: TOTAL }, (_, i) => i);
-
-    // Orientation state
-    let ORIENTATION = null; // 'landscape' or 'portrait'
+    let ORIENTATION = null;
     let ROWS = 3;
     let COLS = 4;
-
-    // Completion flag
     let completed = false;
 
     function setOrientation() {
@@ -247,7 +292,6 @@
       const newOrientation = isMobile ? 'portrait' : 'landscape';
 
       if (newOrientation === ORIENTATION) {
-        // Orientation unchanged; just re-render to keep slices correct on resize
         render();
         return;
       }
@@ -255,16 +299,14 @@
       ORIENTATION = newOrientation;
 
       if (ORIENTATION === 'landscape') {
-        ROWS = 3;
-        COLS = 4;
+        ROWS = 3; COLS = 4;
       } else {
-        ROWS = 4;
-        COLS = 3;
+        ROWS = 4; COLS = 3;
       }
 
-      // Reset puzzle for new orientation
       state = Array.from({ length: TOTAL }, (_, i) => i);
       completed = false;
+      resetTimer();
       shuffle(200);
       render();
     }
@@ -273,23 +315,18 @@
       const row = Math.floor(index / COLS);
       const col = index % COLS;
       const neighbors = [];
-
-      if (row > 0) neighbors.push(index - COLS);        // up
-      if (row < ROWS - 1) neighbors.push(index + COLS); // down
-      if (col > 0) neighbors.push(index - 1);           // left
-      if (col < COLS - 1) neighbors.push(index + 1);    // right
-
+      if (row > 0) neighbors.push(index - COLS);
+      if (row < ROWS - 1) neighbors.push(index + COLS);
+      if (col > 0) neighbors.push(index - 1);
+      if (col < COLS - 1) neighbors.push(index + 1);
       return neighbors;
     }
 
     function shuffle(moves = 200) {
       let emptyPos = state.indexOf(EMPTY);
-
       for (let i = 0; i < moves; i++) {
         const neighbors = getNeighbors(emptyPos);
         const randomNeighbor = neighbors[Math.floor(Math.random() * neighbors.length)];
-
-        // Swap empty with neighbor
         [state[emptyPos], state[randomNeighbor]] = [state[randomNeighbor], state[emptyPos]];
         emptyPos = randomNeighbor;
       }
@@ -300,25 +337,23 @@
     }
 
     function handleTileClick(positionIndex) {
-      if (completed) return; // don't allow moves after completion
+      if (completed) return;
 
       const emptyPos = state.indexOf(EMPTY);
       const neighbors = getNeighbors(emptyPos);
+      if (!neighbors.includes(positionIndex)) return;
 
-      if (!neighbors.includes(positionIndex)) return; // Not movable
+      // Start timer on first move
+      startTimer();
 
-      // Swap clicked tile with empty
       [state[emptyPos], state[positionIndex]] = [state[positionIndex], state[emptyPos]];
 
-      // Play subtle Lego click
       if (slideSound) {
         try {
           slideSound.currentTime = 0;
-          slideSound.volume = 0.25; // gentle but audible
+          slideSound.volume = 0.25;
           slideSound.play().catch(() => {});
-        } catch (e) {
-          // ignore audio errors
-        }
+        } catch (e) {}
       }
 
       render();
@@ -330,18 +365,14 @@
 
     function celebrate() {
       completed = true;
+      stopTimer();
       render();
 
       if (!wrapperEl) return;
-
-      wrapperEl.classList.remove('spark'); // reset if still there
-      // force reflow so the animation can retrigger
+      wrapperEl.classList.remove('spark');
       void wrapperEl.offsetWidth;
       wrapperEl.classList.add('spark');
-
-      setTimeout(() => {
-        wrapperEl.classList.remove('spark');
-      }, 900);
+      setTimeout(() => wrapperEl.classList.remove('spark'), 900);
     }
 
     function render() {
@@ -349,28 +380,20 @@
 
       const key = ORIENTATION === 'landscape' ? 'landscape' : 'portrait';
       const info = imageInfo[key];
-
-      // Wait until the relevant image is loaded so we know its aspect ratio
       if (!info.loaded) return;
 
-      // Update modal reference image to current target
-      if (modalImg) {
-        modalImg.src = info.src;
-      }
+      if (modalImg) modalImg.src = info.src;
 
       puzzleEl.innerHTML = '';
-
-      // Adjust CSS grid + aspect ratio to current orientation
       puzzleEl.style.gridTemplateColumns = `repeat(${COLS}, 1fr)`;
       puzzleEl.style.gridTemplateRows = `repeat(${ROWS}, 1fr)`;
       puzzleEl.style.aspectRatio = `${COLS} / ${ROWS}`;
 
       const puzzleWidth = puzzleEl.clientWidth || puzzleEl.offsetWidth;
-      const puzzleHeight = puzzleWidth * (ROWS / COLS); // from aspect ratio
+      const puzzleHeight = puzzleWidth * (ROWS / COLS);
       const tileWidth = puzzleWidth / COLS;
       const tileHeight = puzzleHeight / ROWS;
 
-      // Compute "cover" sizing so the image fills the puzzle without distortion
       const imgWidth = info.width;
       const imgHeight = info.height;
       const containerRatio = puzzleWidth / puzzleHeight;
@@ -379,12 +402,10 @@
       let displayWidth, displayHeight, offsetX = 0, offsetY = 0;
 
       if (imgRatio > containerRatio) {
-        // Image is wider than container: match height, crop left/right
         displayHeight = puzzleHeight;
         displayWidth = displayHeight * imgRatio;
         offsetX = (displayWidth - puzzleWidth) / 2;
       } else {
-        // Image is taller (or equal): match width, crop top/bottom
         displayWidth = puzzleWidth;
         displayHeight = displayWidth / imgRatio;
         offsetY = (displayHeight - puzzleHeight) / 2;
@@ -394,18 +415,14 @@
         const tile = document.createElement('button');
         tile.className = 'tile';
 
-        // If it's the logical EMPTY tile and we are not completed yet, show blank
         if (tileNum === EMPTY && !completed) {
           tile.classList.add('empty');
           puzzleEl.appendChild(tile);
           return;
         }
 
-        // tileNum is the "correct"/original index of this tile
         const originalRow = Math.floor(tileNum / COLS);
         const originalCol = tileNum % COLS;
-
-        // Position within the covered image (include cropping offsets)
         const bgX = originalCol * tileWidth + offsetX;
         const bgY = originalRow * tileHeight + offsetY;
 
@@ -418,7 +435,6 @@
       });
     }
 
-    // Allow custom image upload (click or drag & drop)
     function useCustomImage(file) {
       if (!file || !file.type.startsWith('image/')) return;
 
@@ -441,34 +457,28 @@
 
         completed = false;
         state = Array.from({ length: TOTAL }, (_, i) => i);
+        resetTimer();
         shuffle(200);
         render();
       };
       img.src = url;
     }
 
-    // Recalculate orientation & redraw when viewport changes
-    window.addEventListener('resize', () => {
-      setOrientation();
-    });
+    window.addEventListener('resize', () => setOrientation());
 
-    // Upload icon -> file input
     if (uploadBtn && fileInput) {
       uploadBtn.addEventListener('click', () => fileInput.click());
       fileInput.addEventListener('change', (e) => {
         if (e.target.files && e.target.files[0]) {
           useCustomImage(e.target.files[0]);
-          e.target.value = ''; // reset input
+          e.target.value = '';
         }
       });
     }
 
-    // Drag & drop onto puzzle area
     if (wrapperEl) {
       ['dragover', 'dragenter'].forEach(evt => {
-        wrapperEl.addEventListener(evt, e => {
-          e.preventDefault();
-        });
+        wrapperEl.addEventListener(evt, e => e.preventDefault());
       });
       wrapperEl.addEventListener('drop', e => {
         e.preventDefault();
@@ -478,28 +488,16 @@
       });
     }
 
-    // View reference modal open/close
     if (viewBtn && modalEl) {
-      viewBtn.addEventListener('click', () => {
-        modalEl.classList.add('open');
-      });
-
-      // click backdrop to close
+      viewBtn.addEventListener('click', () => modalEl.classList.add('open'));
       modalEl.addEventListener('click', (e) => {
-        if (e.target === modalEl) {
-          modalEl.classList.remove('open');
-        }
+        if (e.target === modalEl) modalEl.classList.remove('open');
       });
-
-      // Esc to close
       window.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape') {
-          modalEl.classList.remove('open');
-        }
+        if (e.key === 'Escape') modalEl.classList.remove('open');
       });
     }
 
-    // Initialize
     setOrientation();
   </script>
 </body>
