@@ -32,7 +32,7 @@ const cluesList = [
   ["BAADSHAH", "Film in which he throws walnut on mirror to prove he's not in love (8)"],
   ["JUHI", "When he doesn't end up with Anna, this actress makes a cameo at the end (4)"],
   ["ZERO", "In this film he plays Bauua from Meerut (4)"],
-  ["LONDON", "Maya, aka Pooja's fiancé, lives here (6)"],
+  ["LONDON", "Maya(aka Pooja)'s fiancé, lives here (6)"],
   ["YESBOSS", "In a popular song from this film, he's playing the piano on a truck (3,4)"],
   ["PRIETY", "When he's Amar they almost get married, as Dev they're getting divorced; the actress (6)"],
   ["KAVERIAMMA", "Mohan has come to India after many years for her (6,4)"],
