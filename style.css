@@ -3,7 +3,7 @@ html, body {
   margin: 0;
   padding: 20px;
   box-sizing: border-box;
-  font-family: 'Georgia', serif;
+  font-family: 'Helvetica Neue', Arial, sans-serif;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -38,17 +38,17 @@ html, body {
   display: grid;
   grid-template-columns: repeat(16, 32px);
   grid-template-rows: repeat(20, 32px);
-  background: transparent;
-  border: none;
+  gap: 1px;
+  background: #333;
+  border: 1px solid #333;
+  width: fit-content;
 }
 
 .cell {
   width: 32px;
   height: 32px;
   background: #fff;
-  border: 1px solid #333;
-  box-sizing: border-box;
-  border-radius: 0;
+  border: none;
   position: relative;
   display: flex;
   align-items: center;
@@ -58,7 +58,7 @@ html, body {
 }
 
 .cell.block {
-  background: transparent;
+  background: #fff;
   border: none;
   box-shadow: none;
   pointer-events: none;
@@ -90,7 +90,7 @@ html, body {
   caret-color: #000;
   padding: 0;
   margin: 0;
-  font-family: 'Georgia', serif;
+  font-family: 'Helvetica Neue', Arial, sans-serif;
 }
 
 .cell.highlight { background: #e8e8e8 !important; }
@@ -139,7 +139,7 @@ html, body {
   padding: 0;
   margin: 0 15px 0 0;
   font-size: 14px;
-  font-family: 'Georgia', serif;
+  font-family: 'Helvetica Neue', Arial, sans-serif;
   cursor: pointer;
   text-decoration: underline;
   border-radius: 0;
@@ -157,26 +157,57 @@ html, body {
   margin-top: 16px;
   font-size: 16px;
   text-align: left;
-  font-family: 'Georgia', serif;
 }
 
-@media (max-width: 1100px) {
+/* ── Mobile ─────────────────────────────────────────── */
+@media (max-width: 900px) {
   html, body {
     display: block;
-    padding: 10px;
+    padding: 12px;
   }
+
   .container {
-    padding: 20px;
+    padding: 12px;
     max-height: none;
     max-width: none;
+    overflow-x: hidden;
   }
+
   .flex {
     flex-direction: column !important;
-    align-items: center;
-    gap: 25px;
+    align-items: flex-start;
+    gap: 20px;
   }
+
+  .grid-container {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Scale cells so 16 columns fit the viewport (account for 15 gaps of 1px + 2px border) */
+  .crossword-grid {
+    --cell: min(32px, calc((100vw - 24px - 17px) / 16));
+    grid-template-columns: repeat(16, var(--cell));
+    grid-template-rows: repeat(20, var(--cell));
+  }
+
+  .cell {
+    width: var(--cell, 32px);
+    height: var(--cell, 32px);
+  }
+
+  .cell-number {
+    font-size: 7px;
+  }
+
+  .cell-input {
+    font-size: calc(var(--cell, 32px) * 0.5);
+  }
+
   .clues-section {
     width: 100% !important;
-    max-width: 500px;
+    max-width: none;
+    min-width: 0;
   }
 }
