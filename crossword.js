@@ -244,30 +244,12 @@ function onCellClick(e) {
 }
 
 // --- INPUT HANDLER ---
-// Key fix: after typing a character, advance cursor along the CURRENT word,
-// skipping over pre-filled intersecting cells rather than stopping.
+// Only sanitises the value; movement is handled entirely in keydown.
 function onCellInput(e) {
   const input = e.target;
-  let val = input.value.toUpperCase().replace(/[^A-Z]/g, '').slice(0, 1);
-  input.value = val;
-
-  if (!val || !selected) return;
-
-  const { word, idx, dir } = selected;
-
-  // Advance to next empty cell in this word, skipping pre-filled ones
-  for (let next = idx + 1; next < word.answer.length; next++) {
-    let rr = word.row + (dir === 'down' ? next : 0);
-    let cc = word.col + (dir === 'across' ? next : 0);
-    const nextInput = cellRefs[rr][cc];
-    if (nextInput) {
-      selected = { word, idx: next, dir };
-      highlightWord(word, next, dir);
-      nextInput.focus({ preventScroll: false });
-      return;
-    }
-  }
-  // Already at end of word — stay put
+  // Keep only the last letter typed (handles IME / mobile keyboards)
+  const val = input.value.toUpperCase().replace(/[^A-Z]/g, '');
+  input.value = val.slice(-1);
 }
 
 // --- KEYDOWN HANDLER ---
@@ -275,22 +257,47 @@ function onCellKeyDown(e) {
   if (!selected) return;
   const { word, idx, dir } = selected;
 
-  if (e.key === "Backspace") {
+  // ── Letter key: write the character and advance, skipping filled cells ──
+  if (e.key.length === 1 && /[a-zA-Z]/.test(e.key)) {
+    e.preventDefault();
     const rCur = word.row + (dir === 'down' ? idx : 0);
     const cCur = word.col + (dir === 'across' ? idx : 0);
-    if (cellRefs[rCur][cCur].value === "" && idx > 0) {
-      // Move back, skipping cells that have content only if we want to clear them
-      const prevIdx = idx - 1;
-      const rr = word.row + (dir === 'down' ? prevIdx : 0);
-      const cc = word.col + (dir === 'across' ? prevIdx : 0);
-      selected = { word, idx: prevIdx, dir };
-      highlightWord(word, prevIdx, dir);
+    cellRefs[rCur][cCur].value = e.key.toUpperCase();
+
+    // Advance to the very next cell, whether it is filled or empty
+    if (idx + 1 < word.answer.length) {
+      const next = idx + 1;
+      const rr = word.row + (dir === 'down' ? next : 0);
+      const cc = word.col + (dir === 'across' ? next : 0);
+      selected = { word, idx: next, dir };
+      highlightWord(word, next, dir);
       cellRefs[rr][cc].focus({ preventScroll: false });
     }
-    // If current cell has value, browser default clears it — let that happen
     return;
   }
 
+  // ── Backspace: clear current cell and step back ──
+  if (e.key === "Backspace") {
+    e.preventDefault();
+    const rCur = word.row + (dir === 'down' ? idx : 0);
+    const cCur = word.col + (dir === 'across' ? idx : 0);
+    if (cellRefs[rCur][cCur].value !== "") {
+      // Clear in place, don't move
+      cellRefs[rCur][cCur].value = "";
+    } else if (idx > 0) {
+      // Already empty — step back and clear that cell
+      const prev = idx - 1;
+      const rr = word.row + (dir === 'down' ? prev : 0);
+      const cc = word.col + (dir === 'across' ? prev : 0);
+      cellRefs[rr][cc].value = "";
+      selected = { word, idx: prev, dir };
+      highlightWord(word, prev, dir);
+      cellRefs[rr][cc].focus({ preventScroll: false });
+    }
+    return;
+  }
+
+  // ── Arrow keys ──
   if (e.key === "ArrowRight") {
     e.preventDefault();
     if (dir === 'across' && idx < word.answer.length - 1) {
@@ -335,6 +342,7 @@ function onCellKeyDown(e) {
     return;
   }
 
+  // ── Enter: jump to next word ──
   if (e.key === "Enter") {
     e.preventDefault();
     const currentList = dir === 'across' ? across : down;
