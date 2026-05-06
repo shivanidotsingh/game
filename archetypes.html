@@ -7,12 +7,13 @@
 <title>archetypical</title>
 <style>
 :root {
-  --creator:   #7a6890; --creator-l:   #e2dde6;
-  --preserver: #2a7a6e; --preserver-l: #d4e2df;
-  --reflector: #4a5878; --reflector-l: #dee2e8;
-  --mover:     #cc3300; --mover-l:     #ffebe6;
-  --tender:    #a84868; --tender-l:    #f2e1e7;
-  --seeker:    #d4a017; --seeker-l:    #fdf5e6;
+  /* Colours */
+  --creator:   #dd180f; --creator-l:   #fde8e7;  /* red     */
+  --preserver: #57a1a7; --preserver-l: #e4f2f3;  /* teal    */
+  --reflector: #732e8a; --reflector-l: #ede0f1;  /* purple  */
+  --mover:     #f5a800; --mover-l:     #fef6e0;  /* amber   */
+  --nurturer:    #3d4fcc; --nurturer-l:    #e8eaf9;  /* blue    */
+  --seeker:    #69a23b; --seeker-l:    #eaf3e2;  /* green   */
   --bg:     #f5f2e8;
   --ink:    #1a1612;
   --ink-l:  #636363;
@@ -54,7 +55,7 @@ body {
 .f-preserver { background: var(--preserver-l); color: var(--preserver); }
 .f-reflector { background: var(--reflector-l); color: var(--reflector); }
 .f-mover     { background: var(--mover-l);     color: var(--mover);     }
-.f-tender    { background: var(--tender-l);    color: var(--tender);    }
+.f-nurturer    { background: var(--nurturer-l);    color: var(--nurturer);    }
 .f-seeker    { background: var(--seeker-l);    color: var(--seeker);    }
 
 /* ── QUIZ ── */
@@ -211,7 +212,7 @@ body {
       <div class="face right  f-mover">    <span>🚀</span>Mover</div>
       <div class="face left   f-reflector"><span>🪞</span>Reflector</div>
       <div class="face top    f-seeker">   <span>🔭</span>Seeker</div>
-      <div class="face bottom f-tender">   <span>🌸</span>Nurturer</div>
+      <div class="face bottom f-nurturer">   <span>🌸</span>Nurturer</div>
     </div>
     <div class="intro-instruction">click to begin</div>
   </div>
@@ -263,15 +264,15 @@ body {
 </div>
 
 <script>
-const TYPES    = ['creator','preserver','reflector','mover','tender','seeker'];
-const TYPE_MAP = { creator:'Creator', preserver:'Preserver', reflector:'Reflector', mover:'Mover', tender:'Nurturer', seeker:'Seeker' };
+const TYPES    = ['creator','preserver','reflector','mover','nurturer','seeker'];
+const TYPE_MAP = { creator:'Creator', preserver:'Preserver', reflector:'Reflector', mover:'Mover', nurturer:'Nurturer', seeker:'Seeker' };
 
 const TYPE_DATA = {
   creator:   { desc:"You bring things into being that didn't exist before. You think in possibilities and futures. Driven by the need to build and disrupt because the current version of things isn't good enough.",                shadow_name:'The Destroyer', shadow:"As a Destroyer, your drive to create can flatten what already exists. You may leave wreckage behind you and call it progress." },
   preserver: { desc:"You hold things together that would otherwise fall apart. You understand that most of what's valuable was built slowly and can be lost quickly. You are the continuity others take for granted.",                    shadow_name:'The Decayer',   shadow:"As a Decayer, held too tightly your instinct to preserve becomes resistance. Stagnation can look a lot like stability from the inside." },
   reflector: { desc:"You process the world deeply before responding to it. You observe more than you act. You find meaning in what others overlook. Your insights often arrive after everyone else has moved on.",                  shadow_name:'The Consumer',  shadow:"As a Consumer, reflection without action can become a way of avoiding the world. You may mistake depth of feeling for depth of contribution." },
   mover:     { desc:"You generate momentum — in yourself and in others. Energised by progress, pace, and forward motion. You don't wait for permission and find inaction physically uncomfortable.",                             shadow_name:'The Agitator',  shadow:"As an Agitator, speed without direction is just disruption. You can bulldoze slower people and mistake urgency for importance." },
-  tender:    { desc:"You are most alive when being there for someone. You notice when people are struggling before they say anything. You create safety, warmth, and belonging — often invisibly.",                           shadow_name:'The Enabler',   shadow:"As an Enabler, care without boundaries becomes self-erasure. You may protect people from consequences that would actually help them grow." },
+  nurturer:    { desc:"You are most alive when being there for someone. You notice when people are struggling before they say anything. You create safety, warmth, and belonging — often invisibly.",                           shadow_name:'The Enabler',   shadow:"As an Enabler, care without boundaries becomes self-erasure. You may protect people from consequences that would actually help them grow." },
   seeker:    { desc:"You follow the question wherever it leads. Driven by curiosity more than answers. You change your mind readily and feel most alive in unfamiliar territory.",                                      shadow_name:'The Escapist',  shadow:"As an Escapist, the horizon is always more interesting than where you've arrived. You may flee depth for novelty and commitment for possibility." }
 };
 
@@ -422,7 +423,7 @@ function runTransition() {
 }
 
 function showResult() {
-  const scores = { creator:0, preserver:0, reflector:0, mover:0, tender:0, seeker:0 };
+  const scores = { creator:0, preserver:0, reflector:0, mover:0, nurturer:0, seeker:0 };
   QUESTIONS.forEach((q, qi) => q.opts[answers[qi]].w.forEach((v, ti) => scores[TYPES[ti]] += v));
   const total = Object.values(scores).reduce((a, b) => a + b, 0) || 1;
   const pcts  = {};
