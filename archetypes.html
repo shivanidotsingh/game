@@ -8,12 +8,12 @@
 <style>
 :root {
   /* Colours */
-  --creator:   #dd180f; --creator-l:   #fde8e7;  /* red     */
-  --preserver: #57a1a7; --preserver-l: #e4f2f3;  /* teal    */
-  --reflector: #732e8a; --reflector-l: #ede0f1;  /* purple  */
-  --mover:     #f5a800; --mover-l:     #fef6e0;  /* amber   */
-  --nurturer:    #3d4fcc; --nurturer-l:    #e8eaf9;  /* blue    */
-  --seeker:    #69a23b; --seeker-l:    #eaf3e2;  /* green   */
+  --creator:   ##470024; --creator-l:   #FFB3D9;  /* red     */
+  --preserver: ##004744; --preserver-l: #B3FFFB;  /* teal    */
+  --reflector: ##240047; --reflector-l: #D9B3FF;  /* purple  */
+  --mover:     #474700; --mover-l:     #FFFF99;  /* amber   */
+  --nurturer:    #002447; --nurturer-l:    #B3D9FF;  /* blue    */
+  --seeker:    #004700; --seeker-l:    #B3FFB3;  /* green   */
   --bg:     #f5f2e8;
   --ink:    #1a1612;
   --ink-l:  #636363;
@@ -268,12 +268,12 @@ const TYPES    = ['creator','preserver','reflector','mover','nurturer','seeker']
 const TYPE_MAP = { creator:'Creator', preserver:'Preserver', reflector:'Reflector', mover:'Mover', nurturer:'Nurturer', seeker:'Seeker' };
 
 const TYPE_DATA = {
-  creator:   { desc:"You bring things into being that didn't exist before. You think in possibilities and futures. Driven by the need to build and disrupt because the current version of things isn't good enough.",                shadow_name:'The Destroyer', shadow:"As a Destroyer, your drive to create can flatten what already exists. You may leave wreckage behind you and call it progress." },
-  preserver: { desc:"You hold things together that would otherwise fall apart. You understand that most of what's valuable was built slowly and can be lost quickly. You are the continuity others take for granted.",                    shadow_name:'The Decayer',   shadow:"As a Decayer, held too tightly your instinct to preserve becomes resistance. Stagnation can look a lot like stability from the inside." },
-  reflector: { desc:"You process the world deeply before responding to it. You observe more than you act. You find meaning in what others overlook. Your insights often arrive after everyone else has moved on.",                  shadow_name:'The Consumer',  shadow:"As a Consumer, reflection without action can become a way of avoiding the world. You may mistake depth of feeling for depth of contribution." },
-  mover:     { desc:"You generate momentum — in yourself and in others. Energised by progress, pace, and forward motion. You don't wait for permission and find inaction physically uncomfortable.",                             shadow_name:'The Agitator',  shadow:"As an Agitator, speed without direction is just disruption. You can bulldoze slower people and mistake urgency for importance." },
-  nurturer:    { desc:"You are most alive when being there for someone. You notice when people are struggling before they say anything. You create safety, warmth, and belonging — often invisibly.",                           shadow_name:'The Enabler',   shadow:"As an Enabler, care without boundaries becomes self-erasure. You may protect people from consequences that would actually help them grow." },
-  seeker:    { desc:"You follow the question wherever it leads. Driven by curiosity more than answers. You change your mind readily and feel most alive in unfamiliar territory.",                                      shadow_name:'The Escapist',  shadow:"As an Escapist, the horizon is always more interesting than where you've arrived. You may flee depth for novelty and commitment for possibility." }
+  creator:   { desc:"You bring things into being that didn't exist before. You think in possibilities and futures. Driven by the need to build and disrupt because the current version of things isn't good enough.",                shadow_name:'The Destroyer', shadow:"Your drive to create can flatten what already exists. As a Destroyer, you may leave wreckage behind you and call it progress." },
+  preserver: { desc:"You hold things together that would otherwise fall apart. You understand that most of what's valuable was built slowly and can be lost quickly. You are the continuity others take for granted.",                    shadow_name:'The Decayer',   shadow:"Held too tightly your instinct to preserve becomes resistance. As a Decayer, stagnation can look a lot like stability from the inside." },
+  reflector: { desc:"You process the world deeply before responding to it. You observe more than you act. You find meaning in what others overlook. Your insights often arrive after everyone else has moved on.",                  shadow_name:'The Consumer',  shadow:"Reflection without action can become a way of avoiding the world. As a Consumer, you may mistake depth of feeling for depth of contribution." },
+  mover:     { desc:"You generate momentum — in yourself and in others. Energised by progress, pace, and forward motion. You don't wait for permission and find inaction physically uncomfortable.",                             shadow_name:'The Agitator',  shadow:"Speed without direction is just disruption. As an Agitator, you can bulldoze slower people and mistake urgency for importance." },
+  nurturer:    { desc:"You are most alive when being there for someone. You notice when people are struggling before they say anything. You create safety, warmth, and belonging — often invisibly.",                           shadow_name:'The Enabler',   shadow:"Care without boundaries becomes self-erasure. As an Enabler, you may protect people from consequences that would actually help them grow." },
+  seeker:    { desc:"You follow the question wherever it leads. Driven by curiosity more than answers. You change your mind readily and feel most alive in unfamiliar territory.",                                      shadow_name:'The Escapist',  shadow:"The horizon is always more interesting than where you've arrived. As an Escapist, you may flee depth for novelty and commitment for possibility." }
 };
 
 const QUESTIONS = [
@@ -493,9 +493,9 @@ function showResult() {
     // use original pct for display, not the boosted value
     const displayPct = pcts[c.type] || '<1';
     const label = showLabel
-      ? `<span style="display:block;font-size:0.55rem;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:rgba(255,255,255,0.82);line-height:1.4;pointer-events:none">${displayPct}%<br>${TYPE_MAP[c.type]}</span>`
+      ? `<span style="display:block;font-size:0.55rem;color:rgba(255,255,255,0.82);line-height:1.4;pointer-events:none">${displayPct}%<br>${TYPE_MAP[c.type]}</span>`
       : '';
-    return `<div class="tm-cell" style="left:${(c.x+GAP/2).toFixed(2)}%;top:${(c.y+GAP/2).toFixed(2)}%;width:${(c.w-GAP).toFixed(2)}%;height:${(c.h-GAP).toFixed(2)}%;background:var(--${c.type});display:flex;align-items:flex-end;padding:8px 9px">${label}</div>`;
+    return `<div class="tm-cell" style="left:${(c.x+GAP/2).toFixed(2)}%;top:${(c.y+GAP/2).toFixed(2)}%;width:${(c.w-GAP).toFixed(2)}%;height:${(c.h-GAP).toFixed(2)}%;background:var(--${c.type}-l);display:flex;align-items:flex-end;padding:8px 9px">${label}</div>`;
   }).join('');
 
   show('s-result');
