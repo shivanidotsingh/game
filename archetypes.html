@@ -8,8 +8,8 @@
 <style>
 :root {
   /* Colours */
-  --creator:   ##470024; --creator-l:   #FFB3D9;  /* red     */
-  --preserver: ##004744; --preserver-l: #B3FFFB;  /* teal    */
+  --creator:   #470024; --creator-l:   #FCCCE4;  /* red     */
+  --preserver: #0E3A35; --preserver-l: #C7F2ED;  /* teal    */
   --reflector: ##240047; --reflector-l: #D9B3FF;  /* purple  */
   --mover:     #474700; --mover-l:     #FFFF99;  /* amber   */
   --nurturer:    #002447; --nurturer-l:    #B3D9FF;  /* blue    */
@@ -241,7 +241,6 @@ body {
     <div class="result-page">
       <div>
         <div class="r-name" id="r-name"></div>
-        <div class="r-traces" id="r-traces"></div>
         <div class="r-desc" style="margin-top:16px" id="r-desc"></div>
         <div class="r-desc" style="margin-top:10px" id="r-shadow-desc"></div>
       </div>
@@ -431,19 +430,15 @@ function showResult() {
   const sorted = TYPES.slice().sort((a, b) => pcts[b] - pcts[a]);
   const pri = sorted[0], sec = sorted[1], d = TYPE_DATA[pri];
 
-  // ── page background: gradient from primary to secondary light colour
+  // ── page background: light primary
   const page = document.getElementById('r-page');
-  page.style.background = `linear-gradient(140deg, var(--${pri}-l) 0%, var(--${sec}-l) 100%)`;
+  page.style.background = 'var(--${pri}-l)';
   page.style.minHeight  = '100vh';
 
   // ── title: Primary / Shadow
   const shadowWord = d.shadow_name.replace('The ', '');
   document.getElementById('r-name').innerHTML =
     `<span style="color:var(--${pri})">${TYPE_MAP[pri]} / ${shadowWord}</span>`;
-
-  // ── traces line: secondary colour, smaller italic subheader
-  const tracesEl = document.getElementById('r-traces');
-  tracesEl.innerHTML = `<span style="color:var(--${sec})">With traces of a ${TYPE_MAP[sec]}.</span>`;
 
   // ── descriptions — shadow text already leads with "As a..."
   document.getElementById('r-desc').textContent        = d.desc;
@@ -493,7 +488,7 @@ function showResult() {
     // use original pct for display, not the boosted value
     const displayPct = pcts[c.type] || '<1';
     const label = showLabel
-      ? `<span style="display:block;font-size:0.55rem;color:rgba(255,255,255,0.82);line-height:1.4;pointer-events:none">${displayPct}%<br>${TYPE_MAP[c.type]}</span>`
+      ? `<span style="display:block;font-size:0.55rem;color:var(--${c.type});line-height:1.4;pointer-events:none">${displayPct}%<br>${TYPE_MAP[c.type]}</span>`
       : '';
     return `<div class="tm-cell" style="left:${(c.x+GAP/2).toFixed(2)}%;top:${(c.y+GAP/2).toFixed(2)}%;width:${(c.w-GAP).toFixed(2)}%;height:${(c.h-GAP).toFixed(2)}%;background:var(--${c.type}-l);display:flex;align-items:flex-end;padding:8px 9px">${label}</div>`;
   }).join('');
@@ -512,10 +507,10 @@ function shareResult() {
 
   // gather result state from DOM
   const nameEl   = document.getElementById('r-name');
-  const tracesEl = document.getElementById('r-traces');
+
   const pri      = nameEl.querySelector('span') ? nameEl.querySelector('span').style.color : '#7a6890';
-  // read background gradient start colour from r-page
-  const pageBg   = document.getElementById('r-page').style.background;
+  // read background gradient start colour from r-page   const pageBg   = document.getElementById('r-page').style.background;
+
 
   // card dimensions — 4:5 portrait (Instagram-friendly)
   const W = 1080, H = 1350;
