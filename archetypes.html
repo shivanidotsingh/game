@@ -10,7 +10,7 @@
   /* Colours */
   --creator:   #470024; --creator-l:   #FCCCE4;  /* red     */
   --preserver: #0E3A35; --preserver-l: #C7F2ED;  /* teal    */
-  --reflector: ##240047; --reflector-l: #D9B3FF;  /* purple  */
+  --reflector: #240047; --reflector-l: #D9B3FF;  /* purple  */
   --mover:     #474700; --mover-l:     #FFFF99;  /* amber   */
   --nurturer:    #002447; --nurturer-l:    #B3D9FF;  /* blue    */
   --seeker:    #004700; --seeker-l:    #B3FFB3;  /* green   */
@@ -432,7 +432,7 @@ function showResult() {
 
   // ── page background: light primary
   const page = document.getElementById('r-page');
-  page.style.background = 'var(--${pri}-l)';
+  page.style.background = `var(--${pri}-l)`;
   page.style.minHeight  = '100vh';
 
   // ── title: Primary / Shadow
