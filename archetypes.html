@@ -7,16 +7,15 @@
 <title>archetypical</title>
 <style>
 :root {
-  /* Colours */
-  --creator:   #470024; --creator-l:   #FCCCE4;  /* red     */
-  --preserver: #0E3A35; --preserver-l: #C7F2ED;  /* teal    */
-  --reflector: #240047; --reflector-l: #D9B3FF;  /* purple  */
-  --mover:     #474700; --mover-l:     #FFFF99;  /* amber   */
-  --nurturer:    #002447; --nurturer-l:    #B3D9FF;  /* blue    */
-  --seeker:    #004700; --seeker-l:    #B3FFB3;  /* green   */
-  --bg:     #f5f2e8;
-  --ink:    #1a1612;
-  --ink-l:  #636363;
+  --creator:    #470024; --creator-l:   #FCCCE4;  /* red     */
+  --seeker:     #7A3B00; --seeker-l:    #FFE6CC;  /* amber */
+  --reflector:  #240047; --reflector-l: #D9B3FF;  /* purple  */
+  --mover:      #474700; --mover-l:     #FFFF99;  /* yellow   */
+  --nurturer:   #002447; --nurturer-l:  #B3D9FF;  /* blue    */
+  --preserver:  #004700; --preserver-l: #B3FFB3;  /* green   */
+  --bg:      #f5f2e8;
+  --ink:     #1a1612;
+  --ink-l:   #636363;
   --border: rgba(0,0,0,0.1);
 }
 
@@ -52,11 +51,11 @@ body {
 .top    { transform: rotateX(90deg)  translateZ(55px); }
 .bottom { transform: rotateX(-90deg) translateZ(55px); }
 .f-creator   { background: var(--creator-l);   color: var(--creator);   }
-.f-preserver { background: var(--preserver-l); color: var(--preserver); }
+.f-seeker    { background: var(--seeker-l);    color: var(--seeker);    }
 .f-reflector { background: var(--reflector-l); color: var(--reflector); }
 .f-mover     { background: var(--mover-l);     color: var(--mover);     }
-.f-nurturer    { background: var(--nurturer-l);    color: var(--nurturer);    }
-.f-seeker    { background: var(--seeker-l);    color: var(--seeker);    }
+.f-nurturer  { background: var(--nurturer-l);  color: var(--nurturer);  }
+.f-preserver { background: var(--preserver-l); color: var(--preserver); }
 
 /* ── QUIZ ── */
 .quiz-meta { display: flex; align-items: center; justify-content: space-between; width: 100%; margin-bottom: 28px; }
@@ -95,7 +94,6 @@ body {
 .opt:hover    { border-color: rgba(0,0,0,0.25); background: #fdfcf8; }
 .opt.selected { border-color: var(--ink); background: #fdfcf8; }
 
-/* icon slot — emoji or illustration drops in here later */
 .opt-icon { font-size: 1.4rem; line-height: 1; display: block; }
 .opt-text  { display: block; }
 
@@ -124,23 +122,32 @@ body {
   line-height: 1.25;
   margin-bottom: 10px;
 }
-.r-shadow-part { opacity: 0.65; }
 
-.r-traces {
-  font-size: 0.95rem;
-  font-weight: 400;
-  font-style: italic;
-  line-height: 1.4;
-  opacity: 0.7;
-  margin-top: 6px;
+.r-desc {
+  font-size: 0.92rem;
+  line-height: 1.78;
+  opacity: 0.78;
+  width: 100%;
 }
 
-.r-secondary { display: none; } /* now embedded in r-name */
+.treemap {
+  width: 100%;
+  aspect-ratio: 5 / 3;
+  position: relative;
+  overflow: hidden;
+}
+.tm-cell {
+  position: absolute;
+  overflow: hidden;
+  box-sizing: border-box;
+}
 
 .r-btn-row {
   display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  margin-top: 10px;
 }
 .r-btn {
   font-family: inherit; font-size: 0.8rem; font-weight: 600;
@@ -154,44 +161,24 @@ body {
 }
 .r-btn:hover { background: rgba(0,0,0,0.06); border-color: rgba(0,0,0,0.35); }
 .r-btn:disabled { opacity: 0.4; cursor: default; }
+
+.retake-link {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--ink);
+  text-decoration: none;
+  cursor: pointer;
+  opacity: 0.75;
+  transition: opacity 0.15s;
+}
+.retake-link:hover {
+  opacity: 1;
+}
+
 .share-feedback {
   font-size: 0.72rem; color: var(--ink-l); opacity: 0;
-  transition: opacity 0.3s; align-self: center;
+  transition: opacity 0.3s; margin-left: 10px;
 }
-
-.r-eyebrow {
-  font-size: 0.6rem;
-  font-weight: 700;
-  letter-spacing: 0.22em;
-  text-transform: uppercase;
-  opacity: 0.45;
-  margin-bottom: 5px;
-}
-.r-desc {
-  font-size: 0.92rem;
-  line-height: 1.78;
-  opacity: 0.78;
-  max-width: 460px;
-}
-
-/* treemap */
-.treemap {
-  width: 100%;
-  aspect-ratio: 5 / 3;
-  position: relative;
-  overflow: hidden;
-}
-.tm-cell {
-  position: absolute;
-  overflow: hidden;
-  box-sizing: border-box;
-}
-
-/* legend */
-.blend-legend { display: flex; flex-wrap: wrap; gap: 6px 16px; }
-.legend-item  { display: flex; align-items: center; gap: 6px; font-size: 0.72rem; opacity: 0.6; }
-.legend-dot   { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
-
 
 @media (max-width: 480px) {
   .r-name { font-size: 2rem; }
@@ -208,10 +195,10 @@ body {
   <div class="intro-center" onclick="startQuiz()">
     <div class="cube">
       <div class="face front  f-creator">  <span>💥</span>Creator</div>
-      <div class="face back   f-preserver"><span>🌿</span>Preserver</div>
+      <div class="face back   f-seeker">    <span>🔭</span>Seeker</div>
       <div class="face right  f-mover">    <span>🚀</span>Mover</div>
       <div class="face left   f-reflector"><span>🪞</span>Reflector</div>
-      <div class="face top    f-seeker">   <span>🔭</span>Seeker</div>
+      <div class="face top    f-preserver"><span>📙</span>Preserver</div>
       <div class="face bottom f-nurturer">   <span>🌸</span>Nurturer</div>
     </div>
     <div class="intro-instruction">click to begin</div>
@@ -248,15 +235,14 @@ body {
         <div class="treemap" id="r-treemap"></div>
       </div>
       <div class="r-btn-row">
-        <button class="r-btn" id="share-btn" onclick="shareResult()">
-          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M7 1v8M4 4l3-3 3 3M2 10v2a1 1 0 001 1h8a1 1 0 001-1v-2" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          Save as image
-        </button>
-        <button class="r-btn" onclick="restart()">
-          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M1.5 7a5.5 5.5 0 1 0 1.1-3.3" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/><path d="M1.5 2.5V4.5H3.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          Start again
-        </button>
-        <span class="share-feedback" id="share-feedback">Saved ✓</span>
+        <div style="display: flex; align-items: center;">
+          <button class="r-btn" id="share-btn" onclick="shareResult()">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M7 1v8M4 4l3-3 3 3M2 10v2a1 1 0 001 1h8a1 1 0 001-1v-2" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Save as image
+          </button>
+          <span class="share-feedback" id="share-feedback">Saved ✓</span>
+        </div>
+        <span class="retake-link" onclick="restart()">Retake quiz</span>
       </div>
     </div>
   </div>
@@ -271,7 +257,7 @@ const TYPE_DATA = {
   preserver: { desc:"You hold things together that would otherwise fall apart. You understand that most of what's valuable was built slowly and can be lost quickly. You are the continuity others take for granted.",                    shadow_name:'The Decayer',   shadow:"Held too tightly your instinct to preserve becomes resistance. As a Decayer, stagnation can look a lot like stability from the inside." },
   reflector: { desc:"You process the world deeply before responding to it. You observe more than you act. You find meaning in what others overlook. Your insights often arrive after everyone else has moved on.",                  shadow_name:'The Consumer',  shadow:"Reflection without action can become a way of avoiding the world. As a Consumer, you may mistake depth of feeling for depth of contribution." },
   mover:     { desc:"You generate momentum — in yourself and in others. Energised by progress, pace, and forward motion. You don't wait for permission and find inaction physically uncomfortable.",                             shadow_name:'The Agitator',  shadow:"Speed without direction is just disruption. As an Agitator, you can bulldoze slower people and mistake urgency for importance." },
-  nurturer:    { desc:"You are most alive when being there for someone. You notice when people are struggling before they say anything. You create safety, warmth, and belonging — often invisibly.",                           shadow_name:'The Enabler',   shadow:"Care without boundaries becomes self-erasure. As an Enabler, you may protect people from consequences that would actually help them grow." },
+  nurturer:  { desc:"You are most alive when being there for someone. You notice when people are struggling before they say anything. You create safety, warmth, and belonging — often invisibly.",                           shadow_name:'The Enabler',   shadow:"Care without boundaries becomes self-erasure. As an Enabler, you may protect people from consequences that would actually help them grow." },
   seeker:    { desc:"You follow the question wherever it leads. Driven by curiosity more than answers. You change your mind readily and feel most alive in unfamiliar territory.",                                      shadow_name:'The Escapist',  shadow:"The horizon is always more interesting than where you've arrived. As an Escapist, you may flee depth for novelty and commitment for possibility." }
 };
 
@@ -430,25 +416,19 @@ function showResult() {
   const sorted = TYPES.slice().sort((a, b) => pcts[b] - pcts[a]);
   const pri = sorted[0], sec = sorted[1], d = TYPE_DATA[pri];
 
-  // ── page background: light primary
   const page = document.getElementById('r-page');
   page.style.background = `var(--${pri}-l)`;
   page.style.minHeight  = '100vh';
 
-  // ── title: Primary / Shadow
   const shadowWord = d.shadow_name.replace('The ', '');
   document.getElementById('r-name').innerHTML =
     `<span style="color:var(--${pri})">${TYPE_MAP[pri]} / ${shadowWord}</span>`;
 
-  // ── descriptions — shadow text already leads with "As a..."
   document.getElementById('r-desc').textContent        = d.desc;
   document.getElementById('r-shadow-desc').textContent = d.shadow;
 
-  // ── TREEMAP — squarified layout with minimum visible size
-  // Enforce a floor so small types (Mover) always appear
   const MIN_PCT = 6;
   const rawActive = sorted.filter(t => pcts[t] > 0).map(t => ({ type: t, pct: pcts[t] }));
-  // boost any cell below MIN_PCT and rescale others proportionally
   const boosted = rawActive.map(c => ({ ...c, pct: Math.max(c.pct, MIN_PCT) }));
   const boostedTotal = boosted.reduce((s, c) => s + c.pct, 0);
   const active = boosted.map(c => ({ ...c, pct: c.pct / boostedTotal * 100 }));
@@ -481,16 +461,16 @@ function showResult() {
   const cells = layout(active, 0, 0, 100, 100);
   window._lastTreemapCells = cells;
   window._lastPcts         = pcts;
-  const GAP = 0.5;
+  
+  const GAP = 0;
 
   document.getElementById('r-treemap').innerHTML = cells.map(c => {
     const showLabel = c.w > 16 && c.h > 16;
-    // use original pct for display, not the boosted value
     const displayPct = pcts[c.type] || '<1';
     const label = showLabel
       ? `<span style="display:block;font-size:0.55rem;color:var(--${c.type});line-height:1.4;pointer-events:none">${displayPct}%<br>${TYPE_MAP[c.type]}</span>`
       : '';
-    return `<div class="tm-cell" style="left:${(c.x+GAP/2).toFixed(2)}%;top:${(c.y+GAP/2).toFixed(2)}%;width:${(c.w-GAP).toFixed(2)}%;height:${(c.h-GAP).toFixed(2)}%;background:var(--${c.type}-l);display:flex;align-items:flex-end;padding:8px 9px">${label}</div>`;
+    return `<div class="tm-cell" style="left:${c.x.toFixed(2)}%;top:${c.y.toFixed(2)}%;width:${c.w.toFixed(2)}%;height:${c.h.toFixed(2)}%;background:var(--${c.type}-l);display:flex;align-items:flex-end;padding:8px 9px">${label}</div>`;
   }).join('');
 
   show('s-result');
@@ -501,103 +481,75 @@ function shareResult() {
   const feedback = document.getElementById('share-feedback');
   btn.disabled   = true;
 
-  // resolve CSS variable colours
   const style = getComputedStyle(document.documentElement);
   const getVar = v => style.getPropertyValue(v).trim();
 
-  // gather result state from DOM
   const nameEl   = document.getElementById('r-name');
+  const titleSpan = nameEl.querySelector('span');
+  const titleText = titleSpan ? titleSpan.textContent : '';
+  
+  const matchedType = TYPES.find(t => titleText.startsWith(TYPE_MAP[t])) || 'creator';
+  const bgColor = getVar(`--${matchedType}-l`) || '#f5f2e8';
+  const textColor = getVar(`--${matchedType}`) || '#1a1612';
 
-  const pri      = nameEl.querySelector('span') ? nameEl.querySelector('span').style.color : '#7a6890';
-  // read background gradient start colour from r-page   const pageBg   = document.getElementById('r-page').style.background;
-
-
-  // card dimensions — 4:5 portrait (Instagram-friendly)
   const W = 1080, H = 1350;
   const canvas  = document.createElement('canvas');
   canvas.width  = W;
   canvas.height = H;
   const ctx = canvas.getContext('2d');
 
-  // ── background gradient
-  const bgEl   = document.getElementById('r-page');
-  const bgStyle = bgEl.style.background;
-  // extract the two archetype colours from the page gradient
-  const gradMatch = bgStyle.match(/var\(--(\w+-l)/g) || [];
-  const c1 = gradMatch[0] ? getVar('--' + gradMatch[0].replace('var(--','').replace(')','')) : '#e2dde6';
-  const c2 = gradMatch[1] ? getVar('--' + gradMatch[1].replace('var(--','').replace(')','')) : '#fdf5e6';
-  const grad = ctx.createLinearGradient(0, 0, W, H);
-  grad.addColorStop(0, c1 || '#e2dde6');
-  grad.addColorStop(1, c2 || '#fdf5e6');
-  ctx.fillStyle = grad;
+  ctx.fillStyle = bgColor;
   ctx.fillRect(0, 0, W, H);
 
   const PAD = 72;
 
-  // ── title text (primary colour)
-  const titleSpan  = document.getElementById('r-name').querySelector('span');
-  const titleText  = titleSpan ? titleSpan.textContent : '';
-  const titleColor = titleSpan ? titleSpan.style.color : '#7a6890';
-  ctx.fillStyle = titleColor;
+  ctx.fillStyle = textColor;
   ctx.font      = 'bold 64px -apple-system, Helvetica Neue, sans-serif';
   wrapText(ctx, titleText, PAD, 130, W - PAD*2, 80);
 
-  // ── traces line
-  const tracesSpan  = document.getElementById('r-traces').querySelector('span');
-  const tracesText  = tracesSpan ? tracesSpan.textContent : '';
-  const tracesColor = tracesSpan ? tracesSpan.style.color : '#d4a017';
-  ctx.fillStyle = tracesColor;
-  ctx.font      = 'italic 38px -apple-system, Helvetica Neue, sans-serif';
-  // measure how many lines title took to position traces below
   const titleLines = measureLines(ctx, 'bold 64px -apple-system, Helvetica Neue, sans-serif', titleText, W - PAD*2);
-  const tracesY    = 130 + titleLines * 80 + 24;
-  ctx.fillText(tracesText, PAD, tracesY);
+  const descY = 130 + (titleLines * 80);
 
-  // ── desc text
   const descText = document.getElementById('r-desc').textContent;
-  ctx.fillStyle  = 'rgba(30,24,20,0.72)';
+  ctx.fillStyle  = 'rgba(26,22,18,0.85)';
   ctx.font       = '34px -apple-system, Helvetica Neue, sans-serif';
-  const descY    = tracesY + 60;
-  wrapText(ctx, descText, PAD, descY, W - PAD*2, 48);
+  wrapText(ctx, descText, PAD, descY, W - PAD*2, 52);
   const descLines = measureLines(ctx, '34px -apple-system, Helvetica Neue, sans-serif', descText, W - PAD*2);
 
-  // ── shadow desc
   const shadowText = document.getElementById('r-shadow-desc').textContent;
-  ctx.fillStyle    = 'rgba(30,24,20,0.55)';
-  ctx.font         = 'italic 32px -apple-system, Helvetica Neue, sans-serif';
-  const shadowY    = descY + descLines * 48 + 32;
-  wrapText(ctx, shadowText, PAD, shadowY, W - PAD*2, 46);
+  ctx.fillStyle    = 'rgba(26,22,18,0.65)';
+  ctx.font          = 'italic 32px -apple-system, Helvetica Neue, sans-serif';
+  const shadowY    = descY + (descLines * 52) + 36;
+  wrapText(ctx, shadowText, PAD, shadowY, W - PAD*2, 48);
   const shadowLines = measureLines(ctx, 'italic 32px -apple-system, Helvetica Neue, sans-serif', shadowText, W - PAD*2);
 
-  // ── treemap — draw colour blocks in bottom portion
-  const tmTop  = shadowY + shadowLines * 46 + 56;
-  const tmH    = H - tmTop - PAD;
+  const tmTop  = shadowY + (shadowLines * 48) + 64;
+  const tmH    = H - tmTop - PAD - 50;
   const tmW    = W - PAD * 2;
   const cells  = window._lastTreemapCells || [];
+  
   cells.forEach(c => {
-    ctx.fillStyle = getVar('--' + c.type);
+    ctx.fillStyle = getVar('--' + c.type + '-l');
     const cx = PAD + (c.x / 100) * tmW;
     const cy = tmTop + (c.y / 100) * tmH;
-    const cw = (c.w / 100) * tmW - 2;
-    const ch = (c.h / 100) * tmH - 2;
+    const cw = (c.w / 100) * tmW;
+    const ch = (c.h / 100) * tmH;
     ctx.fillRect(cx, cy, cw, ch);
-    // label
+    
     if (cw > 80 && ch > 60) {
-      ctx.fillStyle = 'rgba(255,255,255,0.82)';
-      ctx.font      = 'bold 22px -apple-system, Helvetica Neue, sans-serif';
+      ctx.fillStyle = getVar('--' + c.type);
+      ctx.font      = 'bold 24px -apple-system, Helvetica Neue, sans-serif';
       const displayPct = window._lastPcts ? (window._lastPcts[c.type] || '<1') : '';
-      ctx.fillText(`${displayPct}%`, cx + 10, cy + ch - 28);
-      ctx.font = '18px -apple-system, Helvetica Neue, sans-serif';
-      ctx.fillText(TYPE_MAP[c.type].toUpperCase(), cx + 10, cy + ch - 10);
+      ctx.fillText(`${displayPct}%`, cx + 16, cy + ch - 42);
+      ctx.font = '600 18px -apple-system, Helvetica Neue, sans-serif';
+      ctx.fillText(TYPE_MAP[c.type].toUpperCase(), cx + 16, cy + ch - 18);
     }
   });
 
-  // ── site label
-  ctx.fillStyle = 'rgba(30,24,20,0.3)';
+  ctx.fillStyle = 'rgba(26,22,18,0.35)';
   ctx.font      = '26px -apple-system, Helvetica Neue, sans-serif';
-  ctx.fillText('archetypical', PAD, H - 32);
+  ctx.fillText('archetypical', PAD, H - 40);
 
-  // download
   const link    = document.createElement('a');
   link.download = 'my-archetype.png';
   link.href     = canvas.toDataURL('image/png');
@@ -608,7 +560,6 @@ function shareResult() {
   setTimeout(() => feedback.style.opacity = '0', 2500);
 }
 
-// helpers
 function wrapText(ctx, text, x, y, maxW, lineH) {
   const words = text.split(' ');
   let line = '';
@@ -623,6 +574,7 @@ function wrapText(ctx, text, x, y, maxW, lineH) {
   });
   if (line) ctx.fillText(line, x, cy);
 }
+
 function measureLines(ctx, font, text, maxW) {
   const saved = ctx.font;
   ctx.font = font;
