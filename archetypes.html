@@ -13,7 +13,7 @@
   --mover:      #474700; --mover-l:     #FFFF99;  /* yellow   */
   --nurturer:   #002447; --nurturer-l:  #B3D9FF;  /* blue    */
   --preserver:  #004700; --preserver-l: #B3FFB3;  /* green   */
-  --bg:      #f5f2e8;
+  --bg:      #fff;
   --ink:     #1a1612;
   --ink-l:   #636363;
   --border: rgba(0,0,0,0.1);
@@ -470,7 +470,7 @@ function shareResult() {
   const getVar = v => style.getPropertyValue(v).trim();
 
   const titleText = document.getElementById('r-name').textContent;
-  const bgColor   = getVar(`--bg`) || '#f5f2e8';
+  const bgColor   = getVar(`--bg`) || '#fff';
   const textColor = getVar(`--${dominantType}`) || '#1a1612';
 
   const W = 1080, H = 1350;
