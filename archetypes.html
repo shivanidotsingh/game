@@ -75,6 +75,7 @@ body {
   width: 100%;
   margin-bottom: 24px;
 }
+.options.disabled { pointer-events: none; }
 
 .opt {
   padding: 16px 14px 14px;
@@ -96,10 +97,6 @@ body {
 
 .opt-icon { font-size: 1.4rem; line-height: 1; display: block; }
 .opt-text  { display: block; }
-
-.next-btn { font-family: inherit; font-size: 0.85rem; font-weight: 600; background: var(--ink); color: var(--bg); border: none; padding: 10px 24px; border-radius: 6px; cursor: pointer; transition: opacity 0.15s; }
-.next-btn:disabled { opacity: 0.15; cursor: default; }
-.next-btn:not(:disabled):hover { opacity: 0.8; }
 
 /* ── TRANSITION ── */
 .emoji-loader { font-size: 2.4rem; margin-bottom: 12px; }
@@ -205,7 +202,6 @@ body {
   </div>
   <div class="q-text" id="q-text"></div>
   <div class="options" id="options"></div>
-  <button class="next-btn" id="next-btn" onclick="nextQ()" disabled>Next →</button>
 </div>
 
 <div class="screen" id="s-transition">
@@ -363,10 +359,10 @@ function renderQ() {
     const d = document.getElementById('dot-' + i);
     if (d) d.className = 'prog-dot' + (i < current ? ' done' : i === current ? ' active' : '');
   });
-  const btn = document.getElementById('next-btn');
-  btn.disabled    = answers[current] === null;
-  btn.textContent = current === 11 ? 'See results →' : 'Next →';
-  document.getElementById('options').innerHTML = q.opts.map((o, i) =>
+
+  const optsContainer = document.getElementById('options');
+  optsContainer.classList.remove('disabled');
+  optsContainer.innerHTML = q.opts.map((o, i) =>
     `<div class="opt${answers[current] === i ? ' selected' : ''}" onclick="selectOpt(${i})">
       <span class="opt-icon">${o.icon || ''}</span>
       <span class="opt-text">${o.text}</span>
@@ -375,9 +371,15 @@ function renderQ() {
 }
 
 function selectOpt(i) {
+  const optsContainer = document.getElementById('options');
+  optsContainer.classList.add('disabled');
   answers[current] = i;
+
   document.querySelectorAll('.opt').forEach((el, j) => el.classList.toggle('selected', j === i));
-  document.getElementById('next-btn').disabled = false;
+
+  setTimeout(() => {
+    nextQ();
+  }, 180);
 }
 
 function nextQ() {
